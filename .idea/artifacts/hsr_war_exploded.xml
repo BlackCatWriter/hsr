@@ -1,0 +1,163 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="hsr:war exploded">
+    <output-path>$PROJECT_DIR$/classes/artifacts/hsr_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="hsr" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="module" name="activation-1.1.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="activiti-bpmn-converter-5.12.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="activiti-bpmn-model-5.12.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="activiti-engine-5.12.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="activiti-spring-5.12.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="analyzer-2012_u6.jar" module-name="hsr" />
+          <element id="library" level="module" name="ant-1.8.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="ant-launcher-1.8.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="antlr-2.7.7.jar" module-name="hsr" />
+          <element id="library" level="module" name="aopalliance-1.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="apache-ant-zip-2.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="asm-3.3.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="aspectjrt-1.7.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="aspectjweaver-1.6.9.jar" module-name="hsr" />
+          <element id="library" level="module" name="avro-1.6.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="bndlib-0.0.145.jar" module-name="hsr" />
+          <element id="library" level="module" name="cglib-2.2.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="ckfinder-2.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="ckfinderplugin-fileeditor-2.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="ckfinderplugin-imageresize-2.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="classmate-0.8.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-beanutils-1.8.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-cli-1.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-codec-1.8.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-collections-3.2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-dbcp-1.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-email-1.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-fileupload-1.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-io-1.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-io-2.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-lang-2.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-lang3-3.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-logging-1.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="commons-pool-1.5.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="dbunit-2.4.8.jar" module-name="hsr" />
+          <element id="library" level="module" name="dom4j-1.6.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="doxia-sink-api-1.0-alpha-9.jar" module-name="hsr" />
+          <element id="library" level="module" name="dozer-5.4.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="druid-0.2.19.jar" module-name="hsr" />
+          <element id="library" level="module" name="ehcache-core-2.6.6.jar" module-name="hsr" />
+          <element id="library" level="module" name="ehcache-web-2.0.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="freemarker-2.3.19.jar" module-name="hsr" />
+          <element id="library" level="module" name="guava-14.0.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="hamcrest-core-1.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-commons-annotations-4.0.1.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-core-4.1.12.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-ehcache-4.1.12.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-entitymanager-4.1.12.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-jpa-2.0-api-1.0.1.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-search-4.2.0.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-search-analyzers-4.2.0.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-search-engine-4.2.0.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-search-orm-4.2.0.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="hibernate-validator-5.0.1.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="jackson-annotations-2.2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="jackson-core-2.2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="jackson-core-asl-1.8.8.jar" module-name="hsr" />
+          <element id="library" level="module" name="jackson-databind-2.2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="jackson-mapper-asl-1.8.8.jar" module-name="hsr" />
+          <element id="library" level="module" name="jackson-module-jaxb-annotations-2.2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="javassist-3.15.0-GA.jar" module-name="hsr" />
+          <element id="library" level="module" name="jboss-logging-3.1.0.GA.jar" module-name="hsr" />
+          <element id="library" level="module" name="jboss-transaction-api_1.1_spec-1.0.0.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="jcl-over-slf4j-1.7.5.jar" module-name="hsr" />
+          <element id="library" level="module" name="jetty-maven-plugin-7.6.10.v20130312.jar" module-name="hsr" />
+          <element id="library" level="module" name="jline-0.9.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="joda-time-2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="jstl-1.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="jul-to-slf4j-1.7.5.jar" module-name="hsr" />
+          <element id="library" level="module" name="junit-3.8.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="junit-4.11.jar" module-name="hsr" />
+          <element id="library" level="module" name="log4j-1.2.17.jar" module-name="hsr" />
+          <element id="library" level="module" name="log4jdbc-remix-0.2.7.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-analyzers-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-core-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-facet-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-grouping-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-highlighter-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-kuromoji-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-memory-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-misc-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-phonetic-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-smartcn-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-spatial-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-spellchecker-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="lucene-stempel-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="mail-1.4.7.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-antrun-plugin-1.7.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-archiver-2.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-clean-plugin-2.5.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-compiler-plugin-2.5.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-eclipse-plugin-2.9.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-install-plugin-2.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-osgi-0.2.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-reporting-api-2.0.8.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-resources-plugin-2.6.jar" module-name="hsr" />
+          <element id="library" level="module" name="maven-war-plugin-2.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="mybatis-3.1.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="mysql-connector-java-5.1.13.jar" module-name="hsr" />
+          <element id="library" level="module" name="paranamer-2.3.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-archiver-1.0-alpha-7.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-interactivity-api-1.0-alpha-4.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-interactivity-jline-1.0-alpha-5.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-interpolation-1.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-resources-1.0-alpha-7.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-utils-1.5.6.jar" module-name="hsr" />
+          <element id="library" level="module" name="plexus-utils-2.0.5.jar" module-name="hsr" />
+          <element id="library" level="module" name="poi-3.2-FINAL.jar" module-name="hsr" />
+          <element id="library" level="module" name="poi-3.9.jar" module-name="hsr" />
+          <element id="library" level="module" name="poi-ooxml-3.9.jar" module-name="hsr" />
+          <element id="library" level="module" name="poi-ooxml-schemas-3.9.jar" module-name="hsr" />
+          <element id="library" level="module" name="resources-3.3.0-v20070604.jar" module-name="hsr" />
+          <element id="library" level="module" name="shiro-core-1.2.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="shiro-ehcache-1.2.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="shiro-spring-1.2.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="shiro-web-1.2.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="sitemesh-2.4.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="slf4j-api-1.7.5.jar" module-name="hsr" />
+          <element id="library" level="module" name="slf4j-log4j12-1.7.5.jar" module-name="hsr" />
+          <element id="library" level="module" name="snappy-java-1.0.4.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="solr-analysis-extras-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="solr-core-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="solr-solrj-3.6.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-aop-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-beans-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-context-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-context-support-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-core-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-data-commons-1.5.0.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-data-jpa-1.3.0.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-expression-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-jdbc-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-orm-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-test-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-tx-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-web-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="spring-webmvc-3.2.2.RELEASE.jar" module-name="hsr" />
+          <element id="library" level="module" name="standard-1.1.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="stax-api-1.0.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="thumbnailator-0.4.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="tomcat6-maven-plugin-2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="tomcat7-maven-plugin-2.1.jar" module-name="hsr" />
+          <element id="library" level="module" name="validation-api-1.1.0.Final.jar" module-name="hsr" />
+          <element id="library" level="module" name="xmlbeans-2.3.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="fastjson-1.2.4.jar" module-name="hsr" />
+          <element id="library" level="module" name="pinyin4j-2.5.0.jar" module-name="hsr" />
+          <element id="library" level="module" name="displaytag-1.2.jar" module-name="hsr" />
+          <element id="library" level="module" name="displaytag-export-poi-1.2.jar" module-name="hsr" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="hsr/web/Web" />
+    </root>
+  </artifact>
+</component>

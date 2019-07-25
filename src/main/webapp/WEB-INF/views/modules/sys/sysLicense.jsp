@@ -41,14 +41,13 @@
 			<label id="licenseError" class="error">${message}</label>
 		</div>
 	</div>
-	<h1 class="form-signin-heading">--</h1>
+	<h1 class="form-signin-heading">授权认证</h1>
 	<form id="licenseForm" class="form-signin" action="${ctx}/license" method="post">
-		<label class="input-label" for="basecode" >申请码</label></br>
-		<textarea rows="4" id="basecode" name="basecode" class="required" >${basecode}</textarea>
+		<label class="input-label" for="basecode" >申请码</label><br>
+		<textarea rows="4" id="basecode" name="basecode" style="width:90%" class="required" >${basecode}</textarea><br>
 
-		<label class="input-label" for="licensecode">授权码</label></br>
-		<textarea rows="4" id="licensecode" name="licensecode" class="required" placeholder="请输入授权码">
-		</textarea>
+		<label class="input-label" for="licensecode">授权码</label><br>
+		<textarea rows="4" id="licensecode" name="licensecode" style="width:90%" class="required" placeholder="请输入授权码"></textarea><br>
 
 		<input class="btn btn-large btn-primary" type="submit" value="授权"/>&nbsp;&nbsp;
 

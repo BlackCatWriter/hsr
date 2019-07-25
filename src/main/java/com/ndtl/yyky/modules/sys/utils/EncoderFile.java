@@ -9,12 +9,24 @@ import java.io.*;
  */
 public class EncoderFile {
 
+    private static String licensePath = "d:/hsr/encoder.license";
+
     public static void main(String[] args) {
-        String plainPassword = "123456";
+        /*String plainPassword = "123456";
         byte[] salt = Digests.generateSalt(8);
         byte[] hashPassword = Digests.sha1(plainPassword.getBytes(), salt,
                 1024);
-        System.out.println(Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword));
+        System.out.println(Encodes.encodeHex(salt) + Encodes.encodeHex(hashPassword));*/
+        File file = new File(licensePath);
+
+        if(!file.exists()){
+            file.getParentFile().mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
     public static void mywrite(File cfgFile ,String write){

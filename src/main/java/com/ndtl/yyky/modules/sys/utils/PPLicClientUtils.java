@@ -27,7 +27,7 @@ public class PPLicClientUtils
 
 	private static String projectSN = Global.getProjectSN();
 
-	private static String licensePath = "c:/Windows/encoder.license";
+	private static String licensePath = "d:/hsr/encoder.license";
 
 	private static Certificate[] verifyJarSign(JarFile jar)
 	{

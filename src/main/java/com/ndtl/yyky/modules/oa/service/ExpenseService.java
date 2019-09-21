@@ -81,7 +81,7 @@ public class ExpenseService extends BaseOAService {
 		DetachedCriteria dc = super.createBaseCriteria(page, expenseDao,
 				expense);
 		if(expense.getIsRejected()==null||!expense.getIsRejected()){
-			dc.add(Restrictions.ne("delFlag", Expense.DEL_FLAG_DELETE));
+			dc.add(Restrictions.eq("delFlag", Expense.DEL_FLAG_AUDIT));
 		}
 		if (expense.getCreateDateStart() != null) {
 			dc.add(Restrictions.ge("createDate", expense.getCreateDateStart()));

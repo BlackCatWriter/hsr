@@ -178,7 +178,7 @@ $(document).ready(function() {
                             +"<div >"  + "<div >"+ "<label >下拨经费:</label>"  + "<input id='xb_fee' name='xb_fee' type='text' class='number'/>" + "</div>" + "</div>" 
                             + "<div >" + "<div >"+ "<label >配套经费:</label>"  + "<input id='pt_fee' name='pt_fee' type='text' class='number'/>" + "</div>" + "</div>" 
                             + "<div >"+ "<div >" + "<label >实到经费:</label>"  + "<input id='sd_fee' name='sd_fee' type='text' class='number'/>" + "</div>" + "</div>"
-                            +"<div >" + "<div >"  + "<label >项目等级:</label>"+ "<select id='level' name='level'>" + "<c:forEach items='${fns:getDictList(\'project_level\')}' var='level'>" + "<option value=\"${level.value}\">${level.label}</option>" + "</c:forEach>" + "</select>" + "</div>" + "</div>" + "<div >" + "<div >"+ "<label >备&nbsp;&nbsp;&nbsp;&nbsp;注&nbsp;&nbsp;:</label>"  + "<textarea id='remarks' style='width: 250px; height: 60px;'></textarea>" + "</div>" + "</div>" + "</div>", {
+                            +"<div >" + "<div >"  + "<label >项目等级:</label>"+ "<select id='level' name='level'>" + "<c:forEach items='${fns:getDictList("project_level")}' var='level'>" + "<option value=\"${level.value}\">${level.label}</option>" + "</c:forEach>" + "</select>" + "</div>" + "</div>" + "<div >" + "<div >"+ "<label >备&nbsp;&nbsp;&nbsp;&nbsp;注&nbsp;&nbsp;:</label>"  + "<textarea id='remarks' style='width: 250px; height: 60px;'></textarea>" + "</div>" + "</div>" + "</div>", {
                                 title: "[追加信息]",
                                 submit: function() {
                                     var projectNo = top.$("#projectNo").val();

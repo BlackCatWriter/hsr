@@ -47,8 +47,7 @@ public class AccountService extends BaseService {
 		return accountDao.find(page, dc);
 	}
 
-	 public Page<List<Map<String, Object>>> projectAccountByYear(Page<List<Map<String, Object>>> page,
-																 Map<String, Object> paramMap) {
+	 public Page<Map> projectAccountByYear(Page<Map> page,Map<String, Object> paramMap) {
 
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
@@ -73,12 +72,11 @@ public class AccountService extends BaseService {
 			ql.append(" AND year = ?");
 			ps.add(year);
 		}
-		Page<List<Map<String, Object>>> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
 		return list;
 	}
 
-	public Page<List<Map<String, Object>>> subjectRewardDetail(Page<List<Map<String, Object>>> page,
-															  Map<String, Object> paramMap) {
+	public Page<Map> subjectRewardDetail(Page<Map> page,Map<String, Object> paramMap) {
 
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
@@ -112,12 +110,11 @@ public class AccountService extends BaseService {
 			ps.add("%"+title+"%");
 		}
 
-		Page<List<Map<String, Object>>> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
 		return list;
 	}
 
-	public Page<List<Map<String, Object>>> expertReviewDetail(Page<List<Map<String, Object>>> page,
-								Map<String, Object> paramMap) {
+	public Page<Map> expertReviewDetail(Page<Map> page,Map<String, Object> paramMap) {
 
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
@@ -136,12 +133,11 @@ public class AccountService extends BaseService {
 			ps.add("%"+name+"%");
 		}
 
-		Page<List<Map<String, Object>>> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
 		return list;
 	}
 
-	public Page<List<Map<String, Object>>> otherAccountDetail(Page<List<Map<String, Object>>> page,
-					Map<String, Object> paramMap) {
+	public Page<Map> otherAccountDetail(Page<Map> page,Map<String, Object> paramMap) {
 
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
@@ -162,7 +158,7 @@ public class AccountService extends BaseService {
 			ps.add("%"+topic+"%");
 		}
 
-		Page<List<Map<String, Object>>> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
 		return list;
 	}
 

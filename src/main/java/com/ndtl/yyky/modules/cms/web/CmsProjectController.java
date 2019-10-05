@@ -1,5 +1,7 @@
 package com.ndtl.yyky.modules.cms.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -9,6 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -73,6 +80,121 @@ public class CmsProjectController extends BaseOAController {
 		model.addAttribute("page", page);
 		model.addAllAttributes(paramMap);
 		return "modules/cms/projectList";
+	}
+
+	@RequestMapping(value = { "listForProject"})
+	public String listForProject(@RequestParam Map<String, Object> paramMap,
+					   Project project, HttpServletRequest request,
+					   HttpServletResponse response, Model model) {
+		Page<Project> page = projectService.findForRelatedCMS(new Page<Project>(
+				request, response), project, paramMap);
+		setUserListInPage(page);
+		model.addAttribute("page", page);
+		model.addAllAttributes(paramMap);
+		return "modules/cms/projectListStatis";
+	}
+
+	@RequestMapping(value = { "picForProject"})
+	public String picForProject() {
+		return "modules/cms/projectPicStatis";
+	}
+
+	@RequestMapping(value = "drawEcharts")
+	@ResponseBody
+	public JSONObject drawEcharts(HttpServletRequest request, Project pro,HttpServletResponse response) {
+
+		JSONObject json = new JSONObject();
+		Map<String,List<Project>> groupLevelMap = Maps.newHashMap();
+		Map<String,List<Project>> groupOfficelMap = Maps.newHashMap();
+		Map<String,Integer> bookMap = Maps.newHashMap();
+		JSONArray levelArray = new JSONArray();
+		JSONArray officeArray = new JSONArray();
+		JSONArray bookArray = new JSONArray();
+
+		// 经费柱状统计
+		JSONArray projectNoArray = new JSONArray();
+		JSONArray totleFeeArray = new JSONArray();
+		JSONArray syFeeArray = new JSONArray();
+		JSONArray reFeeArray = new JSONArray();
+
+
+		String[][] type = {{"论文","科技进步奖","著作","专利"},{"thesis","reward","book","patent"}};
+
+		Page<Project> page = projectService.findForRelatedCMS(new Page<Project>(
+				request, response), pro,new HashMap<String, Object>());
+		List<Project> pojectList = page.getList();
+
+		int thesis = 0;
+		int reward = 0;
+		int book = 0;
+		int patent = 0;
+
+		for(Project project : pojectList){
+			projectNoArray.add(project.getProjectName());
+			totleFeeArray.add(Double.valueOf(project.getSd_fee())+Double.valueOf(project.getPt_fee()));
+			syFeeArray.add(Double.valueOf(project.getSy_fee()));
+			reFeeArray.add(Double.valueOf(project.getSd_fee())+Double.valueOf(project.getPt_fee())-Double.valueOf(project.getSy_fee()));
+
+			String level = project.getLevel();
+			if (groupLevelMap.containsKey(level)) {
+				groupLevelMap.get(level).add(project);
+			} else {
+				groupLevelMap.put(level, Lists.newArrayList(project));
+			}
+
+			String office = project.getOffice().getName();
+			if (groupOfficelMap.containsKey(office)) {
+				groupOfficelMap.get(office).add(project);
+			} else {
+				groupOfficelMap.put(office, Lists.newArrayList(project));
+			}
+
+			if(project.getThesis() != null && project.getThesis().size()>0){
+				thesis += project.getThesis().size();
+				bookMap.put("thesis",thesis);
+			}
+			if(project.getReward() != null && project.getReward().size()>0){
+				reward += project.getReward().size();
+				bookMap.put("reward",reward);
+			}
+			if(project.getBook() != null && project.getBook().size()>0){
+				book += project.getBook().size();
+				bookMap.put("book",book);
+			}
+			if(project.getPatent() != null && project.getPatent().size()>0){
+				patent += project.getPatent().size();
+				bookMap.put("patent",patent);
+			}
+		}
+
+		for(int i = 0 ; i<type[0].length; i++){
+			JSONObject item = new JSONObject();
+			item.put("name",type[0][i]);
+			item.put("value",bookMap.get(type[1][i]));
+			bookArray.add(item);
+			json.put("bookArray",bookArray);
+		}
+
+		for( String key : groupLevelMap.keySet()){
+			JSONObject item = new JSONObject();
+			item.put("name",key);
+			item.put("value",groupLevelMap.get(key).size());
+			levelArray.add(item);
+			json.put("levelArray",levelArray);
+		}
+		for( String key : groupOfficelMap.keySet()){
+			JSONObject item = new JSONObject();
+			item.put("name",key);
+			item.put("value",groupOfficelMap.get(key).size());
+			officeArray.add(item);
+			json.put("officeArray",officeArray);
+		}
+		json.put("projectNoArray",projectNoArray);
+		json.put("totleFeeArray",totleFeeArray);
+		json.put("syFeeArray",syFeeArray);
+		json.put("reFeeArray",reFeeArray);
+		System.out.println(json);
+		return json;
 	}
 
 	private void setUserListInPage(Page<Project> page) {

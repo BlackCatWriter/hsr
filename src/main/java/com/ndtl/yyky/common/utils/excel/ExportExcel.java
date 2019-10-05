@@ -6,12 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -441,6 +436,38 @@ public class ExportExcel {
 				this.addCell(row, colunm++, val, ef.align(), ef.fieldType());
 				sb.append(val + ", ");
 			}
+			log.debug("Write success: [" + row.getRowNum() + "] "
+					+ sb.toString());
+		}
+		return this;
+	}
+
+	/**
+	 * 添加数据(添加map数据)
+	 *
+	 * @return list 数据列表
+	 */
+	public <E> ExportExcel setDataListMap(List<Map> src_list, List<String> titleSet) {
+
+		for (int k=0;k<src_list.size();k++) {
+			Map<String,Object> srcMap = src_list.get(k);
+
+			int colunm = 0;
+			Row row = this.addRow();
+			StringBuilder sb = new StringBuilder();
+
+			// 行，获取cell值
+			for(int j=0;j<titleSet.size();j++){
+				Object val = null;
+				if (srcMap.get(titleSet.get(j)) != null) {
+					val = srcMap.get(titleSet.get(j)).toString();
+				} else {
+					val = "";
+				}
+				this.addCell(row, colunm++, val, 2, String.class);
+				sb.append(val + ", ");
+			}
+
 			log.debug("Write success: [" + row.getRowNum() + "] "
 					+ sb.toString());
 		}

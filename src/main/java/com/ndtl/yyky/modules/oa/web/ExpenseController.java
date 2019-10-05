@@ -1,13 +1,22 @@
 package com.ndtl.yyky.modules.oa.web;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.ndtl.yyky.common.config.Global;
+import com.ndtl.yyky.common.mapper.JsonMapper;
+import com.ndtl.yyky.common.persistence.Page;
+import com.ndtl.yyky.modules.cms.entity.ExpensePlan;
+import com.ndtl.yyky.modules.cms.entity.ExpenseRatio;
+import com.ndtl.yyky.modules.cms.service.ExpensePlanService;
+import com.ndtl.yyky.modules.cms.service.ExpenseRatioService;
+import com.ndtl.yyky.modules.oa.entity.Expense;
+import com.ndtl.yyky.modules.oa.entity.Project;
+import com.ndtl.yyky.modules.oa.service.ExpenseService;
+import com.ndtl.yyky.modules.oa.service.ProjectService;
+import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
+import com.ndtl.yyky.modules.oa.utils.workflow.ProcessDefinitionKey;
+import com.ndtl.yyky.modules.oa.utils.workflow.Variable;
+import com.ndtl.yyky.modules.oa.web.base.BaseOAController;
+import com.ndtl.yyky.modules.oa.web.model.ExpenseModel;
+import com.ndtl.yyky.modules.sys.utils.UserUtils;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.lang3.ObjectUtils;
@@ -25,19 +34,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ndtl.yyky.common.config.Global;
-import com.ndtl.yyky.common.mapper.JsonMapper;
-import com.ndtl.yyky.common.persistence.Page;
-import com.ndtl.yyky.modules.oa.entity.Expense;
-import com.ndtl.yyky.modules.oa.entity.Project;
-import com.ndtl.yyky.modules.oa.service.ExpenseService;
-import com.ndtl.yyky.modules.oa.service.ProjectService;
-import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
-import com.ndtl.yyky.modules.oa.utils.workflow.ProcessDefinitionKey;
-import com.ndtl.yyky.modules.oa.utils.workflow.Variable;
-import com.ndtl.yyky.modules.oa.web.base.BaseOAController;
-import com.ndtl.yyky.modules.oa.web.model.ExpenseModel;
-import com.ndtl.yyky.modules.sys.utils.UserUtils;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 经费Controller
@@ -53,15 +56,22 @@ public class ExpenseController extends BaseOAController {
 	protected ExpenseService expenseService;
 
 	@Autowired
+	protected ExpenseRatioService expenseRatioService;
+
+	@Autowired
 	protected ProjectService projectService;
 
 	@Autowired
 	protected TaskService taskService;
 
+	@Autowired
+	protected ExpensePlanService expensePlanService;
+
 	@RequiresPermissions("oa:expense:view")
 	@RequestMapping(value = "form")
 	public String form(Expense expense, Model model, Long id) {
 		List<Project> projectList = projectService.findOwnedApprovalProjects();
+
 		if (id != null && containsId(projectList, id)) {
 			model.addAttribute("selectedId", id);
 			ExpenseModel expenseModel = initExpenseModel(id);
@@ -69,6 +79,20 @@ public class ExpenseController extends BaseOAController {
 		}
 		model.addAttribute("projectList", projectList);
 		model.addAttribute("expense", expense);
+
+		List<ExpensePlan> planList = expensePlanService.findPlanListByProjectId(id);
+		for(ExpensePlan item : planList){
+			initExpensePlan(item);
+			item.setExpense_name(item.getDicExpenseType());
+		}
+
+		List<ExpenseRatio> ratioList = expenseRatioService.findRatioListByProjectId(id);
+		for(ExpenseRatio item : ratioList){
+			initExpenseRatio(item);
+			item.setExpense_name(item.getDicExpenseType());
+		}
+		model.addAttribute("planList",planList);
+		model.addAttribute("ratioList",ratioList);
 		return "modules/oa/expenseForm";
 	}
 
@@ -130,7 +154,7 @@ public class ExpenseController extends BaseOAController {
 	/**
 	 * 任务列表
 	 * 
-	 * @param expense
+	 * @param session
 	 */
 	@RequiresPermissions("oa:expense:view")
 	@RequestMapping(value = { "task" })
@@ -237,6 +261,22 @@ public class ExpenseController extends BaseOAController {
 		return usedFee;
 	}
 
+	/**
+	 * 按比例剩余
+	 * @param list
+	 * @return
+	 */
+	private Double getUsedFee(List<Expense> list,String type) {
+		Double usedFee = 0D;
+		for (Expense expense : list) {
+			if (expense.getIsUsed() && expense.getExpenseType().equals(type)) {
+				Double exFee = expense.getAmount();
+				usedFee += exFee;
+			}
+		}
+		return usedFee;
+	}
+
 	private boolean containsId(List<Project> projects, Long id) {
 		for (Project project : projects) {
 			if (project.getId().equals(id)) {
@@ -244,6 +284,38 @@ public class ExpenseController extends BaseOAController {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 初始话经费比例
+	 * @param ratio
+	 */
+	private void initExpenseRatio(ExpenseRatio ratio){
+		if(ratio.getRatio() != null){
+			List<Expense> expenseList = expenseService.getAllExpense(ratio.getProject().getId());
+			Project project = projectService.findOne(ratio.getProject().getId());
+
+			ratio.setSd_fee((Double.valueOf(project.getPt_fee())
+					+ Double.valueOf(project.getSd_fee()))*ratio.getRatio()/100);
+			ratio.setSy_fee(getUsedFee(expenseList,ratio.getExpense_type()));
+			ratio.setRe_fee(ratio.getSd_fee() - ratio.getSy_fee());
+		}
+	}
+
+	/**
+	 * 初始话计划比例
+	 * @param plan
+	 */
+	private void initExpensePlan(ExpensePlan plan){
+		if(plan.getRatio() != null){
+			List<Expense> expenseList = expenseService.getAllExpense(plan.getProject().getId());
+			Project project = projectService.findOne(plan.getProject().getId());
+
+			plan.setSd_fee((Double.valueOf(project.getPt_fee())
+					+ Double.valueOf(project.getSd_fee()))*plan.getRatio()/100);
+			plan.setSy_fee(getUsedFee(expenseList,plan.getExpense_type()));
+			plan.setRe_fee(plan.getSd_fee() - plan.getSy_fee());
+		}
 	}
 
 	private ExpenseModel initExpenseModel(Long projectId) {
@@ -284,7 +356,7 @@ public class ExpenseController extends BaseOAController {
     /**
      * 完成任务
      * 
-     * @param id
+     * @param taskId
      * @return
      */
     @RequestMapping(value = "complete/{id}", method = { RequestMethod.POST, RequestMethod.GET })

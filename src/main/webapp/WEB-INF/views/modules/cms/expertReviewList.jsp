@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-<title>专家评审统计</title>
+<title>专家评审明细</title>
 <meta name="decorator" content="default" />
 <%@include file="/WEB-INF/views/include/dialog.jsp"%>
 <style type="text/css">
@@ -14,10 +14,10 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#btnExport").click(function() {
-        top.$.jBox.confirm("确认要导出经费数据吗？", "系统提示",
+        top.$.jBox.confirm("确认要导出专家评审明细数据吗？", "系统提示",
         function(v, h, f) {
             if (v == "ok") {
-                $("#searchForm").attr("action", "${ctx}/cms/expense/export");
+                $("#searchForm").attr("action", "${ctx}/cms/account/exportExpertReviewDetail");
                 $("#searchForm").submit();
             }
         },
@@ -38,7 +38,7 @@ function page(n, s) {
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/cms/account/expertReviewDetail">专家评审统计</a></li>
+		<li class="active"><a href="${ctx}/cms/account/expertReviewDetail">专家评审明细</a></li>
 	</ul>
 	<form:form id="searchForm" action="${ctx}/cms/account/otherAccountDetail" method="post"
 		class="breadcrumb form-search">

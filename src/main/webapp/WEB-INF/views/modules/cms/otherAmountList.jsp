@@ -14,10 +14,10 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#btnExport").click(function() {
-        top.$.jBox.confirm("确认要导出经费数据吗？", "系统提示",
+        top.$.jBox.confirm("确认要导出其它报销明细数据吗？", "系统提示",
         function(v, h, f) {
             if (v == "ok") {
-                $("#searchForm").attr("action", "${ctx}/cms/expense/export");
+                $("#searchForm").attr("action", "${ctx}/cms/account/exportOtherAccountDetail");
                 $("#searchForm").submit();
             }
         },

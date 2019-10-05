@@ -45,6 +45,57 @@
 		<li><a href="${ctx}/oa/expense/list">所有任务</a></li>
 		<li><a href="${ctx}/oa/expense/task">待办任务</a></li>
 	</ul><br/>
+	&nbsp;&nbsp;<label class="control-label breadcrumb" style="width: 800px;">科教科经费预算规划：</label>
+	<table id="contentTable" class="table table-striped table-bordered table-condensed" style="width: 650px;margin-left: 40px">
+		<thead>
+		<tr>
+			<th>项目名</th>
+			<th>经费类型</th>
+			<th>报销比例</th>
+			<th>可用金额</th>
+			<th>已用金额</th>
+			<th>剩余比例</th>
+		</tr>
+		</thead>
+		<tbody>
+		<c:forEach items="${ratioList}" var="ratio">
+			<tr>
+				<td>${ratio.project.projectName}</td>
+				<td>${ratio.expense_name}</td>
+				<td>${ratio.ratio}</td>
+				<td>${ratio.sd_fee}</td>
+				<td>${ratio.sy_fee}</td>
+				<td>${ratio.re_fee}</td>
+			</tr>
+		</c:forEach>
+		</tbody>
+	</table>
+	<label class="control-label breadcrumb" style="width: 800px;">申请人预算规划：</label>
+	<table id="contentTable" class="table table-striped table-bordered table-condensed" style="width: 650px;margin-left: 40px">
+		<thead>
+		<tr>
+			<th>项目名</th>
+			<th>经费类型</th>
+			<th>报销比例</th>
+			<th>可用金额</th>
+			<th>已用金额</th>
+			<th>剩余比例</th>
+		</tr>
+		</thead>
+		<tbody>
+		<c:forEach items="${planList}" var="plan">
+			<tr>
+				<td>${plan.project.projectName}</td>
+				<td>${plan.expense_name}</td>
+				<td>${plan.ratio}</td>
+				<td>${plan.sd_fee}</td>
+				<td>${plan.sy_fee}</td>
+				<td>${plan.re_fee}</td>
+			</tr>
+		</c:forEach>
+		</tbody>
+	</table>
+	<label class="control-label breadcrumb" style="width: 800px;">经费申请：</label>
 	<form:form id="inputForm" modelAttribute="expense" action="${ctx}/oa/expense/save" method="post" class="form-horizontal">
 		<tags:message content="${message}"/>
 		<div class="control-group">

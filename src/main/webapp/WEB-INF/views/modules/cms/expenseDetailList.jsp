@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-<title>经费管理</title>
+<title>经费支出明细</title>
 <meta name="decorator" content="default" />
 <%@include file="/WEB-INF/views/include/dialog.jsp"%>
 <style type="text/css">
@@ -14,10 +14,10 @@
 <script type="text/javascript">
 $(document).ready(function() {
     $("#btnExport").click(function() {
-        top.$.jBox.confirm("确认要导出经费数据吗？", "系统提示",
+        top.$.jBox.confirm("确认要导出经费支出明细数据吗？", "系统提示",
         function(v, h, f) {
             if (v == "ok") {
-                $("#searchForm").attr("action", "${ctx}/cms/expense/export");
+                $("#searchForm").attr("action", "${ctx}/cms/account/exportExpenseDetail");
                 $("#searchForm").submit();
             }
         },

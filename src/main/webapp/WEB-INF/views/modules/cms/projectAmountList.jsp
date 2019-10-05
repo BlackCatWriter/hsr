@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/views/include/taglib.jsp"%>
 <html>
 <head>
-<title>经费管理</title>
+<title>经费年度统计</title>
 <meta name="decorator" content="default" />
 <%@include file="/WEB-INF/views/include/dialog.jsp"%>
 <style type="text/css">
@@ -17,7 +17,7 @@ $(document).ready(function() {
         top.$.jBox.confirm("确认要导出经费数据吗？", "系统提示",
         function(v, h, f) {
             if (v == "ok") {
-                $("#searchForm").attr("action", "${ctx}/cms/expense/export");
+                $("#searchForm").attr("action", "${ctx}/cms/account/exportAccountYear");
                 $("#searchForm").submit();
             }
         },
@@ -38,7 +38,7 @@ function page(n, s) {
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/cms/account/projectAccountByYear">经费支出明细</a></li>
+		<li class="active"><a href="${ctx}/cms/account/projectAccountByYear">经费年度统计</a></li>
 	</ul>
 	<form:form id="searchForm" action="${ctx}/cms/account/projectAccountByYear" method="post"
 		class="breadcrumb form-search">

@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.ndtl.yyky.modules.cms.dao.ExpensePlanDao;
+import com.ndtl.yyky.modules.cms.dao.ExpenseRatioDao;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -47,6 +49,12 @@ public class ProjectService extends BaseOAService {
 	
 	@Autowired
 	private ExpenseDao expenseDao;
+
+	@Autowired
+	private ExpensePlanDao expensePlanDao;
+
+	@Autowired
+	private ExpenseRatioDao expenseRatioDao;
 
 	@Autowired
 	private ProjectToUserDao projectToUserDao;
@@ -100,6 +108,9 @@ public class ProjectService extends BaseOAService {
 		Page<Project> result = projectDao.find(page, dc);
 		for (Project item : result.getList()) {
 			item = (Project) super.retriveProcessAndHistory(item);
+		}
+		for(Project p:result.getList()){
+			copyRelatedAttribute(p);
 		}
 		return result;
 	}
@@ -187,6 +198,8 @@ public class ProjectService extends BaseOAService {
 		project.setThesis(projectDao.findThesisForProject(project.getId()));
 		project.setPatent(projectDao.findPatentForProject(project.getId()));
 		project.setBook(projectDao.findBookForProject(project.getId()));
+		project.setPlan(expensePlanDao.findPlanListByProjectId(project.getId()));
+		project.setRatio(expenseRatioDao.findRatioListByProjectId(project.getId()));
 	}
 
 	public Page<Project> findForCMS(Page<Project> page, Project project,
@@ -226,6 +239,9 @@ public class ProjectService extends BaseOAService {
 		Project project = projectDao.findOne(id);
 		if (StringUtils.isNotEmpty((String) variables.get("projectNo"))) {
 			project.setProjectNo((String) variables.get("projectNo"));
+		}
+		if (StringUtils.isNotEmpty((String) variables.get("projectHospitalNo"))) {
+			project.setProjectHospitalNo((String) variables.get("projectHospitalNo"));
 		}
 		if (StringUtils.isNotEmpty((String) variables.get("approvalOrg"))) {
 			project.setApprovalOrg((String) variables.get("approvalOrg"));
@@ -338,6 +354,12 @@ public class ProjectService extends BaseOAService {
 		projectDao.flush();
 		Double result=Double.valueOf(findOne(id).getSy_fee())+ Double.valueOf(sy_fee);	
 		projectDao.updateSyfee(id, String.valueOf(result));
+	}
+
+	@Transactional(readOnly = false)
+	public void updateProjectfee(Long id, String xb_fee,String pt_fee, String sd_fee) {
+		projectDao.flush();
+		projectDao.updateProjectfee(id, xb_fee, pt_fee, sd_fee);
 	}
 	
 	@Transactional(readOnly = false)

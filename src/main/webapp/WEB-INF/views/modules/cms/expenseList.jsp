@@ -70,6 +70,10 @@ function page(n, s) {
 		&nbsp;&nbsp;
 		&nbsp;<label>所有申请：&nbsp;</label><form:checkbox id="isRejected" path="isRejected" />
 		<div style="margin-top: 8px;">
+			<label>经费类型：</label><form:select path="expenseType">
+				<form:option  label="" value="" htmlEscape="false"/>
+				<form:options items="${fns:getDictList('oa_expense_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+			</form:select>&nbsp;
 			<label>日期范围：&nbsp;</label><input id="beginDate" name="beginDate" type="text" readonly="readonly" maxlength="20"
 				class="input-medium Wdate" value="${beginDate}" onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
 			<label>&nbsp;--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><input id="endDate" name="endDate" type="text"

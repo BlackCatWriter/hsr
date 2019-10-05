@@ -15,6 +15,7 @@ public interface AccountDao extends AccountDaoCustom,CrudRepository<Account, Lon
 
 	@Query("from Account where projectName = ?1")
 	public Account findByProjectName(String projectName);
+
 }
 
 /**

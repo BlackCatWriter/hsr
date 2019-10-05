@@ -165,6 +165,45 @@
                     }
                 });
 	}
+
+    function saveExpensePlan(projectId){
+        top.$.jBox(
+            "<div style='padding:10px;'>" +
+            "<c:forEach items='${fns:getDictList("oa_expense_type")}' var='dict'>" +
+            "<input type=\"hidden\" name=\"expenseTypes\" value=\"${dict.value}\"/>" +
+            "<div class=\"control-group\">" +
+            "<label class=\"control-label\">${dict.label}：</label>" +
+            "<div class=\"controls\">" +
+            "<input name=\"ratios\" type=\"text\" class=\"required\" " +
+            "onkeyup=\"if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\\D/g,'')}\""+
+            "onafterpaste=\"if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\\D/g,'')}\">"+
+            "<span class=\"add-on\">%</span>"+
+            "</div>"+
+            "</div>"+
+            "</c:forEach>"+
+        	"</div>", {
+                title: "请先完成预算配置",
+                submit: function () {
+                    var expenseTypes = top.$("input[name=expenseTypes]").map(function(){return $(this).val()}).get();
+                    var ratios = top.$("input[name=ratios]").map(function(){return $(this).val()}).get();
+                    $.ajax({
+                        type: "POST",
+                        dataType: "json",
+						traditional: true,
+                        url: "${ctx}/cms/account/saveExpensePlan",
+                        data: {"project_id": projectId,"expenseTypes": expenseTypes,"ratios": ratios},
+                        error: function(data) {
+                            console.log(data);
+                            top.$.jBox.tip('操作失败!');
+                        },
+                        success: function(data) {
+                            top.$.jBox.tip('保存完成');
+                            location.reload();
+                        }
+                    });
+                }
+            });
+    }
 	
 	/**
 	 * 完成属性保存
@@ -261,7 +300,12 @@
 					<a class="handle" href="#" data-id="${project.id}">经费编辑</a>
 				</c:if>
 				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id}">
-					<a href="${ctx}/oa/expense/form?id=${project.id}">申请经费</a>
+					<c:if test="${not empty project.plan}">
+						<a href="${ctx}/oa/expense/form?id=${project.id}">申请经费</a>
+					</c:if>
+					<c:if test="${empty project.plan}">
+						<a onclick="saveExpensePlan(${project.id})">预算配置</a>
+					</c:if>
 				</c:if>
 				</td>
 				<td>

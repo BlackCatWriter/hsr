@@ -31,6 +31,13 @@
 			<allowedExtensions>7z,aiff,asf,avi,bmp,csv,doc,docx,fla,flv,gif,gz,gzip,jpeg,jpg,mid,mov,mp3,mp4,mpc,mpeg,mpg,ods,odt,pdf,png,ppt,pptx,pxd,qt,ram,rar,rm,rmi,rmvb,rtf,sdc,sitd,swf,sxc,sxw,tar,tgz,tif,tiff,txt,vsd,wav,wma,wmv,xls,xlsx,zip</allowedExtensions>
 			<deniedExtensions></deniedExtensions>
 		</type>
+		<type name="images">
+			<url>%BASE_URL%images/</url>
+			<directory>%BASE_DIR%images</directory>
+			<maxSize>20M</maxSize><!-- 上传的大小不限制时，为0，否则就是类似的1MB -->
+			<allowedExtensions>bmp,gif,jpeg,jpg,png</allowedExtensions>
+			<deniedExtensions></deniedExtensions>
+		</type>
 	</types>
 	<accessControls>
 		<accessControl>

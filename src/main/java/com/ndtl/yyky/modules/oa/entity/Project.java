@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.ndtl.yyky.modules.cms.entity.ExpensePlan;
+import com.ndtl.yyky.modules.cms.entity.ExpenseRatio;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -37,6 +39,7 @@ import com.ndtl.yyky.modules.oa.entity.base.BaseOAItem;
 import com.ndtl.yyky.modules.oa.entity.enums.ProjectStatus;
 import com.ndtl.yyky.modules.sys.entity.User;
 import com.ndtl.yyky.modules.sys.utils.DictUtils;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "oa_project")
@@ -51,6 +54,7 @@ public class Project extends BaseOAItem {
 	private String author3; // 第三负责人
 	private String approvalOrg; // 立项单位
 	private String projectNo; // 立项编号
+	private String projectHospitalNo;// 院内项目编号
 	private String projectName; // 项目名称
 	private String xb_fee; // 下拨经费
 	private String sd_fee; // 实到经费
@@ -70,6 +74,7 @@ public class Project extends BaseOAItem {
 	private String endFileTemplete; // 结题上传文件名
 	private String notice; // 结题上传文件名
 	private String endtype; // 结题方式
+	private String introduce; // 项目简介
 
 	private Date createDateStart;
 	private Date createDateEnd;
@@ -83,6 +88,9 @@ public class Project extends BaseOAItem {
 	private List<Reward> tecAdv;
 	private List<Book> book;
 	private List<Patent> patent;
+
+	private List<ExpenseRatio> ratio;
+	private List<ExpensePlan> plan;
 
 	@NotNull(message = "第一责任人不能为空")
 	@ExcelField(title = "第一责任人", align = 2, sort = 5, fieldType = UserType.class)
@@ -128,6 +136,14 @@ public class Project extends BaseOAItem {
 
 	public void setProjectNo(String projectNo) {
 		this.projectNo = projectNo;
+	}
+
+	public String getProjectHospitalNo() {
+		return projectHospitalNo;
+	}
+
+	public void setProjectHospitalNo(String projectHospitalNo) {
+		this.projectHospitalNo = projectHospitalNo;
 	}
 
 	@ExcelField(title = "项目题目", align = 2, sort = 1)
@@ -468,5 +484,29 @@ public class Project extends BaseOAItem {
 
 	public void setEndtype(String endtype) {
 		this.endtype = endtype;
+	}
+
+	@Transient
+	public List<ExpenseRatio> getRatio() {
+		return ratio;
+	}
+	public void setRatio(List<ExpenseRatio> ratio) {
+		this.ratio = ratio;
+	}
+	@Transient
+	public List<ExpensePlan> getPlan() {
+		return plan;
+	}
+	public void setPlan(List<ExpensePlan> plan) {
+		this.plan = plan;
+	}
+
+	@Length(min = 0, max = 255)
+	public String getIntroduce() {
+		return introduce;
+	}
+
+	public void setIntroduce(String introduce) {
+		this.introduce = introduce;
 	}
 }

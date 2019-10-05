@@ -409,7 +409,7 @@ function complete(taskId, variables) {
 				</c:if>
 				<div class="controls">
 					<input id="file" name="file" type="hidden" value="${project.file}" /> <input id="fileupload" type="file"
-						name="files[]" data-url="${ctx}/oa/project/upload/project">
+						name="files[]" multiple="multiple" data-url="${ctx}/oa/project/upload/project">
 				</div>
 			</div>
 			<div class="control-group">
@@ -429,9 +429,15 @@ function complete(taskId, variables) {
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label">项目简介：</label>
+				<div class="controls">
+					<form:textarea path="introduce" rows="5" style="width:500px;" maxlength="255" />
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label">备注：</label>
 				<div class="controls">
-					<form:textarea path="remarks" rows="5" maxlength="20" />
+					<form:textarea path="remarks" rows="5" style="width:500px;" maxlength="20" />
 				</div>
 			</div>
 			<c:if test="${modify eq true}">
@@ -491,6 +497,12 @@ function complete(taskId, variables) {
 				<label class='control-label'>立项编号:</label>
 				<div class='controls'>
 					<input id='projectNo' name='projectNo' type='text' />
+				</div>
+			</div>
+			<div class='control-group'>
+				<label class='control-label'>院内项目编号:</label>
+				<div class='controls'>
+					<input id='projectHospitalNo' name='projectHospitalNo' type='text' />
 				</div>
 			</div>
 			<div class='control-group'>

@@ -1,8 +1,11 @@
 package com.ndtl.yyky.modules.oa.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.ndtl.yyky.modules.oa.entity.Thesis;
+import com.ndtl.yyky.modules.oa.utils.workflow.ProcessDefinitionKey;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -139,6 +142,12 @@ public class ExpenseService extends BaseOAService {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Expense> findTodoTasks(String userId, ProcessDefinitionKey key) {
+		List<Expense> results = new ArrayList<Expense>();
+		results = (List<Expense>) super.findTodoTasks(userId, key);
+		return results;
+	}
 
 	public List<Expense> getAllExpense(Long projectId) {
 		List<Expense> existingExpenses = expenseDao

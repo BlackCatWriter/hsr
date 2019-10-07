@@ -3,15 +3,7 @@ package com.ndtl.yyky.modules.oa.web.model.converter;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.ndtl.yyky.modules.oa.entity.Acad;
-import com.ndtl.yyky.modules.oa.entity.Academic;
-import com.ndtl.yyky.modules.oa.entity.Academiccost;
-import com.ndtl.yyky.modules.oa.entity.Advstudy;
-import com.ndtl.yyky.modules.oa.entity.Book;
-import com.ndtl.yyky.modules.oa.entity.Patent;
-import com.ndtl.yyky.modules.oa.entity.Project;
-import com.ndtl.yyky.modules.oa.entity.Reward;
-import com.ndtl.yyky.modules.oa.entity.Thesis;
+import com.ndtl.yyky.modules.oa.entity.*;
 import com.ndtl.yyky.modules.oa.entity.Reward.RewardType;
 import com.ndtl.yyky.modules.oa.entity.base.BaseOAEntity;
 import com.ndtl.yyky.modules.oa.web.model.UserTask;
@@ -67,6 +59,10 @@ public class UserTaskConverter {
 			ut.setTitle(((Advstudy) entity).getAdvstudyDirection());
 			ut.setType("进修方向");
 			ut.setTypeInSys("advstudy");
+		}else if (entity instanceof Expense) {
+			ut.setTitle(((Expense) entity).getDicExpenseType());
+			ut.setType("经费申请");
+			ut.setTypeInSys("expense");
 		}else if (entity instanceof Academiccost) {
 			if(((Academiccost) entity).getAcademic()!=null){
 				ut.setTitle(((Academiccost) entity).getAcademic().getAcademicName());

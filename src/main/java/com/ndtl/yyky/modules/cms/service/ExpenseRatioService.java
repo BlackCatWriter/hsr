@@ -34,8 +34,13 @@ public class ExpenseRatioService extends BaseService {
 
 
 
-	public Page<ExpenseRatio> find(Page<ExpenseRatio> page) {
-		return expenseRatioDao.find(page);
+	public Page<ExpenseRatio> find(Page<ExpenseRatio> page, ExpenseRatio expenseRatio) {
+		DetachedCriteria dc = expenseRatioDao.createDetachedCriteria();
+		if (expenseRatio.getProject() != null&&expenseRatio.getProject().getId()!= null) {
+			dc.add(Restrictions.eq("project.id", expenseRatio.getProject().getId()));
+		}
+		dc.addOrder(Order.desc("id"));
+		return expenseRatioDao.find(page, dc);
 	}
 
 	public List<ExpenseRatio> findRatioListByProjectId(Long project_id) {

@@ -73,6 +73,12 @@ function page(n, s) {
 					<td>${amount.remarks}</td>
 				</tr>
 			</c:forEach>
+			<tr style="font-weight: bold">
+				<td colspan="3" style="text-align:right;vertical-align:middle;">合计</td>
+				<td>${totleMap.bx_fee}</td>
+				<td></td>
+				<td></td>
+			</tr>
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>

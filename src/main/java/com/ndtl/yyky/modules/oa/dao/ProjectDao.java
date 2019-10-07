@@ -42,6 +42,9 @@ public interface ProjectDao extends ProjectDaoCustom, BaseOADao<Project> {
 	@Query("from Project where status in ('CLOSE','FINISH')")
 	public List<Project> findApprovalProjects();
 
+	@Query("from Project where status in ('CLOSE','FINISH','APPROVAL')")
+	public List<Project> findFinishAndApprovalProjects();
+
 	@Query("from Project where status in ('CLOSE','FINISH') and weightBelong = ?1")
 	public List<Project> findOwnedApprovalProjects(Long id);
 
@@ -70,6 +73,7 @@ public interface ProjectDao extends ProjectDaoCustom, BaseOADao<Project> {
 	@Query("update Project set sy_fee = ?2 where id = ?1")
 	public int updateSyfee(Long id, String sy_fee);
 
+	@Modifying
 	@Query("update Project set xb_fee = ?2,pt_fee = ?3,sd_fee = sd_fee+?4 where id = ?1")
 	public int updateProjectfee(Long id, String xb_fee,String pt_fee, String sd_fee);
 }

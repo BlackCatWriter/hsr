@@ -18,7 +18,28 @@
 			$("#name").focus();
 			$("#inputForm").validate({
 				submitHandler: function(form){
-					loading('正在提交，请稍等...');
+					var expenseName = $("#expenseType").find("option:selected").text();
+                    var remaindFee = $("#remaindFee").val();//项目剩余经费
+					var amount = $("#amount").val();
+                    var re_fee = '';//项目该类型剩余经费
+                    $("#ratioTable tbody tr").each(function(i){
+                        if($($(this).find("td").get(1)).text() === expenseName
+							&& $($(this).find("td").get(2)).text() !== ''){
+                            re_fee = $($(this).find("td").get(5)).text();
+                        }
+                    });
+                    if(re_fee !== 'null' && re_fee !== ''){
+                        if(Number(amount) > Number(re_fee)){
+                            top.$.jBox.tip('报销金额不能超出该类型剩余经费！'+Number(re_fee));
+                            return false;
+						}
+					}else if(remaindFee !== 'null' && remaindFee !== ''){
+                        if(Number(amount) > Number(remaindFee)){
+                            top.$.jBox.tip('报销金额不能超出项目剩余经费！'+Number(remaindFee));
+                            return false;
+                        }
+					}
+                    loading('正在提交，请稍等...');
 					form.submit();
 				},
 				errorContainer: "#messageBox",
@@ -46,7 +67,7 @@
 		<li><a href="${ctx}/oa/expense/task">待办任务</a></li>
 	</ul><br/>
 	&nbsp;&nbsp;<label class="control-label breadcrumb" style="width: 800px;">科教科经费预算规划：</label>
-	<table id="contentTable" class="table table-striped table-bordered table-condensed" style="width: 650px;margin-left: 40px">
+	<table id="ratioTable" class="table table-striped table-bordered table-condensed" style="width: 650px;margin-left: 40px">
 		<thead>
 		<tr>
 			<th>项目名</th>
@@ -54,7 +75,7 @@
 			<th>报销比例</th>
 			<th>可用金额</th>
 			<th>已用金额</th>
-			<th>剩余比例</th>
+			<th>剩余金额</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -71,7 +92,7 @@
 		</tbody>
 	</table>
 	<label class="control-label breadcrumb" style="width: 800px;">申请人预算规划：</label>
-	<table id="contentTable" class="table table-striped table-bordered table-condensed" style="width: 650px;margin-left: 40px">
+	<table id="planTable" class="table table-striped table-bordered table-condensed" style="width: 650px;margin-left: 40px">
 		<thead>
 		<tr>
 			<th>项目名</th>
@@ -79,7 +100,7 @@
 			<th>报销比例</th>
 			<th>可用金额</th>
 			<th>已用金额</th>
-			<th>剩余比例</th>
+			<th>剩余金额</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -139,10 +160,10 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">经费类型：</label>
+			<label class="control-label"><font color='red'>*</font>经费类型：</label>
 			<div class="controls">
 				<form:select path="expenseType" >
-					<form:options items="${fns:getDictList('oa_expense_type')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+					<form:options items="${fns:getDictList('oa_expense_type')}" class="required" itemLabel="label" itemValue="value" htmlEscape="false" />
 				</form:select>
 			</div>
 		</div>
@@ -153,7 +174,7 @@
 			</div>
 		</div>
 		<div class="control-group">
-			<label class="control-label">数额：</label>
+			<label class="control-label"><font color='red'>*</font>数额：</label>
 			<div class="controls">
 				<form:input path="amount" name="amount" class="required number"/>
 			</div>

@@ -1,5 +1,7 @@
 package com.ndtl.yyky.modules.cms.web;
 
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.ndtl.yyky.common.config.Global;
 import com.ndtl.yyky.common.persistence.Page;
 import com.ndtl.yyky.common.utils.DateUtils;
@@ -27,10 +29,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,7 +68,7 @@ public class AccountController extends BaseController {
 	@RequestMapping(value = { "form", "" })
 	public String form(Account account, Model model, Long id) {
 		model.addAttribute("account",account);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findFinishAndApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/cms/accountForm";
 	}
@@ -102,19 +106,35 @@ public class AccountController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = { "expenseRatioForm"})
-	public String expenseRatioFrom(ExpenseRatio ratio,Model model,HttpServletRequest request,
-								   HttpServletResponse response) {
-		model.addAttribute("ratio",ratio);
+	public String expenseRatioFrom(Model model) {
 		List<Project> projectList = projectService.findApprovalProjects();
 		model.addAttribute("projectList", projectList);
 
-		Page<ExpenseRatio> page = expenseRatioService.find(new Page<ExpenseRatio>(request, response));
+		return "modules/cms/expenseRatioForm";
+	}
+
+	/**
+	 * 经费比例列表查询
+	 *
+	 * @param ratio
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = { "expenseRatioList"})
+	public String expenseRatioList(ExpenseRatio ratio,Model model,HttpServletRequest request,
+								   HttpServletResponse response) {
+		model.addAttribute("ratio",ratio);
+
+		Page<ExpenseRatio> page = expenseRatioService.find(new Page<ExpenseRatio>(request, response),ratio);
 		for(ExpenseRatio item : page.getList()){
 			item.setExpense_name(item.getDicExpenseType());
 		}
+
+		List<Project> projectList = projectService.findApprovalProjects();
+		model.addAttribute("projectList", projectList);
 		model.addAttribute("ratioList", page);
 
-		return "modules/cms/expenseRatioForm";
+		return "modules/cms/expenseRatioList";
 	}
 
 	/**
@@ -168,7 +188,9 @@ public class AccountController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "saveExpensePlan", method = RequestMethod.POST)
-	public String saveExpensePlan(String project_id,String[] expenseTypes, Integer[] ratios, RedirectAttributes redirectAttributes) {
+	@ResponseBody
+	public JSONObject saveExpensePlan(String project_id, String[] expenseTypes, Integer[] ratios, RedirectAttributes redirectAttributes) {
+		JSONObject json = new JSONObject();
 		try {
 			int len = expenseTypes.length;
 			ExpensePlan[] item = new ExpensePlan[len];
@@ -194,13 +216,14 @@ public class AccountController extends BaseController {
 				}
 				expensePlanService.save(item[i]);
 			}
-			addMessage(redirectAttributes,
-					"经费预算配置成功" );
+			json.put("result","success");
+			json.put("reason","经费预算配置成功");
 		} catch (Exception e) {
 			logger.error("经费预算配置失败：", e);
-			addMessage(redirectAttributes, "系统内部错误！");
+			json.put("result","fail");
+			json.put("reason","系统内部错误！");
 		}
-		return "redirect:" + Global.getAdminPath() + "/oa/expense/form";
+		return json;
 	}
 
 	@RequestMapping(value = { "list" })
@@ -214,10 +237,22 @@ public class AccountController extends BaseController {
 	public String search(Map<String, Object> paramMap, Account account,
 						 HttpServletRequest request, HttpServletResponse response,
 						 Model model) {
+		Map totleMap = Maps.newHashMap();
 		Page<Account> page = accountService.findForCMS(new Page<Account>(
 				request, response), account, paramMap);
+		double xb_fee = 0,sd_fee = 0,pt_fee = 0;
+		for(Account item : page.getList()){
+			xb_fee += Double.valueOf(item.getXb_fee());
+			sd_fee += Double.valueOf(item.getSd_fee());
+			pt_fee += Double.valueOf(item.getPt_fee());
+		}
+		totleMap.put("xb_fee",xb_fee);
+		totleMap.put("sd_fee",sd_fee);
+		totleMap.put("pt_fee",pt_fee);
+
 		List<Project> projectList = projectService.findApprovalProjects();
 		model.addAttribute("projectList", projectList);
+		model.addAttribute("totleMap", totleMap);
 		model.addAttribute("page", page);
 		model.addAllAttributes(paramMap);
 		return "modules/cms/accountList";
@@ -227,10 +262,19 @@ public class AccountController extends BaseController {
 	public String detailSearch(Map<String, Object> paramMap, Expense expense,
 						 HttpServletRequest request, HttpServletResponse response,
 						 Model model) {
+		Map totleMap = Maps.newHashMap();
 		Page<Expense> page = expenseService.findForCMS(new Page<Expense>(
 				request, response), expense, paramMap);
+
+		double amount = 0;
+		for(Expense item : page.getList()){
+			amount += Double.valueOf(item.getAmount());
+		}
+		totleMap.put("amount",amount);
+
 		List<Project> projectList = projectService.findApprovalProjects();
 		model.addAttribute("projectList", projectList);
+		model.addAttribute("totleMap", totleMap);
 		model.addAttribute("page", page);
 		model.addAllAttributes(paramMap);
 		return "modules/cms/expenseDetailList";
@@ -246,12 +290,28 @@ public class AccountController extends BaseController {
 	public String projectAccountByYear(@RequestParam Map<String, Object> paramMap,Account account,
 									   HttpServletRequest request, HttpServletResponse response,
 									   Model model) {
+		Map totleMap = Maps.newHashMap();
 		Page<Map> page = accountService.projectAccountByYear(new Page<Map>(
 				request, response),paramMap);
+
+		double budget = 0,expend = 0,balance = 0;
+		for(Map item : page.getList()){
+			if(item.get("budget") != null)
+				budget += ((BigDecimal)item.get("budget")).doubleValue();
+			if(item.get("expend") != null)
+				expend += ((BigDecimal)item.get("expend")).doubleValue();
+			if(item.get("balance") != null)
+				balance += ((BigDecimal)item.get("balance")).doubleValue();
+		}
+		totleMap.put("budget",budget);
+		totleMap.put("expend",expend);
+		totleMap.put("balance",balance);
+
 		List<Project> projectList = projectService.findApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		model.addAttribute("page", page);
 		model.addAttribute("paramMap", paramMap);
+		model.addAttribute("totleMap", totleMap);
 		return "modules/cms/projectAmountList";
 	}
 
@@ -265,10 +325,20 @@ public class AccountController extends BaseController {
 	public String otherAccountDetail(@RequestParam Map<String, Object> paramMap,
 									 HttpServletRequest request, HttpServletResponse response,
 									 Model model) {
+		Map totleMap = Maps.newHashMap();
 		Page<Map> page = accountService.otherAccountDetail(new Page<Map>(
 				request, response),paramMap);
+
+		double bx_fee = 0;
+		for(Map item : page.getList()){
+			if(item.get("bx_fee") != null)
+				bx_fee += Double.valueOf((String)item.get("bx_fee"));
+		}
+		totleMap.put("bx_fee",bx_fee);
+
 		model.addAttribute("page", page);
 		model.addAttribute("paramMap", paramMap);
+		model.addAttribute("totleMap", totleMap);
 		return "modules/cms/otherAmountList";
 	}
 

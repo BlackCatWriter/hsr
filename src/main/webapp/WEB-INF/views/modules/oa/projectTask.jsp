@@ -376,8 +376,13 @@ function saveAdditionalProperty(projectId, variables, taskId, taskVariables) {
 }
 
 function assign() {
-    $("#assignForm").attr("action", "${ctx}/oa/project/assign");
-    $("#assignForm").submit();
+    var Check = $("#assignForm table input[type=checkbox]:checked");
+    if (Check.length > 0) {
+        $("#assignForm").attr("action", "${ctx}/oa/project/assign");
+        $("#assignForm").submit();
+    } else {
+        top.$.jBox.tip('请先勾选需要评审的项目!');
+    }
 }
 
 function editStatus() {
@@ -685,7 +690,7 @@ function complete(taskId, variables) {
 			<table id="contentTable"
 				class="table table-striped table-bordered table-condensed">
 				<tr>
-					<th>申请人</th>
+					<%--<th>申请人</th>--%>
 					<th>申请时间</th>
 					<th>科研项目题目：</th>
 					<th>当前节点</th>
@@ -698,7 +703,7 @@ function complete(taskId, variables) {
 						<c:set var="task" value="${project.task}" />
 						<c:set var="pi" value="${project.processInstance}" />
 						<tr id="${project.id }">
-							<td>${project.user.name}</td>
+							<%--<td>${project.user.name}</td>--%>
 							<td><fmt:formatDate value="${project.createDate}"
 									type="both" /></td>
 							<c:if test="${empty project.file}">

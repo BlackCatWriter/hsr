@@ -46,7 +46,7 @@ function page(n, s) {
 		</form>
 	</div>
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="${ctx}/cms/expense">经费入账明细</a></li>
+		<li class="active"><a href="${ctx}/cms/account/search">经费入账明细</a></li>
 	</ul>
 	<form:form id="searchForm" modelAttribute="account" action="${ctx}/cms/account/search" method="post"
 		class="breadcrumb form-search">
@@ -92,6 +92,14 @@ function page(n, s) {
 					<td>${account.remarks}</td>
 				</tr>
 			</c:forEach>
+			<tr style="font-weight: bold">
+				<td colspan="4" style="text-align:right;vertical-align:middle;">合计</td>
+				<td>${totleMap.xb_fee}</td>
+				<td>${totleMap.sd_fee}</td>
+				<td>${totleMap.pt_fee}</td>
+				<td></td>
+				<td></td>
+			</tr>
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>

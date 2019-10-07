@@ -2,6 +2,8 @@ package com.ndtl.yyky.modules.oa.web;
 
 import java.util.List;
 
+import com.ndtl.yyky.modules.oa.entity.*;
+import com.ndtl.yyky.modules.oa.service.*;
 import org.activiti.engine.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,29 +14,7 @@ import com.google.common.collect.Lists;
 import com.ndtl.yyky.common.web.BaseController;
 import com.ndtl.yyky.modules.cms.entity.Article;
 import com.ndtl.yyky.modules.cms.service.ArticleService;
-import com.ndtl.yyky.modules.oa.entity.Acad;
-import com.ndtl.yyky.modules.oa.entity.Academic;
-import com.ndtl.yyky.modules.oa.entity.Academiccost;
-import com.ndtl.yyky.modules.oa.entity.Advstudy;
-import com.ndtl.yyky.modules.oa.entity.Book;
-import com.ndtl.yyky.modules.oa.entity.Patent;
-import com.ndtl.yyky.modules.oa.entity.Project;
-import com.ndtl.yyky.modules.oa.entity.ProjectToUser;
-import com.ndtl.yyky.modules.oa.entity.Reward;
-import com.ndtl.yyky.modules.oa.entity.RewardToUser;
-import com.ndtl.yyky.modules.oa.entity.Thesis;
 import com.ndtl.yyky.modules.oa.entity.base.BaseOAEntity;
-import com.ndtl.yyky.modules.oa.service.AcadService;
-import com.ndtl.yyky.modules.oa.service.AcademicService;
-import com.ndtl.yyky.modules.oa.service.AcademiccostService;
-import com.ndtl.yyky.modules.oa.service.AdvstudyService;
-import com.ndtl.yyky.modules.oa.service.BookService;
-import com.ndtl.yyky.modules.oa.service.PatentService;
-import com.ndtl.yyky.modules.oa.service.ProjectService;
-import com.ndtl.yyky.modules.oa.service.ProjectToUserService;
-import com.ndtl.yyky.modules.oa.service.RewardService;
-import com.ndtl.yyky.modules.oa.service.RewardToUserService;
-import com.ndtl.yyky.modules.oa.service.ThesisService;
 import com.ndtl.yyky.modules.oa.service.base.BasicTaskService;
 import com.ndtl.yyky.modules.oa.utils.workflow.ProcessDefinitionKey;
 import com.ndtl.yyky.modules.oa.web.model.DashboardModel;
@@ -75,7 +55,8 @@ public class DashBoardController extends BaseController {
 	protected AcademiccostService academiccostService;
 	@Autowired
 	protected AdvstudyService advstudyService;
-
+	@Autowired
+	protected ExpenseService expenseService;
 	@Autowired
 	protected OfficeService officeService;
 
@@ -161,6 +142,11 @@ public class DashBoardController extends BaseController {
 				.findTodoTasks(user.getId().toString(),
 						ProcessDefinitionKey.Academiccost);
 		tasks.addAll(UserTaskConverter.convert(academiccosts));
+
+		List<Expense> expense = (List<Expense>) expenseService
+				.findTodoTasks(user.getId().toString(),
+						ProcessDefinitionKey.Expense);
+		tasks.addAll(UserTaskConverter.convert(expense));
 
 		dm.setTasks(tasks);
 

@@ -9,6 +9,7 @@ public class ColumnTitleMap {
     private ArrayList<String> titleKeyList = new ArrayList<String> ();
 
     public ColumnTitleMap(String datatype) {
+        columnTitleMap.clear();
         switch (datatype) {
             case "projectYearAccount":
                 initProjectYearAccountColu();

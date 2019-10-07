@@ -52,10 +52,10 @@ public class AccountService extends BaseService {
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
 
-		ql.append(" SELECT t.project_no,t.project_name,account.budget,expense.expend,(account.budget-expense.expend) as balance,expense.year as year FROM");
-		ql.append(" oa_project t LEFT JOIN (SELECT (a.xb_fee+a.pt_fee) as budget,a.project_id FROM oa_expense_account a GROUP BY a.project_id )");
+		ql.append(" SELECT t.project_no,t.project_name,account.budget,expense.expend,(account.budget-IFNULL(expense.expend,0)) as balance,expense.year as year FROM oa_project t LEFT JOIN ");
+		ql.append(" (SELECT (a.sd_fee+a.pt_fee) as budget,a.project_id,DATE_FORMAT(a.approp_date, '%Y') AS YEAR FROM oa_expense_account a GROUP BY a.project_id,DATE_FORMAT(a.approp_date, '%Y') )");
 		ql.append(" account ON account.project_id = t.id LEFT JOIN (SELECT SUM(b.amount) AS expend,b.project_id,DATE_FORMAT(b.update_date,'%Y') as year FROM oa_expense b");
-		ql.append(" WHERE b.del_flag LIKE 2 GROUP BY b.project_id,DATE_FORMAT(b.update_date,'%Y') ) expense ON expense.project_id = t.id where t.del_flag LIKE 2");
+		ql.append(" WHERE b.del_flag LIKE 2 GROUP BY b.project_id,DATE_FORMAT(b.update_date,'%Y') ) expense ON expense.project_id = t.id and account.YEAR = expense. YEAR where t.del_flag LIKE 2");
 
 		String project_no = (String)paramMap.get("project_no");
 		if(StringUtils.isNotBlank(project_no)){

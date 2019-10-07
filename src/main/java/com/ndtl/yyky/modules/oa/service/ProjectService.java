@@ -131,6 +131,10 @@ public class ProjectService extends BaseOAService {
 		return projectDao.findApprovalProjects();
 	}
 
+	public List<Project> findFinishAndApprovalProjects() {
+		return projectDao.findFinishAndApprovalProjects();
+	}
+
 	public List<Project> findOwnedApprovalProjects() {
 		return projectDao
 				.findOwnedApprovalProjects(UserUtils.getUser().getId());

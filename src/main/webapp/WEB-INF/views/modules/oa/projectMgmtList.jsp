@@ -184,6 +184,15 @@
         	"</div>", {
                 title: "请先完成预算配置",
                 submit: function () {
+                    var _money=0;
+                    top.$("input[name=ratios]").each(function(){
+                        //累加求和
+                        _money+=Number($(this).val());
+                    });
+                    if (_money > 100) {
+                        top.$.jBox.tip('项目配置比例总和不得大于100！');
+                        return false;
+                    }
                     var expenseTypes = top.$("input[name=expenseTypes]").map(function(){return $(this).val()}).get();
                     var ratios = top.$("input[name=ratios]").map(function(){return $(this).val()}).get();
                     $.ajax({
@@ -192,8 +201,7 @@
 						traditional: true,
                         url: "${ctx}/cms/account/saveExpensePlan",
                         data: {"project_id": projectId,"expenseTypes": expenseTypes,"ratios": ratios},
-                        error: function(data) {
-                            console.log(data);
+                        error: function() {
                             top.$.jBox.tip('操作失败!');
                         },
                         success: function(data) {

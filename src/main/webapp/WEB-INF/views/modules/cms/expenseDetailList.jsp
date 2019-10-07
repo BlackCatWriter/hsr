@@ -109,6 +109,12 @@ function page(n, s) {
 
 				</tr>
 			</c:forEach>
+			<tr style="font-weight: bold">
+				<td colspan="6" style="text-align:right;vertical-align:middle;">合计</td>
+				<td>${totleMap.amount}</td>
+				<td></td>
+				<td></td>
+			</tr>
 		</tbody>
 	</table>
 	<div class="pagination">${page}</div>

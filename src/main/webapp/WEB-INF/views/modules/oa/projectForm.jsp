@@ -563,7 +563,7 @@ function complete(taskId, variables) {
 					<form:input id='projectName' path='project.projectName' type='text' readonly="true" />
 				</div>
 			</div>
-			<div class="control-group">
+			<%--<div class="control-group">
 				<label class="control-label">第一责任人：</label>
 				<div class="controls">
 					<form:input id='author1DisplayName' path='project.author1DisplayName' type='text' readonly="true" />
@@ -586,7 +586,7 @@ function complete(taskId, variables) {
 				<div class="controls">
 					<form:input id='weightBelongDisplayName' path='project.weightBelongDisplayName' type='text' readonly="true" />
 				</div>
-			</div>
+			</div>--%>
 			<div class="control-group">
 				<label class="control-label">所属科室：</label>
 				<div class="controls">

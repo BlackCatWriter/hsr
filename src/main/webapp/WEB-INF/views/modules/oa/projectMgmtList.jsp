@@ -11,6 +11,7 @@
 	<link href="${ctxStatic}/bootstrap/2.3.1/css_default/bootstrap.min.css" type="text/css" rel="stylesheet" />
 	<link href="${ctxStatic}/common/dropzone.css" type="text/css" rel="stylesheet" />
 	<script src="${ctxStatic}/common/myuploadfunction.js"></script>
+	<%@include file="/WEB-INF/views/include/dialog.jsp" %>
 	<script type="text/javascript">
 	function page(n, s) {
 	    $("#pageNo").val(n);
@@ -129,8 +130,13 @@
 	                    top.$("#pt_fee").val(data.pt_fee);
 		                });
 		        });
+
+				$("#btnImport").click(function(){
+					$.jBox($("#importBox").html(), {title:"导入数据", buttons:{"关闭":true},
+						bottomText:"导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！"});
+				});
 			});
-	
+
 	function uploadFiles(projectId,type){
         top.$.jBox(
         		"<div style='padding:10px;'>" +
@@ -212,7 +218,7 @@
                 }
             });
     }
-	
+
 	/**
 	 * 完成属性保存
 	 * @param {Object} projectId
@@ -252,6 +258,14 @@
 	</script>
 </head>
 <body>
+	<div id="importBox" class="hide">
+		<form id="importForm" action="${ctx}/cms/project/importProjectList" method="post" enctype="multipart/form-data"
+			  style="padding-left:20px;text-align:center;" class="form-search" onsubmit="loading('正在导入，请稍等...');"><br/>
+			<input id="uploadFile" name="file" type="file" style="width:330px"/><br/><br/>　　
+			<input id="btnImportSubmit" class="btn btn-primary" type="submit" value="   导    入   "/>
+			<a href="${ctx}/cms/project/import/template">下载模板</a>
+		</form>
+	</div>
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="${ctx}/oa/expense/projectlist">项目管理</a></li>
 		<shiro:hasPermission name="oa:expense:edit"><li><a href="${ctx}/oa/expense/form">经费申请</a></li></shiro:hasPermission>
@@ -277,6 +291,7 @@
 				value="<fmt:formatDate value="${project.createDateEnd}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+			&nbsp;<input id="btnImport" class="btn btn-primary" type="button" value="导入"/>
 		</div>
 	</form:form>
 	<tags:message content="${message}"/>

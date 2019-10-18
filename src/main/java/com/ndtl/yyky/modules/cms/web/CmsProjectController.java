@@ -314,6 +314,60 @@ public class CmsProjectController extends BaseOAController {
 		return "redirect:" + Global.getAdminPath() + "/cms/project/?repage";
 	}
 
+	@RequestMapping(value = "importProjectList", method = RequestMethod.POST)
+	public String importProjectList(MultipartFile file,
+							 RedirectAttributes redirectAttributes) {
+		if (Global.isDemoMode()) {
+			addMessage(redirectAttributes, "演示模式，不允许操作！");
+			return "redirect:" + Global.getAdminPath() + "/cms/project/?repage";
+		}
+		try {
+			int successNum = 0;
+			int failureNum = 0;
+			StringBuilder failureMsg = new StringBuilder();
+			ImportExcel ei = new ImportExcel(file, 1, 0);
+			List<Project> list = ei.getDataList(Project.class);
+			for (Project project : list) {
+				try {
+					if ("true".equals(checkProjectName("",
+							project.getProjectName()))) {
+						convertOffice(project);
+						BeanValidators
+								.validateWithException(validator, project);
+						project.setStatus(ProjectStatus.CLOSE);
+						project.setDelFlag(Project.DEL_FLAG_AUDIT);
+						projectService.saveProject(project);
+						successNum++;
+					} else {
+						failureMsg.append("<br/>项目 " + project.getProjectName()
+								+ " 已存在; ");
+						failureNum++;
+					}
+				} catch (ConstraintViolationException ex) {
+					failureMsg.append("<br/>项目 " + project.getProjectName()
+							+ " 导入失败：");
+					List<String> messageList = BeanValidators
+							.extractPropertyAndMessageAsList(ex, ": ");
+					for (String message : messageList) {
+						failureMsg.append(message + "; ");
+						failureNum++;
+					}
+				} catch (Exception ex) {
+					failureMsg.append("<br/>项目 " + project.getProjectName()
+							+ " 导入失败：" + ex.getMessage());
+				}
+			}
+			if (failureNum > 0) {
+				failureMsg.insert(0, "，失败 " + failureNum + " 条项目，导入信息如下：");
+			}
+			addMessage(redirectAttributes, "已成功导入 " + successNum + " 条项目"
+					+ failureMsg);
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导入项目失败！失败信息：" + e.getMessage());
+		}
+		return "redirect:" + Global.getAdminPath() + "/oa/expense/projectlist";
+	}
+
 	private Project convertName(Project project) {
 		project.setAuthor1(extractIdsFromName(project.getAuthor1()));
 		project.setAuthor2(extractIdsFromName(project.getAuthor2()));

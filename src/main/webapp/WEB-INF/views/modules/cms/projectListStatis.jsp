@@ -76,7 +76,8 @@
 	</form:form>
 	<div style="margin-top:8px;" ></div>
 	<tags:message content="${message}"/>
-	<table id="contentTable" class="table table-striped table-bordered table-condensed">
+	<div style="overflow:scroll;">
+	<table id="contentTable" style="min-width:1300px;" class="table table-striped table-bordered table-condensed">
 		<thead>
 			<tr>
 				<th>立项号</th>
@@ -87,7 +88,7 @@
 				<th>第二责任人</th>
 				<th>第三责任人</th>
 				<th>权属</th>
-				<%--<th>权重</th>--%>
+				<th>权重</th>
 				<th>关联论文</th>
 				<th>关联著作</th>
 				<th>关联专利</th>
@@ -111,7 +112,7 @@
 				<td>${project.author2DisplayName}</td>
 				<td>${project.author3DisplayName}</td>
 				<td>${project.weightBelongDisplayName}</td>
-				<%--<td>${project.weight}</td>--%>
+				<td>${project.weight}</td>
 				<td>
 					<div style="width:80px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis">
 						<c:forEach items="${project.thesis}" var="thesis">
@@ -147,11 +148,12 @@
 				<td>
     				<a href="${ctx}/cms/project/form?id=${project.id}">查看</a>
 				</td>
-				
+
 			</tr>
 		</c:forEach>
 		</tbody>
 	</table>
+	</div>
 	<div class="pagination">${page}</div>
 </body>
 </html>

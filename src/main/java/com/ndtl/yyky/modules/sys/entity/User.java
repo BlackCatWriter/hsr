@@ -17,6 +17,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.ndtl.yyky.common.utils.StringUtils;
+import com.ndtl.yyky.modules.sys.utils.DateUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -69,6 +71,7 @@ public class User extends DataEntity {
 	private String birthday; // 生日
 	private String degree; // 学历
 	private String sex; // 性别
+	private Integer age; // 年龄
 	private String prefression;// 专业
 	private String title;// 职称
 	private String educationalBackground;// 学位
@@ -401,6 +404,22 @@ public class User extends DataEntity {
 
 	public void setIsProfessional(String isProfessional) {
 		this.isProfessional = isProfessional;
+	}
+
+	@Transient
+	public Integer getAge() {
+		try {
+			if(StringUtils.isNotEmpty(this.birthday)){
+				return DateUtils.getAge(DateUtils.parse(this.birthday));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
 	}
 
 }

@@ -91,6 +91,7 @@
 				<th>手机</th>
 				<th>职称</th>
 				<th>学历</th>
+				<th>出生日期</th>
 				<th>角色</th><shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="user">
@@ -103,6 +104,7 @@
 				<td>${user.mobile}</td>
 				<td>${user.jobTitle}</td>
 				<td>${user.education}</td>
+				<td>${user.birthday}</td>
 				<td>${user.roleNames}</td>
 				<shiro:hasPermission name="sys:user:edit"><td>
     				<a href="${ctx}/sys/user/form?id=${user.id}">修改</a>

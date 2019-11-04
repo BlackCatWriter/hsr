@@ -73,6 +73,13 @@
 				<form:input path="name" htmlEscape="false" maxlength="50" class="required"/>
 			</div>
 		</div>
+		<div class='control-group'>
+			<label class='control-label'>出生日期:</label>
+			<div class='controls'>
+				<input id="birthday" name="birthday" type="text" maxlength="20" class="input-medium Wdate" value="${birthday}"
+					   onclick="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false});" />
+			</div>
+		</div>
 		<div class="control-group">
 			<label class="control-label">密码:</label>
 			<div class="controls">

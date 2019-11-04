@@ -53,6 +53,7 @@ $("#${id}keyword").keyup(function(event){
            var value=jsonuser.name+"("+jsonuser.no+")--"+jsonuser.officeName;
            $optu.text(value);  
            $optu.val(jsonuser.id);
+           $("#firstAge").val(jsonuser.age);
            $("#${id}words").append($optu).show();  
         }
      }, "json");
@@ -63,7 +64,7 @@ $("#${id}words").bind("dblclick", function() {
     $("#${id}keyword").val(item); 
     if("${bindId}"!=""){
     	 $("#${bindId}").val(item); 
-    	 $("#${bindValueId}").val($(this).val()); 
+    	 $("#${bindValueId}").val($(this).val());
     }
     $("#${id}words").empty().hide();  
 });

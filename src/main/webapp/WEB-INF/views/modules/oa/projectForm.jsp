@@ -355,6 +355,12 @@ function complete(taskId, variables) {
 						labelValue="${project.author1DisplayName}" name="author1" id="author1" url="${ctx}/sys/user/users/" cssClass="required"></tags:nameSuggest>
 				</div>
 			</div>
+			<div class='control-group'>
+				<label class='control-label'>第一责任人年龄:</label>
+				<div class='controls'>
+					<input id='firstAge' type='text' readonly="readonly"/>
+				</div>
+			</div>
 			<div class="control-group">
 				<label class="control-label">第二责任人：</label>
 				<div class="controls">

@@ -11,6 +11,7 @@ public class UserSelectModel implements Serializable {
 	 private String officeName;
 	 private Long id;
 	 private String no;
+	 private Integer age;
 
 	public UserSelectModel() {
 	}
@@ -20,6 +21,7 @@ public class UserSelectModel implements Serializable {
 		 this.officeName = user.getOffice().getName();
 		 this.id = user.getId();
 		 this.no = user.getNo();
+		 this.age = user.getAge();
 	}
 
 	 public String getName() {
@@ -54,4 +56,11 @@ public class UserSelectModel implements Serializable {
 	 this.id = id;
 	 }
 
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 }

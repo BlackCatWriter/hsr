@@ -66,7 +66,7 @@ public class CmsBookController extends BaseOAController {
 	}
 
 	@RequestMapping(value = { "search" })
-	public String search(Map<String, Object> paramMap, Book book,
+	public String search(@RequestParam Map<String, Object> paramMap, Book book,
 			HttpServletRequest request, HttpServletResponse response,
 			Model model) {
 		Page<Book> page = bookService.findForCMS(new Page<Book>(request,

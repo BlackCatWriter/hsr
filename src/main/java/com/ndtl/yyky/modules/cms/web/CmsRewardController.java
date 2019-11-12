@@ -71,7 +71,7 @@ public class CmsRewardController extends BaseOAController {
 	}
 
 	@RequestMapping(value = { "search" })
-	public String search(Map<String, Object> paramMap, Reward reward,
+	public String search(@RequestParam Map<String, Object> paramMap, Reward reward,
 			HttpServletRequest request, HttpServletResponse response,
 			Model model) {
 		Page<Reward> page = rewardService.findForCMS(new Page<Reward>(request,

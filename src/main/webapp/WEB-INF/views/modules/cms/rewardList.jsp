@@ -77,7 +77,7 @@ function page(n, s) {
 		&nbsp;&nbsp;
 			<label>获奖年限：&nbsp;</label><input id="year" name="year" type="text" readonly="readonly" maxlength="20"
 				class="input-medium Wdate" value="${year}" onclick="WdatePicker({dateFmt:'yyyy',isShowClear:false});" />
-			<label>第一责任人年龄：</label><input class="span2" name="age" type="text"
+			<label>第一责任人年龄：</label><input class="span2" name="age" type="text" value="${age}"
 						onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
 						onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" /> &nbsp;<input id="btnExport"

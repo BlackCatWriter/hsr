@@ -76,7 +76,7 @@ function page(n, s) {
 				<label>发表时间：</label> <input id="searchYear" name="searchYear" type="text" readonly="readonly" maxlength="20"
 					class="input-medium Wdate" style="width: 163px;" value="${book.searchYear}"
 					onclick="WdatePicker({dateFmt:'yyyy'});" /> &nbsp;
-				<label>作者年龄：</label><input class="span2" name="age" type="text"
+				<label>作者年龄：</label><input class="span2" name="age" type="text" value="${age}"
 						onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
 						 onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
 				<input id="btnSubmit" class="btn btn-primary" type="submit"

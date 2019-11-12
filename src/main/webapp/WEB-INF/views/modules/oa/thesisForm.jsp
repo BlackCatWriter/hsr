@@ -306,8 +306,7 @@ function complete(taskId, variables) {
 		<div class="control-group">
 			<label class="control-label">影响因子：</label>
 			<div class="controls">
-				<form:input id="annual_volume" name="annual_volume" path="annual_volume" htmlEscape="false" maxlength="200"
-							class="input-medium annual_volume" />
+				<input id="impact_factor" name="impact_factor" type="text" value="" />
 			</div>
 		</div>
 		<div class="control-group">

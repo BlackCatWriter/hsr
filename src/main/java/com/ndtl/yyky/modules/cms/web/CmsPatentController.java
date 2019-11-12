@@ -69,7 +69,7 @@ public class CmsPatentController extends BaseOAController {
 	}
 
 	@RequestMapping(value = { "search" })
-	public String search(Map<String, Object> paramMap, Patent patent,
+	public String search(@RequestParam Map<String, Object> paramMap, Patent patent,
 			HttpServletRequest request, HttpServletResponse response,
 			Model model) {
 		Page<Patent> page = patentService.findForCMS(new Page<Patent>(request,

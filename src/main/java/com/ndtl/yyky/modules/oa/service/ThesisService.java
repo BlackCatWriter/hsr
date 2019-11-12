@@ -135,6 +135,10 @@ public class ThesisService extends BaseOAService {
 			dc.add(Restrictions.like("annual_volume",
 					"%" + thesis.getSearchYear() + "%"));
 		}
+		if (StringUtils.isNotEmpty(thesis.getImpact_factor())) {
+			dc.add(Restrictions.like("impact_factor",
+					"%" + thesis.getImpact_factor() + "%"));
+		}
 		if (thesis.getUpdateDate()!=null) {
 			dc.add(Restrictions.between("updateDate", thesis.getUpdateDate(),new Date()));
 		}

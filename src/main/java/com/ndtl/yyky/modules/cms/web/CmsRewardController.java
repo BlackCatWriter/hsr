@@ -1,5 +1,6 @@
 package com.ndtl.yyky.modules.cms.web;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
+import com.ndtl.yyky.modules.oa.entity.Project;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,6 +77,7 @@ public class CmsRewardController extends BaseOAController {
 		Page<Reward> page = rewardService.findForCMS(new Page<Reward>(request,
 				response), reward, paramMap, rewardType);
 		setUserListInPage(page);
+		filterUserAgeInPage(page,paramMap);
 		model.addAttribute("page", page);
 		model.addAllAttributes(paramMap);
 		return "modules/cms/rewardList";
@@ -83,6 +87,23 @@ public class CmsRewardController extends BaseOAController {
 		for (int i = 0; i < page.getList().size(); i++) {
 			Reward reward = page.getList().get(i);
 			setUserListInForm(reward);
+		}
+	}
+	private void filterUserAgeInPage(Page<Reward> page, Map map) {
+		if(StringUtils.isNotEmpty((String)map.get("age"))){
+			int age = Integer.valueOf((String)map.get("age"));
+			/*for (int i = 0; i < page.getList().size(); i++) {
+				Project project = page.getList().get(i);
+				if(UserUtils.getUserAgeByUserId(project.getAuthor1()) != age){
+					page.getList().remove(i);
+				}
+			}*/
+			Iterator<Reward> itr = page.getList().iterator();
+			while(itr.hasNext()) {
+				if(UserUtils.getUserAgeByUserId(itr.next().getAuthor1()) != age){
+					itr.remove();
+				}
+			}
 		}
 	}
 

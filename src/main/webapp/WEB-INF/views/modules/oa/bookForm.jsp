@@ -195,6 +195,12 @@
 					name="author1" id="author1" url="${ctx}/sys/user/users/"></tags:nameSuggest>
 			</div>
 		</div>
+		<div class='control-group'>
+			<label class='control-label'>作者年龄:</label>
+			<div class='controls'>
+				<input id='firstAge' type='text' readonly="readonly"/>
+			</div>
+		</div>
 		<div class="control-group">
 			<label class="control-label"><font color='red'>*</font>权属：</label>
 			<div class="controls">

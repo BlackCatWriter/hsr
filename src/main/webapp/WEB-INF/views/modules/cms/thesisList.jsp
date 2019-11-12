@@ -84,6 +84,8 @@ function page(n, s) {
 		<form:select path="delFlag">
 			<form:options items="${fns:getDictList('cms_del_flag')}" itemLabel="label" itemValue="value" htmlEscape="false" />
 		</form:select>
+		<label>影响因子：</label>
+		<form:input path="impact_factor" htmlEscape="false" maxlength="50" class="input-medium" />&nbsp;
 			&nbsp; &nbsp;&nbsp;
 			<div style="margin-top: 8px;">
 			<label>发表时间：</label> <input id="searchYear" name="searchYear" type="text" readonly="readonly" maxlength="20"
@@ -117,6 +119,7 @@ function page(n, s) {
 				<th>年卷期</th>
 				<th>论文等级</th>
 				<th>论文类别</th>
+				<th>影响因子</th>
 				<th>版面费</th>
 				<th>权重</th>
 				<th>状态更新时间</th>
@@ -140,6 +143,7 @@ function page(n, s) {
 					<td>${thesis.annual_volume}</td>
 					<td>${thesis.thesisLevel}</td>
 					<td>${thesis.thesisCategory}</td>
+					<td>${thesis.impact_factor}</td>
 					<td>${thesis.ybm_fee}</td>
 					<td>${thesis.weight}</td>
 					<td>${thesis.updateDate}</td>

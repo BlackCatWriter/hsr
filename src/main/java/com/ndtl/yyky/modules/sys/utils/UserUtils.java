@@ -90,6 +90,21 @@ public class UserUtils extends BaseService {
 		return userList;
 	}
 
+	public static Integer getUserAgeByUserId(String userId) {
+		List<User> userList = (List<User>) getCache(CACHE_USER_LIST);
+		if (userList == null) {
+			userList = userDao.findAllList();
+			putCache(CACHE_USER_LIST, userList);
+		}
+		for(User user : userList){
+			if(StringUtils.equals(String.valueOf(user.getId()),userId)){
+				return user.getAge();
+			}
+		}
+		return -1;
+	}
+
+
 	public static List<Area> getAreaList() {
 		@SuppressWarnings("unchecked")
 		List<Area> areaList = (List<Area>) getCache(CACHE_AREA_LIST);

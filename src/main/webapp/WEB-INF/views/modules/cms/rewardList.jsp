@@ -76,12 +76,15 @@ function page(n, s) {
 		</form:select>&nbsp;
 		&nbsp;&nbsp;
 			<label>获奖年限：&nbsp;</label><input id="year" name="year" type="text" readonly="readonly" maxlength="20"
-				class="input-medium Wdate" value="${year}" onclick="WdatePicker({dateFmt:'yyyy',isShowClear:false});" /> <input
-				id="btnSubmit" class="btn btn-primary" type="submit" value="查询" /> &nbsp;<input id="btnExport"
+				class="input-medium Wdate" value="${year}" onclick="WdatePicker({dateFmt:'yyyy',isShowClear:false});" />
+			<label>第一责任人年龄：</label><input class="span2" name="age" type="text"
+						onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}"
+						onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">
+			<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" /> &nbsp;<input id="btnExport"
 				class="btn btn-primary" type="button" value="导出" />
 				<c:if test="${fns:isKJDept()}"> &nbsp;<input id="btnImport" class="btn btn-primary"
 				type="button" value="导入" /></c:if>
-		</div>
+			</div>
 	</form:form>
 	<div style="margin-top: 8px;" ></div>
 	<tags:message content="${message}" />

@@ -1,9 +1,6 @@
 package com.ndtl.yyky.modules.cms.web;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,6 +17,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,6 +75,7 @@ public class CmsProjectController extends BaseOAController {
 		Page<Project> page = projectService.findForRelatedCMS(new Page<Project>(
 				request, response), project, paramMap);
 		setUserListInPage(page);
+		filterUserAgeInPage(page,paramMap);
 		model.addAttribute("page", page);
 		model.addAllAttributes(paramMap);
 		return "modules/cms/projectList";
@@ -201,6 +200,24 @@ public class CmsProjectController extends BaseOAController {
 		for (int i = 0; i < page.getList().size(); i++) {
 			Project project = page.getList().get(i);
 			setUserListInForm(project);
+		}
+	}
+
+	private void filterUserAgeInPage(Page<Project> page,Map map) {
+		if(StringUtils.isNotEmpty((String)map.get("age"))){
+			int age = Integer.valueOf((String)map.get("age"));
+			/*for (int i = 0; i < page.getList().size(); i++) {
+				Project project = page.getList().get(i);
+				if(UserUtils.getUserAgeByUserId(project.getAuthor1()) != age){
+					page.getList().remove(i);
+				}
+			}*/
+			Iterator<Project> itr = page.getList().iterator();
+			while(itr.hasNext()) {
+				if(UserUtils.getUserAgeByUserId(itr.next().getAuthor1()) != age){
+					itr.remove();
+				}
+			}
 		}
 	}
 

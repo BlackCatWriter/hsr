@@ -40,6 +40,7 @@ public class Thesis extends ProjectRelatedItem {
 	private String title; // 文题
 	private String mag_name; // 杂志名称
 	private String annual_volume; // 年卷期
+	private String impact_factor; // 影响因子
 	private String level; // 论文等级
 	private String ybm_fee; // 原版面费
 	private String bx_fee; // 报销版费
@@ -132,6 +133,16 @@ public class Thesis extends ProjectRelatedItem {
 	public void setAnnual_volume(String annual_volume) {
 		this.annual_volume = annual_volume;
 	}
+
+	@ExcelField(title = "影响因子", align = 2, sort = 22)
+	public String getImpact_factor() {
+		return impact_factor;
+	}
+
+	public void setImpact_factor(String impact_factor) {
+		this.impact_factor = impact_factor;
+	}
+
 
 	@ExcelField(title = "论文等级", align = 2, sort = 5, dictType = "thesis_level_type")
 	public String getLevel() {

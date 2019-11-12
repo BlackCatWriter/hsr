@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 import com.ndtl.yyky.modules.oa.entity.Project;
+import com.ndtl.yyky.modules.oa.entity.Reward;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -86,19 +87,15 @@ public class CmsBookController extends BaseOAController {
 	}
 	private void filterUserAgeInPage(Page<Book> page, Map map) {
 		if(StringUtils.isNotEmpty((String)map.get("age"))){
-			int age = Integer.valueOf((String)map.get("age"));
-			/*for (int i = 0; i < page.getList().size(); i++) {
-				Project project = page.getList().get(i);
-				if(UserUtils.getUserAgeByUserId(project.getAuthor1()) != age){
-					page.getList().remove(i);
-				}
-			}*/
-			Iterator<Book> itr = page.getList().iterator();
-			while(itr.hasNext()) {
-				if(UserUtils.getUserAgeByUserId(itr.next().getAuthor1()) != age){
-					itr.remove();
-				}
-			}
+            int age = Integer.valueOf((String)map.get("age"));
+            for (int i = 0; i < page.getList().size(); i++) {
+                Book project = page.getList().get(i);
+                Integer targetAge = UserUtils.getUserAgeByUserId(project.getAuthor1());
+                if(targetAge == null || targetAge != age){
+                    page.getList().remove(i);
+                    i--;
+                }
+            }
 		}
 	}
 	private void setUserListInForm(Book book) {

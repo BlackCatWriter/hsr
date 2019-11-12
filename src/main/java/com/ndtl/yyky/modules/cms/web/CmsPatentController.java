@@ -89,19 +89,15 @@ public class CmsPatentController extends BaseOAController {
 	}
 	private void filterUserAgeInPage(Page<Patent> page, Map map) {
 		if(StringUtils.isNotEmpty((String)map.get("age"))){
-			int age = Integer.valueOf((String)map.get("age"));
-			/*for (int i = 0; i < page.getList().size(); i++) {
-				Project project = page.getList().get(i);
-				if(UserUtils.getUserAgeByUserId(project.getAuthor1()) != age){
-					page.getList().remove(i);
-				}
-			}*/
-			Iterator<Patent> itr = page.getList().iterator();
-			while(itr.hasNext()) {
-				if(UserUtils.getUserAgeByUserId(itr.next().getAuthor1()) != age){
-					itr.remove();
-				}
-			}
+            int age = Integer.valueOf((String)map.get("age"));
+            for (int i = 0; i < page.getList().size(); i++) {
+                Patent project = page.getList().get(i);
+                Integer targetAge = UserUtils.getUserAgeByUserId(project.getAuthor1());
+                if(targetAge == null || targetAge != age){
+                    page.getList().remove(i);
+                    i--;
+                }
+            }
 		}
 	}
 

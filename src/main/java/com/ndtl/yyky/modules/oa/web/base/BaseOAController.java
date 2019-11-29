@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.engine.TaskService;
@@ -59,7 +60,7 @@ public abstract class BaseOAController extends BaseController {
 		MultipartFile mpf = null;
 		while (itr.hasNext()) {
 			mpf = request.getFile(itr.next());
-			if (files.size() >= 1) {
+			if (files.size() >= 4) {
 				files.pop();
 			}
 			fileMeta = new FileMeta();
@@ -89,7 +90,7 @@ public abstract class BaseOAController extends BaseController {
 		return json;
 	}
 
-	private void saveFileFromInputStream(InputStream inputStream, String path,
+	public void saveFileFromInputStream(InputStream inputStream, String path,
 			String filename) throws IOException {
 		File dir = new File(path);
 		if (!dir.exists()) {
@@ -108,6 +109,17 @@ public abstract class BaseOAController extends BaseController {
 
 	public String getFilePath(String type, String id) {
 		String result = Global.getSavedFilePath() + "/" + type + "_";
+		if (StringUtils.isEmpty(id)) {
+			result = result + UserUtils.getUser().getId() + "/";
+		} else {
+			result = result + id + "/";
+		}
+		return result;
+	}
+
+	public String getFilePathByWeb(String type, String id, HttpServletRequest request) {
+		String realPath = request.getSession().getServletContext().getRealPath("/avatorImg");
+		String result = realPath + "/" + type + "_";
 		if (StringUtils.isEmpty(id)) {
 			result = result + UserUtils.getUser().getId() + "/";
 		} else {

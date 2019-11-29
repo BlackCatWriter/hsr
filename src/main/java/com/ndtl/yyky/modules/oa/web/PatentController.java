@@ -158,14 +158,20 @@ public class PatentController extends BaseOAController {
 		if(patent.getProject()!=null&&patent.getProject().getId()==null){
 			patent.setProject(null);
 		}
+
 		try {
-			Map<String, Object> variables = new HashMap<String, Object>();
-			ProcessInstance processInstance = patentService.save(patent,
-					variables, ProcessDefinitionKey.Patent);
-			addMessage(redirectAttributes,
-					"流程已启动，流程ID：" + processInstance.getId());
+			if(Global.getProcessEable()){
+				patent.setDelFlag("2");
+				patentService.save(patent);
+			}else{
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = patentService.save(patent,
+						variables, ProcessDefinitionKey.Patent);
+				addMessage(redirectAttributes,
+						"流程已启动，流程ID：" + processInstance.getId());
+			}
 		} catch (Exception e) {
-			logger.error("启动请假流程失败：", e);
+			logger.error("启动流程失败：", e);
 			addMessage(redirectAttributes, "系统内部错误！");
 		}
 		return "redirect:" + Global.getAdminPath() + "/oa/patent/form";

@@ -228,7 +228,7 @@
 				<th>开始时间</th>
 				<th>结束时间</th>
 				<th>当前节点</th>
-				<th>流程状态</th>
+				<%--<th>流程状态</th>--%>
 				<th>操作</th>
 			</tr>
 		<tbody>
@@ -245,7 +245,7 @@
 					<td><fmt:formatDate value="${acad.startDate}" pattern="yyyy-MM-dd" type="both"/></td>
 					<td><fmt:formatDate value="${acad.endDate}" pattern="yyyy-MM-dd" type="both"/></td>
 					<td>${task.name}</td>
-					<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${acad.processDefinition.version}</b></td>
+					<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${acad.processDefinition.version}</b></td>--%>
 					<td>
 						<%-- 此处用tkey记录当前节点的名称 --%>
 						<a class="handle" href="#" data-tkey="${task.taskDefinitionKey}" data-tname="${task.name}"  data-id="${acad.id}"  data-tid="${task.id}">办理</a>

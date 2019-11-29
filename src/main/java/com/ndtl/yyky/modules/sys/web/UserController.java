@@ -1,5 +1,6 @@
 package com.ndtl.yyky.modules.sys.web;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
+import com.alibaba.fastjson.JSONObject;
+import com.ndtl.yyky.modules.cms.entity.Account;
+import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
+import com.ndtl.yyky.modules.oa.web.base.BaseOAController;
+import com.ndtl.yyky.modules.sys.entity.*;
+import com.ndtl.yyky.modules.sys.service.UserEducationService;
+import com.ndtl.yyky.modules.sys.service.UserWorkService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +41,6 @@ import com.ndtl.yyky.common.utils.excel.ImportExcel;
 import com.ndtl.yyky.common.web.BaseController;
 import com.ndtl.yyky.modules.oa.utils.workflow.Variable;
 import com.ndtl.yyky.modules.oa.web.model.UserSelectModel;
-import com.ndtl.yyky.modules.sys.entity.Office;
-import com.ndtl.yyky.modules.sys.entity.Role;
-import com.ndtl.yyky.modules.sys.entity.User;
 import com.ndtl.yyky.modules.sys.service.OfficeService;
 import com.ndtl.yyky.modules.sys.service.SystemService;
 import com.ndtl.yyky.modules.sys.utils.UserUtils;
@@ -45,13 +50,19 @@ import com.ndtl.yyky.modules.sys.utils.UserUtils;
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/user")
-public class UserController extends BaseController {
+public class UserController extends BaseOAController {
 
 	@Autowired
 	private SystemService systemService;
 
 	@Autowired
 	private OfficeService officeService;
+
+	@Autowired
+	private UserEducationService userEducationService;
+
+	@Autowired
+	private UserWorkService userWorkService;
 
 	@ModelAttribute
 	public User get(@RequestParam(required = false) Long id) {
@@ -61,6 +72,84 @@ public class UserController extends BaseController {
 			return new User();
 		}
 	}
+	/**
+	 * 创建
+	 *
+	 * @param userEducation
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "saveEducation", method = RequestMethod.POST)
+	public JSONObject saveEducation(UserEducation userEducation, RedirectAttributes redirectAttributes) {
+		JSONObject json = new JSONObject();
+		try {
+			userEducation.setUser(UserUtils.getUser());
+			userEducationService.save(userEducation);
+
+			json.put("result","success");
+		} catch (Exception e) {
+			logger.error("填报失败：", e);
+			json.put("result","fail");
+		}
+		return json;
+	}
+
+	@RequestMapping(value = "deleteEducation")
+	public String deleteEducation(Long id, RedirectAttributes redirectAttributes) {
+
+		try {
+			userEducationService.delete(id);
+
+			addMessage(redirectAttributes,
+					"删除成功" );
+		} catch (Exception e) {
+			logger.error("删除失败：", e);
+			addMessage(redirectAttributes, "系统内部错误！");
+		}
+		return "redirect:" + Global.getAdminPath() + "/sys/user/info";
+	}
+	/**
+	 * 创建
+	 *
+	 * @param userWork
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "saveWork", method = RequestMethod.POST)
+	public JSONObject saveWork(UserWork userWork,Office office,Long officeId,
+						   RedirectAttributes redirectAttributes) {
+		JSONObject json = new JSONObject();
+		try {
+			office.setId(officeId);
+			userWork.setUser(UserUtils.getUser());
+			userWork.setOffice(office);
+			userWorkService.save(userWork);
+
+			json.put("result","success");
+		} catch (Exception e) {
+			logger.error("填报失败：", e);
+			json.put("result","fail");
+		}
+		return json;
+	}
+
+	@RequestMapping(value = "deleteWork")
+	public String deleteWork(Long id, RedirectAttributes redirectAttributes) {
+
+		try {
+			userWorkService.delete(id);
+
+			addMessage(redirectAttributes,
+					"删除成功" );
+		} catch (Exception e) {
+			logger.error("删除失败：", e);
+			addMessage(redirectAttributes, "系统内部错误！");
+		}
+		return "redirect:" + Global.getAdminPath() + "/sys/user/info";
+	}
+
 
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = { "list", "" })
@@ -277,6 +366,62 @@ public class UserController extends BaseController {
 			systemService.saveUser(currentUser);
 			model.addAttribute("message", "保存用户信息成功");
 		}
+		currentUser.setUedList(userEducationService.findPlanListByUserId(currentUser.getId()));
+		currentUser.setWorkList(userWorkService.findPlanListByUserId(currentUser.getId()));
+		model.addAttribute("user", currentUser);
+		return "modules/sys/userInfo";
+	}
+
+	@RequestMapping(value = "infoSave")
+	public String infoSave(User user, Model model,
+						   HttpServletRequest request, MultipartFile file) {
+		String filePath = getFilePathByWeb("head",String.valueOf(UserUtils.getUser().getId()),request);
+		try {
+			saveFileFromInputStream(
+					file.getInputStream(),
+					filePath,
+					file.getOriginalFilename());
+
+			System.out.println(getFilePath("head",
+					String.valueOf(UserUtils.getUser().getId())));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		User currentUser = UserUtils.getUser();
+		if (StringUtils.isNotBlank(user.getName())) {
+
+			if (Global.isDemoMode()) {
+				model.addAttribute("message", "演示模式，不允许操作！");
+				return "modules/sys/userInfo";
+			}
+			currentUser = UserUtils.getUser(true);
+			currentUser.setEmail(user.getEmail());
+			currentUser.setPhone(user.getPhone());
+			currentUser.setMobile(user.getMobile());
+			currentUser.setRemarks(user.getRemarks());
+			if (StringUtils.isNotEmpty(user.getBirthday())) {
+				currentUser.setBirthday(user.getBirthday());
+			}
+			currentUser.setNation(user.getNation());
+			currentUser.setParty(user.getParty());
+			currentUser.setNativePlace(user.getNativePlace());
+			currentUser.setIdCard(user.getIdCard());
+			currentUser.setContactAddress(user.getContactAddress());
+			currentUser.setPost(user.getPost());
+			currentUser.setHeadImg(filePath+"/"+file.getOriginalFilename());
+			currentUser.setPrefression(user.getPrefression());
+			currentUser.setTitle(user.getTitle());
+			currentUser.setSex(user.getSex());
+			currentUser.setDegree(user.getDegree());
+			currentUser.setEducationalBackground(user
+					.getEducationalBackground());
+			Office office = officeService.get(user.getOffice().getId());
+			currentUser.setOffice(office);
+			systemService.saveUser(currentUser);
+			model.addAttribute("message", "保存用户信息成功");
+		}
+		currentUser.setUedList(userEducationService.findPlanListByUserId(currentUser.getId()));
+		currentUser.setWorkList(userWorkService.findPlanListByUserId(currentUser.getId()));
 		model.addAttribute("user", currentUser);
 		return "modules/sys/userInfo";
 	}
@@ -506,5 +651,10 @@ public class UserController extends BaseController {
 			return false;
 		}
 		return isPossibleName(user, value);
+	}
+
+	@Override
+	public BaseOAService getService() {
+		return null;
 	}
 }

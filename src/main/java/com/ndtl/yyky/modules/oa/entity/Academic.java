@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.ndtl.yyky.modules.oa.entity.base.BaseOAItem;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
@@ -51,7 +52,12 @@ public class Academic extends BaseOAEntity {
 	private Office office; // 所属科室
 	private Academiccost academiccost; // bxfee
 	private Boolean used = false; // 是否报销出差费用
-	
+	private String reportTopic;//汇报题目
+	private String reviewOpinion;//评审意见
+	private String speechContent;//发言内容
+	private String author1; // 作者
+	private String expenseSource;//费用来源
+
 	@ManyToOne
 	@JoinColumn(name = "office_id")
 	@JsonIgnore
@@ -214,10 +220,45 @@ public class Academic extends BaseOAEntity {
 	public void setApplyuser(String applyuser) {
 		this.applyuser = applyuser;
 	}
-	
+	public String getReportTopic() {
+		return reportTopic;
+	}
+
+	public void setReportTopic(String reportTopic) {
+		this.reportTopic = reportTopic;
+	}
+
+	public String getReviewOpinion() {
+		return reviewOpinion;
+	}
+
+	public void setReviewOpinion(String reviewOpinion) {
+		this.reviewOpinion = reviewOpinion;
+	}
+
+	public String getSpeechContent() {
+		return speechContent;
+	}
+
+	public void setSpeechContent(String speechContent) {
+		this.speechContent = speechContent;
+	}
 	@Transient
 	public String getAcademicLevel() {
 		return DictUtils.getDictLabel(level, "academic_level_type", "");
 	}
+	public String getAuthor1() {
+		return author1;
+	}
 
+	public void setAuthor1(String author1) {
+		this.author1 = author1;
+	}
+	public String getExpenseSource() {
+		return expenseSource;
+	}
+
+	public void setExpenseSource(String expenseSource) {
+		this.expenseSource = expenseSource;
+	}
 }

@@ -501,7 +501,7 @@ public class Project extends BaseOAItem {
 		this.plan = plan;
 	}
 
-	@Length(min = 0, max = 255)
+	@Length(min = 0, max = 800)
 	public String getIntroduce() {
 		return introduce;
 	}

@@ -367,7 +367,7 @@
 				<th>会议开始日期</th>
 				<th>会议结束日期</th>
 				<th>当前节点</th>
-				<th>流程状态</th>
+				<%--<th>流程状态</th>--%>
 				<th>操作</th>
 			</tr>
 		<tbody>
@@ -381,7 +381,7 @@
 					<td><fmt:formatDate value="${academic.startDate}" pattern="yyyy-MM-dd" type="both"/></td>
 					<td><fmt:formatDate value="${academic.endDate}" pattern="yyyy-MM-dd" type="both"/></td>
 					<td>${task.name}</td>
-					<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${academic.processDefinition.version}</b></td>
+					<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${academic.processDefinition.version}</b></td>--%>
 					<td>
 						<%-- 此处用tkey记录当前节点的名称 --%>
 						<a class="handle" href="#" data-tkey="${task.taskDefinitionKey}" data-tname="${task.name}"  data-id="${academic.id}"  data-tid="${task.id}">办理</a>
@@ -402,7 +402,7 @@
 				<th>会议报销金额</th>
 				<th>报销上传附件</th>
 				<th>当前节点</th>
-				<th>流程状态</th>
+				<%--<th>流程状态</th>--%>
 				<th>操作</th>
 			</tr>
 		<tbody>
@@ -417,7 +417,7 @@
 					<td>${academic.academiccost.bxFee}</td>
 					<td><a href="${ctx}/cms/academiccost/get/${academic.academiccost.id}">${academic.academiccost.file}</a></td>
 					<td>${task.name}</td>
-					<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${academiccost.processDefinition.version}</b></td>
+					<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${academiccost.processDefinition.version}</b></td>--%>
 					<td>
 						<%-- 此处用tkey记录当前节点的名称 --%>
 						<a class="handle" href="#" data-tkey="${task.taskDefinitionKey}" data-tname="${task.name}"  data-id="${academiccost.id}"  data-tid="${task.id}">办理</a>

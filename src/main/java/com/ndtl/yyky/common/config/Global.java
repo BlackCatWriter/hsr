@@ -80,4 +80,8 @@ public class Global {
 		return getConfig("projectSN");
 	}
 
+	public static boolean getProcessEable() {
+		return "true".equals(getConfig("isProcessEable"));
+	}
+
 }

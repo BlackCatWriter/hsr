@@ -527,11 +527,11 @@ function complete(taskId, variables) {
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<shiro:hasPermission name="oa:project:edit">
-			<li><a href="${ctx}/oa/project/form">科研项目登记</a></li>
-		</shiro:hasPermission>
-		<li><a href="${ctx}/oa/project/list">所有任务</a></li>
+		<li><a href="${ctx}/oa/project/list">科研项目管理</a></li>
 		<li class="active"><a href="${ctx}/oa/project/task">待办任务</a></li>
+		<shiro:hasPermission name="oa:project:edit">
+			<li><a href="${ctx}/oa/project/form">申报</a></li>
+		</shiro:hasPermission>
 	</ul>
 	<tags:message content="${message}" />
 	
@@ -546,7 +546,7 @@ function complete(taskId, variables) {
 					<th>科研项目题目：</th>
 					<th>当前节点</th>
 					<th>任务创建时间</th>
-					<th>流程状态</th>
+					<%--<th>流程状态</th>--%>
 					<th>操作</th>
 				</tr>
 				<tbody>
@@ -565,8 +565,8 @@ function complete(taskId, variables) {
 							</c:if>
 							<td>${task.name}</td>
 							<td><fmt:formatDate value="${task.createTime}" type="both" /></td>
-							<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V:
-									${project.processDefinition.version}</b></td>
+							<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V:
+									${project.processDefinition.version}</b></td>--%>
 							<td><a class="handle" href="#"
 								data-tkey="${task.taskDefinitionKey}" data-tname="${task.name}"
 								data-id="${project.id}" data-tid="${task.id}">办理</a></td>

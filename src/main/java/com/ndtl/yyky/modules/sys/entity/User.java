@@ -18,6 +18,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import com.ndtl.yyky.common.utils.StringUtils;
+import com.ndtl.yyky.modules.cms.entity.ExpensePlan;
+import com.ndtl.yyky.modules.cms.entity.ExpenseRatio;
 import com.ndtl.yyky.modules.sys.utils.DateUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -78,9 +80,18 @@ public class User extends DataEntity {
 	private String professionalTitle;//教师职称
 	private String graduateAdvisor;//研究生导师
 	private String isProfessional;
-	
+	private String post;// 职务
+	private String contactAddress;//联系地址
+	private String idCard;//身份证
+	private String nativePlace;//籍贯
+	private String party;//党派
+	private String nation;//民族
+	private String headImg;//头像
+
 
 	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
+	private List<UserEducation> uedList;
+	private List<UserWork> workList;
 
 	public User() {
 		super();
@@ -421,5 +432,73 @@ public class User extends DataEntity {
 	public void setAge(Integer age) {
 		this.age = age;
 	}
+	@Transient
+	public List<UserEducation> getUedList() {
+		return uedList;
+	}
+	public void setUedList(List<UserEducation> uedList) {
+		this.uedList = uedList;
+	}
+	@Transient
+	public List<UserWork> getWorkList() {
+		return workList;
+	}
+	public void setWorkList(List<UserWork> workList) {
+		this.workList = workList;
+	}
 
+	public String getPost() {
+		return post;
+	}
+
+	public void setPost(String post) {
+		this.post = post;
+	}
+
+	public String getContactAddress() {
+		return contactAddress;
+	}
+
+	public void setContactAddress(String contactAddress) {
+		this.contactAddress = contactAddress;
+	}
+
+	public String getIdCard() {
+		return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	public String getNativePlace() {
+		return nativePlace;
+	}
+
+	public void setNativePlace(String nativePlace) {
+		this.nativePlace = nativePlace;
+	}
+
+	public String getParty() {
+		return party;
+	}
+
+	public void setParty(String party) {
+		this.party = party;
+	}
+
+	public String getNation() {
+		return nation;
+	}
+
+	public void setNation(String nation) {
+		this.nation = nation;
+	}
+	public String getHeadImg() {
+		return headImg;
+	}
+
+	public void setHeadImg(String headImg) {
+		this.headImg = headImg;
+	}
 }

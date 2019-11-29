@@ -15,9 +15,9 @@
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<shiro:hasPermission name="oa:project:edit"><li><a href="${ctx}/oa/project/form">科研项目登记</a></li></shiro:hasPermission>
-		<li class="active"><a href="${ctx}/oa/project/list">所有任务</a></li>
+		<li class="active"><a href="${ctx}/oa/project/list">科研项目管理</a></li>
 		<li><a href="${ctx}/oa/project/task">待办任务</a></li>
+		<shiro:hasPermission name="oa:project:edit"><li><a href="${ctx}/oa/project/form">申报</a></li></shiro:hasPermission>
 	</ul>
 	<form:form id="searchForm" modelAttribute="project" action="${ctx}/oa/project/list" method="post" class="breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
@@ -36,12 +36,13 @@
 				value="<fmt:formatDate value="${project.createDateEnd}" pattern="yyyy-MM-dd"/>"
 					onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});"/>
 			&nbsp;<input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+			&nbsp;<a href="${ctx}/oa/project/form" class="btn btn-primary">申报</a>
 		</div>
 	</form:form>
 	<tags:message content="${message}"/>
 	<table id="contentTable" class="table table-striped table-bordered table-condensed">
 		<thead><tr>
-			<th>申请编号</th>
+			<%--<th>申请编号</th>--%>
 			<th>立项号</th>
 			<th>科研项目题目</th>
 			<th>项目追踪</th>
@@ -56,13 +57,14 @@
 			<c:set var="pi" value="${project.processInstance }" />
 			<c:set var="hpi" value="${project.historicProcessInstance }" />
 			<tr>
-				<td>${project.id}</td>
+				<%--<td>${project.id}</td>--%>
 				<td>${project.projectNo}</td>
 				<c:if test="${empty project.file}">
 					<td>${project.projectName}</td>
 				</c:if>
 				<c:if test="${not empty project.file}">
-					<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>
+					<%--<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>--%>
+					<td><a href="${ctx}/cms/project/form?id=${project.id}">${project.projectName}</a></td>
 				</c:if>
 				<td>${project.processStatus}</td>
 				<td>${project.createBy.name}</td>

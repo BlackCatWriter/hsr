@@ -123,19 +123,19 @@
 					notAllowSelectParent="true" />
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group" style="display:none">
 			<label class="control-label">姓名：</label>
 			<div class="controls">
 				<form:input path="applyuser" htmlEscape="false" maxlength="200" readonly="true"/>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group" style="display:none">
 			<label class="control-label">职称：</label>
 			<div class="controls">
 				<form:input path="worktitle" htmlEscape="false" maxlength="200" readonly="true"/>
 			</div>
 		</div>
-		<div class="control-group">
+		<div class="control-group" style="display:none">
 			<label class="control-label">学历：</label>
 			<div class="controls">
 				<form:input path="education" htmlEscape="false" maxlength="200" readonly="true"/>

@@ -38,6 +38,22 @@
 				 var decimal =  /^[0-9]+([\.][0-9]{0,3})?$/;
 				return (decimal.test(value));
 			}, "请输入正确的报销金额(格式:xx.xx)");
+
+            $('#exerciseRole').on('change',function(){
+                var chooseValue = $(this).val();
+                if(chooseValue){
+                    if(chooseValue == 2){
+                        $('#speechContent').attr("disabled",false);
+                        $('#reviewOpinion').attr("disabled",true);
+					}else if(chooseValue == 3){
+                        $('#reviewOpinion').attr("disabled",false);
+                        $('#speechContent').attr("disabled",true);
+					}else{
+                        $('#reviewOpinion').attr("disabled",true);
+                        $('#speechContent').attr("disabled",true);
+					}
+                }
+            });
 		});
 		function cleanSuggestWords(){ 
 		    $("#bx_fee").val(''); 
@@ -164,13 +180,26 @@
 		<div class="control-group">
 			<label class="control-label">地点：</label>
 			<div class="controls">
-				<form:input path="place" id="place" htmlEscape="false" maxlength="200" class="required"/>
+				<form:input path="place" id="place" htmlEscape="false" maxlength="200" class="input-xxlarge required"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">参会人员：</label>
+			<div class="controls">
+				<tags:namesSuggest value="${academic.author1}" labelValue="${thesis.author1DisplayName}" name="author1" id="author1"
+								   url="${ctx}/sys/user/users/"></tags:namesSuggest>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">汇报题目：</label>
+			<div class="controls controls-row">
+				<form:input path="place" id="place" htmlEscape="false" maxlength="200" class="input-xxlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">主办单位：</label>
 			<div class="controls">
-				<form:input path="hostUnit" id="hostUnit" htmlEscape="false" maxlength="200" class="required"/>
+				<form:input path="hostUnit" id="hostUnit" htmlEscape="false" maxlength="200" class="input-xxlarge required"/>
 			</div>
 		</div>
 		<div class="control-group">
@@ -178,6 +207,14 @@
 			<div class="controls">
 				<form:select path="level" >
 					<form:options id="level" items="${fns:getDictList('academic_level_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label">费用来源：</label>
+			<div class="controls">
+				<form:select path="expenseSource">
+					<form:options id="expenseSource" items="${fns:getDictList('academic_expense_source')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>
@@ -198,10 +235,22 @@
 		<div class="control-group">
 			<label class="control-label">参会形式：</label>
 			<div class="controls">
-				<form:input path="exerciseRole" id="exerciseRole" htmlEscape="false" maxlength="200" />
+				<form:select path="exerciseRole">
+					<form:options id="exerciseRole" items="${fns:getDictList('academic_exercise_role')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
 			</div>
 		</div>
-		
+		<div class="control-group">
+			<label class="control-label">发言内容：</label>
+			<div class="controls">
+				<form:textarea path="speechContent" rows="3" maxlength="200" disabled="true"/>
+		</div><br>
+		<div class="control-group">
+			<label class="control-label">评审意见：</label>
+			<div class="controls">
+				<form:textarea path="reviewOpinion" rows="3" maxlength="200" disabled="true"/>
+		</div>
+		<br>
 		<div class="control-group">
 			<label class="control-label">附件上传：</label>
 			<div class="controls">

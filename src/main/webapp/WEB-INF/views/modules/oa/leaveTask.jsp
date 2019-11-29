@@ -340,7 +340,7 @@
 				<th>结束时间</th>
 				<th>当前节点</th>
 				<th>任务创建时间</th>
-				<th>流程状态</th>
+				<%--<th>流程状态</th>--%>
 				<th>操作</th>
 			</tr>
 		<tbody>
@@ -355,7 +355,7 @@
 					<td><fmt:formatDate value="${leave.endTime}" type="both"/></td>
 					<td>${task.name}</td>
 					<td><fmt:formatDate value="${task.createTime}" type="both"/></td>
-					<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${leave.processDefinition.version}</b></td>
+					<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${leave.processDefinition.version}</b></td>--%>
 					<td>
 						<c:if test="${empty task.assignee}">
 							<a class="claim" href="#" onclick="javescript:claim('${task.id}');">签收</a>

@@ -158,11 +158,16 @@ public class BookController extends BaseOAController {
 			book.setProject(null);
 		}
 		try {
-			Map<String, Object> variables = new HashMap<String, Object>();
-			ProcessInstance processInstance = bookService.save(book, variables,
-					ProcessDefinitionKey.Book);
-			addMessage(redirectAttributes,
-					"流程已启动，流程ID：" + processInstance.getId());
+			if(Global.getProcessEable()){
+				book.setDelFlag("2");
+				bookService.save(book);
+			}else {
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = bookService.save(book, variables,
+						ProcessDefinitionKey.Book);
+				addMessage(redirectAttributes,
+						"流程已启动，流程ID：" + processInstance.getId());
+			}
 		} catch (Exception e) {
 			logger.error("启动流程失败：", e);
 			addMessage(redirectAttributes, "系统内部错误！");

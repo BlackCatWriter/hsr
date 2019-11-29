@@ -243,7 +243,16 @@ function pass(kjDeptPass) {
         type: 'B'
     }]);
 }
-
+function deleteTr(nowTr){
+    var fileNames ="";
+    $(nowTr).parent().parent().remove();
+    $.each($("#uploaded-files [name=fileName]"),function () {
+        fileNames += $(this).text() + ",";
+    })
+    if(fileNames != ""){
+        $("#file").val(fileNames.substring(0,fileNames.length-1));
+    }
+}
 function save() {
     $("#checkForm").attr("action", "${ctx}/oa/project/saveProjectToUser");
     $("#checkForm").submit();
@@ -329,11 +338,11 @@ function complete(taskId, variables) {
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<shiro:hasPermission name="oa:project:edit">
-			<li class="active"><a href="${ctx}/oa/project/form">科研项目登记</a></li>
-		</shiro:hasPermission>
-		<li><a href="${ctx}/oa/project/list">所有任务</a></li>
+		<li><a href="${ctx}/oa/project/list">科研项目管理</a></li>
 		<li><a href="${ctx}/oa/project/task">待办任务</a></li>
+		<shiro:hasPermission name="oa:project:edit">
+			<li class="active"><a href="${ctx}/oa/project/form">申报</a></li>
+		</shiro:hasPermission>
 	</ul>
 	<br />
 	<form:form id="inputForm" modelAttribute="project" action="${ctx}/oa/project/save" method="post"
@@ -401,9 +410,10 @@ function complete(taskId, variables) {
 			<div class="control-group">
 				<label class="control-label">申请等级:</label>
 				<div class="controls">
-					<form:select path="level">
+					<form:select path="level" >
 						<form:options items="${fns:getDictList('project_level')}" itemLabel="label" itemValue="value" htmlEscape="false" />
 					</form:select>
+
 				</div>
 			</div>
 			<div class="control-group">
@@ -414,9 +424,10 @@ function complete(taskId, variables) {
 					</div>
 				</c:if>
 				<div class="controls">
-					<input id="file" name="file" type="hidden" value="${project.file}" /> <input id="fileupload" type="file"
+					<input id="file" name="file" type="hidden" value="${project.file}" /><font color="red">(*最多上传4个附件)</font> <input id="fileupload" type="file"
 						name="files[]" multiple="multiple" data-url="${ctx}/oa/project/upload/project">
 				</div>
+				<>
 			</div>
 			<div class="control-group">
 				<div class="controls">
@@ -430,6 +441,7 @@ function complete(taskId, variables) {
 							<th>文件名称</th>
 							<th>文件大小</th>
 							<th>文件类型</th>
+							<th>操作</th>
 						</tr>
 					</table>
 				</div>
@@ -437,7 +449,7 @@ function complete(taskId, variables) {
 			<div class="control-group">
 				<label class="control-label">项目简介：</label>
 				<div class="controls">
-					<form:textarea path="introduce" rows="5" style="width:500px;" maxlength="255" />
+					<form:textarea path="introduce" rows="5" style="width:500px;" maxlength="800" />
 				</div>
 			</div>
 			<div class="control-group">

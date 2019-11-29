@@ -4,15 +4,20 @@ $(function () {
         
         done: function (e, data) {
         	$("tr:has(td)").remove();
+        	var fileNames ="";
             $.each(data.result, function (index, file) {
                 $("#uploaded-files").append(
                 		$('<tr/>')
-                		.append($('<td/>').text(file.fileName))
+                		.append($('<td name="fileName"/>').text(file.fileName))
                 		.append($('<td/>').text(file.fileSize))
                 		.append($('<td/>').text(file.fileType))
-                		)//end $("#uploaded-files").append()
-                		$("#file").val(file.fileName);
+						.append("<td><a style='cursor:pointer' onclick='deleteTr(this)'>删除</a></td>")
+                		)
+                fileNames += file.fileName + ",";
             });
+            if(fileNames != ""){
+                $("#file").val(fileNames.substring(0,fileNames.length-1));
+			}
             $("#progress").show();
             $("#uploaded-files").show();
         },
@@ -27,4 +32,5 @@ $(function () {
    		
 		dropZone: $('#dropzone')
     });
+
 });

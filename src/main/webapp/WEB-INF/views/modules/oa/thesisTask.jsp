@@ -337,7 +337,7 @@ function complete(taskId, variables) {
 			<th>申请时间</th>
 			<th>当前节点</th>
 			<th>任务创建时间</th>
-			<th>流程状态</th>
+			<%--<th>流程状态</th>--%>
 			<th>操作</th>
 		</tr>
 		<tbody>
@@ -350,7 +350,7 @@ function complete(taskId, variables) {
 					<td><fmt:formatDate value="${thesis.createDate}" type="both" /></td>
 					<td>${task.name}</td>
 					<td><fmt:formatDate value="${task.createTime}" type="both" /></td>
-					<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${thesis.processDefinition.version}</b></td>
+					<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V: ${thesis.processDefinition.version}</b></td>--%>
 					<td><a class="handle" href="#" data-tkey="${task.taskDefinitionKey}" data-tname="${task.name}"
 						data-id="${thesis.id}" data-tid="${task.id}">办理</a></td>
 				</tr>

@@ -186,12 +186,17 @@ public class RewardController extends BaseOAController {
 			reward.setProject(null);
 		}
 		try {
-			Map<String, Object> variables = new HashMap<String, Object>();
-			reward.setType(RewardType.tecProgress.name());
-			ProcessInstance processInstance = rewardService.save(reward,
-					variables, ProcessDefinitionKey.Reward);
-			addMessage(redirectAttributes,
-					"流程已启动，流程ID：" + processInstance.getId());
+			if(Global.getProcessEable()){
+				reward.setDelFlag("2");
+				rewardService.save(reward);
+			}else {
+				Map<String, Object> variables = new HashMap<String, Object>();
+				reward.setType(RewardType.tecProgress.name());
+				ProcessInstance processInstance = rewardService.save(reward,
+						variables, ProcessDefinitionKey.Reward);
+				addMessage(redirectAttributes,
+						"流程已启动，流程ID：" + processInstance.getId());
+			}
 		} catch (Exception e) {
 			logger.error("启动奖励申请流程失败：", e);
 			addMessage(redirectAttributes, "系统内部错误！");

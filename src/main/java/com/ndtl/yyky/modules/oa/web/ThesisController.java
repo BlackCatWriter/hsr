@@ -160,13 +160,18 @@ public class ThesisController extends BaseOAController {
 			thesis.setProject(null);
 		}
 		try {
-			Map<String, Object> variables = new HashMap<String, Object>();
-			ProcessInstance processInstance = thesisService.save(thesis,
-					variables, ProcessDefinitionKey.Thesis);
-			addMessage(redirectAttributes,
-					"流程已启动，流程ID：" + processInstance.getId());
+			if(Global.getProcessEable()){
+				thesis.setDelFlag("2");
+				thesisService.save(thesis);
+			}else {
+				Map<String, Object> variables = new HashMap<String, Object>();
+				ProcessInstance processInstance = thesisService.save(thesis,
+						variables, ProcessDefinitionKey.Thesis);
+				addMessage(redirectAttributes,
+						"流程已启动，流程ID：" + processInstance.getId());
+			}
 		} catch (Exception e) {
-			logger.error("启动请假流程失败：", e);
+			logger.error("启动流程失败：", e);
 			addMessage(redirectAttributes, "系统内部错误！");
 		}
 		return "redirect:" + Global.getAdminPath() + "/oa/thesis/form";

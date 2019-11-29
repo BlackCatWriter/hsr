@@ -46,7 +46,7 @@
 			<label id="loginError" class="error"><%=error==null?"":"com.ndtl.yyky.modules.sys.security.CaptchaException".equals(error)?"验证码错误, 请重试.":"用户或密码错误, 请重试." %></label>
 		</div>
 	</div>
-	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>
+	<h1 class="form-signin-heading"><%--${fns:getConfig('productName')}--%></h1>
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
 		<label class="input-label" for="username" >登录名</label>
 		<input type="text" id="username" name="username" class="input-block-level required" value="${username}" placeholder="请输入工号">

@@ -10,6 +10,7 @@ CKEDITOR.editorConfig = function( config ) {
 		config.height = '400px';
 	}
 	config.removePlugins = 'elementspath,scayt';
+    config.allowedContent = true;
 	config.disableNativeSpellChecker = false;
 	config.resize_dir = 'vertical';
 	config.keystrokes =[[ CKEDITOR.CTRL + 13 /*Enter*/, 'maximize' ]];	

@@ -102,7 +102,7 @@
 				<td>${fns:getDictLabel(academic.level, 'academic_level_type', '无')}</td>
 				<td><fmt:formatDate value="${academic.startDate}" pattern="yyyy-MM-dd" type="both"/></td>
 				<td><fmt:formatDate value="${academic.endDate}" pattern="yyyy-MM-dd" type="both"/></td>
-				<td>${academic.exerciseRole}</td>
+				<td>${fns:getDictLabel(academic.exerciseRole, 'academic_exercise_role', '无')}</td>
 				<td>${academic.academiccost.bxFee}</td>
 				<td>
     				<a href="${ctx}/cms/academic/form?id=${academic.id}">查看</a>

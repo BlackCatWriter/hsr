@@ -82,7 +82,7 @@ public class ProjectController extends BaseOAController {
 	FileMeta fileMeta = null;
 
 	@RequiresPermissions("oa:project:view")
-	@RequestMapping(value = { "form", "" })
+	@RequestMapping(value = { "form" })
 	public String form(Project project, Model model) {
 		project.setOffice(UserUtils.getUser().getOffice());
 		project.setOfficeName(UserUtils.getUser().getOffice().getName());
@@ -285,7 +285,7 @@ public class ProjectController extends BaseOAController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = { "list" })
+	@RequestMapping(value = { "list" , "" })
 	public String list(Project project, HttpServletRequest request,
 			HttpServletResponse response, Model model) {
 		Page<Project> page = projectService.find(new Page<Project>(request,

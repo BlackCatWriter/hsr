@@ -3,12 +3,14 @@ package com.ndtl.yyky.modules.sys.web;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
 import com.alibaba.fastjson.JSONObject;
+import com.ndtl.yyky.common.utils.excel.ColumnTitleMap;
 import com.ndtl.yyky.modules.cms.entity.Account;
 import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
 import com.ndtl.yyky.modules.oa.web.base.BaseOAController;
@@ -375,15 +377,14 @@ public class UserController extends BaseOAController {
 	@RequestMapping(value = "infoSave")
 	public String infoSave(User user, Model model,
 						   HttpServletRequest request, MultipartFile file) {
-		String filePath = getFilePathByWeb("head",String.valueOf(UserUtils.getUser().getId()),request);
+		Map<String,String> filePath = getFilePathByWeb("head",
+				String.valueOf(UserUtils.getUser().getId()),request);
 		try {
 			saveFileFromInputStream(
 					file.getInputStream(),
-					filePath,
+					filePath.get("servletPath"),
 					file.getOriginalFilename());
 
-			System.out.println(getFilePath("head",
-					String.valueOf(UserUtils.getUser().getId())));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -408,7 +409,7 @@ public class UserController extends BaseOAController {
 			currentUser.setIdCard(user.getIdCard());
 			currentUser.setContactAddress(user.getContactAddress());
 			currentUser.setPost(user.getPost());
-			currentUser.setHeadImg(filePath+"/"+file.getOriginalFilename());
+			currentUser.setHeadImg(filePath.get("relativePath")+"/"+file.getOriginalFilename());
 			currentUser.setPrefression(user.getPrefression());
 			currentUser.setTitle(user.getTitle());
 			currentUser.setSex(user.getSex());
@@ -425,6 +426,29 @@ public class UserController extends BaseOAController {
 		model.addAttribute("user", currentUser);
 		return "modules/sys/userInfo";
 	}
+
+
+	/*@RequestMapping(value = "exportUserDetail", method = RequestMethod.POST)
+	public String exportUserDetail(Map<String, Object> paramMap,HttpServletRequest request, HttpServletResponse response,
+											RedirectAttributes redirectAttributes) {
+
+		User currentUser = UserUtils.getUser();
+		currentUser.setUedList(userEducationService.findPlanListByUserId(currentUser.getId()));
+		currentUser.setWorkList(userWorkService.findPlanListByUserId(currentUser.getId()));
+		try {
+			String fileName = "个人档案" + DateUtils.getDate("yyyyMMddHHmmss")+ ".xlsx";
+
+			Map<String, String> titleMap = new ColumnTitleMap("subjectRewardDetail").getColumnTitleMap();
+
+			ExportExcel excel = new ExportExcel("各科奖励明细",new ArrayList<String>(titleMap.values()));
+			excel.setDataListMap(page.getList(),new ArrayList<String>(titleMap.keySet()))
+					.write(response, fileName).dispose();
+			return null;
+		} catch (Exception e) {
+			addMessage(redirectAttributes, "导出数据失败！失败信息：" + e.getMessage());
+		}
+		return "redirect:" + Global.getAdminPath() + "/cms/account/?repage";
+	}*/
 
 	@RequiresUser
 	@RequestMapping(value = "task")

@@ -7,8 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -117,15 +119,19 @@ public abstract class BaseOAController extends BaseController {
 		return result;
 	}
 
-	public String getFilePathByWeb(String type, String id, HttpServletRequest request) {
-		String realPath = request.getSession().getServletContext().getRealPath("/avatorImg");
-		String result = realPath + "/" + type + "_";
+	public Map getFilePathByWeb(String type, String id, HttpServletRequest request) {
+
+		Map map = new HashMap<>();
+		String servletPath = request.getSession().getServletContext().getRealPath("/");
+		String relativePath = "/avatorImg/" + type + "_";
 		if (StringUtils.isEmpty(id)) {
-			result = result + UserUtils.getUser().getId() + "/";
+			relativePath = relativePath + UserUtils.getUser().getId() + "/";
 		} else {
-			result = result + id + "/";
+			relativePath = relativePath + id + "/";
 		}
-		return result;
+		map.put("servletPath",servletPath+relativePath);
+		map.put("relativePath",relativePath);
+		return map;
 	}
 
 	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)

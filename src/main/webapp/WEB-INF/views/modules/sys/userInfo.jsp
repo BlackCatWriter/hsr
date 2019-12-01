@@ -14,6 +14,19 @@
 <script type="text/javascript">
 	$(document).ready(
 			function() {
+                $("#btnExport").click(function() {
+                    top.$.jBox.confirm("确认要导出经费支出明细数据吗？", "系统提示",
+                        function(v, h, f) {
+                            if (v == "ok") {
+                                $("#inputForm").attr("action", "${ctx}/sys/user/exportUserDetail");
+                                $("#inputForm").submit();
+                            }
+                        },
+                        {
+                            buttonsFocus: 1
+                        });
+                    top.$('.jbox-body .jbox-icon').css('top', '55px');
+                });
 				changChild("${user.prefression}");
 				$("#inputForm")
 						.validate(
@@ -154,15 +167,20 @@
 	<br />
 	<form:form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/infoSave" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<tags:message content="${message}" />
-		<%--<div class="content">
-			<img src="${ctxStatic}/images/header.png" class="img-rounded">
-			<input id="file" name="file" type="hidden" />
-			<input id="fileupload" type="file" name="files[]" multiple="multiple" data-url="${ctx}/oa/project/upload/project">
-		</div>--%>
 		<div class="box">
 			<p>
-			<div class="upload imgLog2" style="background: url('D:\works\gitworks\hsr\classes\artifacts\hsr_war_exploded\avatorImg/head_10000//lilu2.jpg');">
-				<span><i class="glyphicon glyphicon-open"></i>上传头像</span>
+			<c:if test="${not empty user.headImg}">
+				<div class="upload imgLog2" style="background: url('${user.headImg}')0% 0% / cover;">
+					<span style="opacity: 0"><i class="glyphicon glyphicon-open"></i>上传头像</span>
+				</div>
+			</c:if>
+			<c:if test="${empty user.headImg}">
+				<div class="upload imgLog2" >
+					<span><i class="glyphicon glyphicon-open"></i>上传</span>
+				</div>
+			</c:if>
+			<div style="position: absolute;left: 550px;top: 280px;">
+				<span>头像</span>
 			</div>
 			</p>
 		</div>
@@ -404,6 +422,7 @@
 		</div>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" />
+			<input id="btnExport" class="btn btn-primary" type="submit" value="导 出" />
 		</div>
 	</form:form>
 </body>

@@ -147,6 +147,22 @@ public class PatentService extends BaseOAService {
 		return result;
 	}
 
+	public List<Patent> findForAchieve(Long userId) {
+		DetachedCriteria dc = super.createDCForAchieve();
+		dc.add(Restrictions.or(Restrictions.eq("author1", userId.toString()),
+				Restrictions.eq("author2", userId.toString()),
+				Restrictions.eq("author3", userId.toString()),
+				Restrictions.eq("weightBelong", userId)));
+		List<Patent> searchResult = patentDao.find(dc);
+		List<Patent> result = Lists.newArrayList();
+		for (Patent patent : searchResult) {
+			if (isAchieve(patent, userId)) {
+				result.add(patent);
+			}
+		}
+		return result;
+	}
+
 	private boolean isAchieve(Patent patent, Long userId) {
 		if (StringUtils.isNotEmpty(patent.getAuthor1())
 				&& Arrays.asList(patent.getAuthor1().split(",")).contains(

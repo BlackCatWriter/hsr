@@ -1,35 +1,6 @@
 package com.ndtl.yyky.modules.sys.web;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolationException;
-
 import com.alibaba.fastjson.JSONObject;
-import com.ndtl.yyky.common.utils.excel.ColumnTitleMap;
-import com.ndtl.yyky.modules.cms.entity.Account;
-import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
-import com.ndtl.yyky.modules.oa.web.base.BaseOAController;
-import com.ndtl.yyky.modules.sys.entity.*;
-import com.ndtl.yyky.modules.sys.service.UserEducationService;
-import com.ndtl.yyky.modules.sys.service.UserWorkService;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresUser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import com.google.common.collect.Lists;
 import com.ndtl.yyky.common.beanvalidator.BeanValidators;
 import com.ndtl.yyky.common.config.Global;
@@ -38,14 +9,41 @@ import com.ndtl.yyky.common.persistence.Page;
 import com.ndtl.yyky.common.utils.DateUtils;
 import com.ndtl.yyky.common.utils.JString;
 import com.ndtl.yyky.common.utils.StringUtils;
+import com.ndtl.yyky.common.utils.excel.ColumnTitleMap;
 import com.ndtl.yyky.common.utils.excel.ExportExcel;
 import com.ndtl.yyky.common.utils.excel.ImportExcel;
-import com.ndtl.yyky.common.web.BaseController;
+import com.ndtl.yyky.modules.cms.web.model.Achieve;
+import com.ndtl.yyky.modules.oa.entity.*;
+import com.ndtl.yyky.modules.oa.service.*;
+import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
 import com.ndtl.yyky.modules.oa.utils.workflow.Variable;
+import com.ndtl.yyky.modules.oa.web.base.BaseOAController;
 import com.ndtl.yyky.modules.oa.web.model.UserSelectModel;
+import com.ndtl.yyky.modules.sys.entity.*;
 import com.ndtl.yyky.modules.sys.service.OfficeService;
 import com.ndtl.yyky.modules.sys.service.SystemService;
+import com.ndtl.yyky.modules.sys.service.UserEducationService;
+import com.ndtl.yyky.modules.sys.service.UserWorkService;
+import com.ndtl.yyky.modules.sys.utils.DictUtils;
 import com.ndtl.yyky.modules.sys.utils.UserUtils;
+import javafx.scene.Parent;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户Controller
@@ -65,6 +63,17 @@ public class UserController extends BaseOAController {
 
 	@Autowired
 	private UserWorkService userWorkService;
+
+	@Autowired
+	private ThesisService thesisService;
+	@Autowired
+	private ProjectService projectService;
+	@Autowired
+	private BookService bookService;
+	@Autowired
+	private PatentService patentService;
+	@Autowired
+	private RewardService rewardService;
 
 	@ModelAttribute
 	public User get(@RequestParam(required = false) Long id) {
@@ -428,27 +437,98 @@ public class UserController extends BaseOAController {
 	}
 
 
-	/*@RequestMapping(value = "exportUserDetail", method = RequestMethod.POST)
+	@RequestMapping(value = "exportUserDetail", method = RequestMethod.POST)
 	public String exportUserDetail(Map<String, Object> paramMap,HttpServletRequest request, HttpServletResponse response,
 											RedirectAttributes redirectAttributes) {
-
+		Map<String,String> titleMap = new LinkedHashMap<>();
+		List<List> sourceList = new ArrayList();
+		List<Map> titleList = new ArrayList();
 		User currentUser = UserUtils.getUser();
-		currentUser.setUedList(userEducationService.findPlanListByUserId(currentUser.getId()));
-		currentUser.setWorkList(userWorkService.findPlanListByUserId(currentUser.getId()));
+
 		try {
+
+			titleMap.put("姓名",currentUser.getName());
+			titleMap.put("性别", DictUtils.getDictLabel(currentUser.getSex(),"sex", ""));
+			titleMap.put("出生年月",currentUser.getBirthday());
+			titleMap.put("民族",DictUtils.getDictLabel(currentUser.getNation(),"nation", ""));
+			titleMap.put("党派",DictUtils.getDictLabel(currentUser.getParty(),"party", ""));
+			titleMap.put("籍贯",currentUser.getNativePlace());
+			titleMap.put("职称",DictUtils.getDictLabel(currentUser.getTitle(),"title", ""));
+			titleMap.put("职务",DictUtils.getDictLabel(currentUser.getPost(),"post", ""));
+			titleMap.put("科室",UserUtils.getOfficeByOffid(currentUser.getOffice().getId()).getName());
+			titleMap.put("身份证号码",currentUser.getIdCard());
+			titleMap.put("手机号码",currentUser.getMobile());
+			titleMap.put("邮箱",currentUser.getEmail());
+			titleMap.put("联系地址",currentUser.getContactAddress());
+
+			List userEduList = userEducationService.expertUserEducationDetail(currentUser.getId());
+			List userWorkList = userWorkService.expertUserWorkDetail(currentUser.getId());
+			sourceList.add(userEduList);
+			sourceList.add(userWorkList);
+
+			Map eduMap = new LinkedHashMap();
+			Map workMap = new LinkedHashMap();
+			eduMap.putAll(new ColumnTitleMap("userEducationDetail").getColumnTitleMap());
+			workMap.putAll(new ColumnTitleMap("userWorkDetail").getColumnTitleMap());
+
+			titleList.add(eduMap);
+			titleList.add(workMap);
+
 			String fileName = "个人档案" + DateUtils.getDate("yyyyMMddHHmmss")+ ".xlsx";
 
-			Map<String, String> titleMap = new ColumnTitleMap("subjectRewardDetail").getColumnTitleMap();
+			ExportExcel excel = new ExportExcel("", titleMap);
 
-			ExportExcel excel = new ExportExcel("各科奖励明细",new ArrayList<String>(titleMap.values()));
-			excel.setDataListMap(page.getList(),new ArrayList<String>(titleMap.keySet()))
-					.write(response, fileName).dispose();
+			for(int i = 0 ;i<sourceList.size();i++){
+				excel.setDataListMap(sourceList.get(i),titleList.get(i));
+			}
+
+			Achieve achieve = achieveList(currentUser.getId());
+			excel.setDataListAndTitle(achieve.getProjectList(), Project.class);
+			excel.setDataListAndTitle(achieve.getPatentList(), Patent.class);
+			excel.setDataListAndTitle(achieve.getThesisList(), Thesis.class);
+			excel.setDataListAndTitle(achieve.getBookList(), Book.class);
+			excel.setDataListAndTitle(achieve.getRewardList(),Reward.class);
+			excel.write(response, fileName).dispose();
 			return null;
 		} catch (Exception e) {
 			addMessage(redirectAttributes, "导出数据失败！失败信息：" + e.getMessage());
 		}
-		return "redirect:" + Global.getAdminPath() + "/cms/account/?repage";
-	}*/
+		return "redirect:" + Global.getAdminPath() + "/sys/user/?repage";
+	}
+
+	/**
+	　* @description: 个人成果
+	　* @param [paramMap, achieve, request, response, model]
+	　* @return java.lang.String
+	　* @throws
+	　*/
+	public Achieve achieveList(Long userId) {
+
+		Achieve achieve = new Achieve();
+		if (!StringUtils.isEmpty(String.valueOf(userId))) {
+			achieve.setThesisList(thesisService.findForAchieve(userId));
+			achieve.setProjectList(projectService.findForAchieve(userId));
+			achieve.setBookList(bookService.findForAchieve(userId));
+			achieve.setPatentList(patentService.findForAchieve(userId));
+			List<Reward> res = rewardService.findForAchieve(userId);
+			List<Reward> tecPro = Lists.newArrayList();
+			List<Reward> newTec = Lists.newArrayList();
+			List<Reward> tecAdv = Lists.newArrayList();
+			for (Reward re : res) {
+				if (re.getType().equals(Reward.RewardType.tecProgress.name())) {
+					tecPro.add(re);
+				} else if (re.getType().equals(Reward.RewardType.newTec.name())) {
+					newTec.add(re);
+				} else if (re.getType().equals(Reward.RewardType.tecAdv.name())) {
+					tecAdv.add(re);
+				}
+			}
+			achieve.setNewTecRewardList(newTec);
+			achieve.setTecAdvrewardList(tecAdv);
+			achieve.setRewardList(tecPro);
+		}
+		return achieve;
+	}
 
 	@RequiresUser
 	@RequestMapping(value = "task")

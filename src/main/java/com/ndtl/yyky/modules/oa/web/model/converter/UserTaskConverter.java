@@ -32,7 +32,11 @@ public class UserTaskConverter {
 			ut.setTitle(((Patent) entity).getTitle());
 			ut.setType("专利");
 			ut.setTypeInSys("patent");
-		} else if (entity instanceof Reward) {
+		} else if (entity instanceof ProjectData) {
+			ut.setTitle(((ProjectData) entity).getProjectNo());
+			ut.setType("合同");
+			ut.setTypeInSys("projectData");
+		}else if (entity instanceof Reward) {
 			ut.setTitle(((Reward) entity).getRewardName());
 			if (((Reward) entity).getType().equals(RewardType.newTec.name())) {
 				ut.setType("新技术引进奖");

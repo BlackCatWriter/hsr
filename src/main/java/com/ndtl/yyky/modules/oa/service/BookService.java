@@ -113,6 +113,13 @@ public class BookService extends BaseOAService {
 		return bookDao.find(dc);
 	}
 
+	public List<Book> findForAchieve(Long userId) {
+		DetachedCriteria dc = super.createDCForAchieve();
+		dc.add(Restrictions.or(Restrictions.eq("author1", userId.toString()),
+				Restrictions.eq("weightBelong", userId)));
+		return bookDao.find(dc);
+	}
+
 	public List<Book> findForDept(Long userId, String year) {
 		DetachedCriteria dc = super.createDCForDept(userId, year);
 		return bookDao.find(dc);

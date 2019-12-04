@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 成果DAO接口
@@ -18,6 +19,9 @@ public interface UserEducationDao extends UserEducationDaoCustom,CrudRepository<
 
 	@Query("from UserEducation where user.id =?1")
 	List<UserEducation> findPlanListByUserId(Long user_id);
+
+	@Query("from UserEducation where user.id =?1")
+	List<Map> findPlanMapByUserId(Long user_id);
 
 }
 

@@ -169,6 +169,15 @@ public class RewardService extends BaseOAService {
 		return rewardDao.find(dc);
 	}
 
+	public List<Reward> findForAchieve(Long userId) {
+		DetachedCriteria dc = super.createDCForAchieve();
+		dc.add(Restrictions.or(Restrictions.eq("author1", userId.toString()),
+				Restrictions.eq("author2", userId.toString()),
+				Restrictions.eq("author3", userId.toString()),
+				Restrictions.eq("weightBelong", userId)));
+		return rewardDao.find(dc);
+	}
+
 	public List<Reward> findForDept(Long userId, String year) {
 		DetachedCriteria dc = super.createDCForDeptWithYear(userId, year);
 		return rewardDao.find(dc);

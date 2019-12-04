@@ -23,6 +23,12 @@ public class ColumnTitleMap {
             case "subjectRewardDetail":
                 initSubjectRewardDetailColu();
                 break;
+            case "userEducationDetail":
+                initUserEducationDetailColu();
+                break;
+            case "userWorkDetail":
+                initUserWorkDetailColu();
+                break;
             default:
                 break;
         }
@@ -74,6 +80,30 @@ public class ColumnTitleMap {
         columnTitleMap.put("jl", "奖励金额");
         columnTitleMap.put("title", "相关研究性课题");
         columnTitleMap.put("update_date", "申请时间");
+    }
+
+    /**
+     * 个人学习经历
+     */
+    private void initUserEducationDetailColu() {
+        columnTitleMap.put("start_date", "起始时间");
+        columnTitleMap.put("end_date", "结束时间");
+        columnTitleMap.put("school_name", "学校名称");
+        columnTitleMap.put("prefression", "专业");
+        columnTitleMap.put("degree", "学历");
+        columnTitleMap.put("educational_background", "学位");
+        columnTitleMap.put("graduate_advisor", "导师");
+    }
+
+    /**
+     * 个人工作经历
+     */
+    private void initUserWorkDetailColu() {
+        columnTitleMap.put("start_date", "起始时间");
+        columnTitleMap.put("end_date", "结束时间");
+        columnTitleMap.put("company_name", "单位名称");
+        columnTitleMap.put("title", "职称");
+        columnTitleMap.put("post", "职务");
     }
 
 

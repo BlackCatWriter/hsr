@@ -58,6 +58,18 @@ public class ThesisService extends BaseOAService {
 		return result;
 	}
 
+	public List<Thesis> findForAchieve(Long userId) {
+		DetachedCriteria dc = super.createDCForAchieve();
+		List<Thesis> searchResult = thesisDao.find(dc);
+		List<Thesis> result = Lists.newArrayList();
+		for (Thesis thesis : searchResult) {
+			if (isAchieve(thesis, userId)) {
+				result.add(thesis);
+			}
+		}
+		return result;
+	}
+
 	private boolean isAchieve(Thesis thesis, Long userId) {
 		if (StringUtils.isNotEmpty(thesis.getAuthor1())
 				&& Arrays.asList(thesis.getAuthor1().split(",")).contains(

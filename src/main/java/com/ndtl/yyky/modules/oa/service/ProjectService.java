@@ -348,6 +348,16 @@ public class ProjectService extends BaseOAService {
 		return projectDao.find(dc);
 	}
 
+	public List<Project> findForAchieve(Long userId) {
+		DetachedCriteria dc = super.createDCForAchieve();
+		dc.add(Restrictions.or(
+				Restrictions.eq("author1", String.valueOf(userId)),
+				Restrictions.eq("author2", String.valueOf(userId)),
+				Restrictions.eq("author3", String.valueOf(userId)),
+				Restrictions.eq("weightBelong", userId)));
+		return projectDao.find(dc);
+	}
+
 	public List<Project> findForDept(Long userId, String year) {
 		DetachedCriteria dc = super.createDCForDeptWithAuditDate(userId, year);
 		return projectDao.find(dc);

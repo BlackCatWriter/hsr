@@ -1,12 +1,6 @@
 package com.ndtl.yyky.modules.oa.web.base;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -156,30 +150,35 @@ public abstract class BaseOAController extends BaseController {
 		BaseOAEntity entity = getService().findOne(id);
 		String filePath = getFilePath(type,
 				String.valueOf(entity.getCreateBy().getId()));
-		File file = new File(filePath, fileName);
-		try {
-			String fName = new String(file.getName().getBytes(), "iso-8859-1");
-			// 读到流中
-			InputStream inStream = new FileInputStream(file.getAbsolutePath());// 文件的存放路径
-			// 设置输出的格式
-			response.reset();
-			response.setContentType("multipart/form-data");
-			response.addHeader("Content-Disposition", "attachment; filename=\""
-					+ fName + "\"");
-			// 循环取出流中的数据
-			byte[] b = new byte[100];
-			int len;
-			while ((len = inStream.read(b)) > 0) {
-				response.getOutputStream().write(b, 0, len);
+		for(String path : fileName.split(",")){
+			File file = new File(filePath, path);
+			try {
+				String fName = new String(file.getName().getBytes(), "iso-8859-1");
+				// 读到流中
+				InputStream inStream = new FileInputStream(file.getAbsolutePath());// 文件的存放路径
+				OutputStream out = response.getOutputStream();
+				// 设置输出的格式
+				response.reset();
+				response.setContentType("multipart/form-data");
+				response.addHeader("Content-Disposition", "attachment; filename=\""
+						+ fName + "\"");
+				// 循环取出流中的数据
+				byte[] b = new byte[100];
+				int len;
+				while ((len = inStream.read(b)) > 0) {
+					out.write(b, 0, len);
+				}
+				out.flush();
+				inStream.close();
+			} catch (UnsupportedEncodingException e1) {
+				addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+			} catch (FileNotFoundException e1) {
+				addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+			} catch (IOException e) {
+				addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
 			}
-			inStream.close();
-		} catch (UnsupportedEncodingException e1) {
-			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
-		} catch (FileNotFoundException e1) {
-			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
-		} catch (IOException e) {
-			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
 		}
+
 	}
 
 	protected void convertOffice(BaseOAItem entity) {

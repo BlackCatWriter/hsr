@@ -136,6 +136,26 @@ public class UserUtils extends BaseService {
 		return officeList;
 	}
 
+	public static Office getOfficeByOffid(Long officeId) {
+		@SuppressWarnings("unchecked")
+		List<Office> officeList = (List<Office>) getCache(CACHE_OFFICE_LIST);
+		if (officeList == null) {
+			DetachedCriteria dc = officeDao.createDetachedCriteria();
+			// User user = getUser();
+			// dc.add(dataScopeFilter(user, dc.getAlias(), ""));
+			dc.add(Restrictions.eq("delFlag", Office.DEL_FLAG_NORMAL));
+			dc.addOrder(Order.asc("code"));
+			officeList = officeDao.find(dc);
+			putCache(CACHE_OFFICE_LIST, officeList);
+		}
+		for(Office office : officeList){
+			if(office.getId() == officeId){
+				return office;
+			}
+		}
+		return new Office();
+	}
+
 	// ============== User Cache ==============
 
 	public static Object getCache(String key) {

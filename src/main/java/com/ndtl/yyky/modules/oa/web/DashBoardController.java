@@ -40,6 +40,8 @@ public class DashBoardController extends BaseController {
 	@Autowired
 	protected ProjectService projectService;
 	@Autowired
+	protected ProjectDataService projectDataService;
+	@Autowired
 	protected BookService bookService;
 	@Autowired
 	protected PatentService patentService;
@@ -89,6 +91,10 @@ public class DashBoardController extends BaseController {
 		List<Book> books = bookService.findTodoTasks(user.getId().toString(),
 				ProcessDefinitionKey.Book);
 		tasks.addAll(UserTaskConverter.convert(books));
+
+		List<ProjectData> projectData = projectDataService.findTodoTasks(user.getId().toString(),
+				ProcessDefinitionKey.ProjectData);
+		tasks.addAll(UserTaskConverter.convert(projectData));
 
 		List<Patent> patents = patentService.findTodoTasks(user.getId()
 				.toString(), ProcessDefinitionKey.Patent);

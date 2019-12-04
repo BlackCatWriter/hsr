@@ -75,6 +75,17 @@ public abstract class BaseOAService extends BaseService {
 		return dc;
 	}
 
+	public DetachedCriteria createDCForAchieve() {
+		DetachedCriteria dc = getDao().createDetachedCriteria();
+		dc.createAlias("office", "office");
+		User currentUser = UserUtils.getUser();
+		dc.add(dataScopeFilter(currentUser, "office", "createBy"));
+		dc.add(Restrictions.like("delFlag", "%" + BaseEntity.DEL_FLAG_AUDIT
+				+ "%"));
+		dc.addOrder(Order.desc("id"));
+		return dc;
+	}
+
 	public DetachedCriteria createDCForAchieveWithAuditDate(String year) {
 		DetachedCriteria dc = getDao().createDetachedCriteria();
 		dc.createAlias("office", "office");

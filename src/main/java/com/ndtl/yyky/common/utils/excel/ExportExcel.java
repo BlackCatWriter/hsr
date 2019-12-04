@@ -10,6 +10,11 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.ndtl.yyky.modules.oa.entity.Expense;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -159,6 +164,95 @@ public class ExportExcel {
 			headerList.add(t);
 		}
 		initialize(title, headerList);
+
+	}
+	/**
+	 * 构造函数
+	 *
+	 * @param title
+	 *            表格标题，传“空值”，表示无标题
+	 * @param cls
+	 *            实体对象，通过annotation.ExportField获取标题
+	 * @param type
+	 *            导出类型（1:导出数据；2：导出模板）
+	 * @param groups
+	 *            导入分组
+	 */
+	public ExportExcel initExcelByClass(String title, Class<?> cls, int type, int... groups) {
+		// Get annotation field
+		Field[] fs = cls.getDeclaredFields();
+		for (Field f : fs) {
+			ExcelField ef = f.getAnnotation(ExcelField.class);
+			if (ef != null && (ef.type() == 0 || ef.type() == type)) {
+				if (groups != null && groups.length > 0) {
+					boolean inGroup = false;
+					for (int g : groups) {
+						if (inGroup) {
+							break;
+						}
+						for (int efg : ef.groups()) {
+							if (g == efg) {
+								inGroup = true;
+								annotationList.add(new Object[] { ef, f });
+								break;
+							}
+						}
+					}
+				} else {
+					annotationList.add(new Object[] { ef, f });
+				}
+			}
+		}
+		// Get annotation method
+		Method[] ms = cls.getDeclaredMethods();
+		for (Method m : ms) {
+			ExcelField ef = m.getAnnotation(ExcelField.class);
+			if (ef != null && (ef.type() == 0 || ef.type() == type)) {
+				if (groups != null && groups.length > 0) {
+					boolean inGroup = false;
+					for (int g : groups) {
+						if (inGroup) {
+							break;
+						}
+						for (int efg : ef.groups()) {
+							if (g == efg) {
+								inGroup = true;
+								annotationList.add(new Object[] { ef, m });
+								break;
+							}
+						}
+					}
+				} else {
+					annotationList.add(new Object[] { ef, m });
+				}
+			}
+		}
+		// Field sorting
+		Collections.sort(annotationList, new Comparator<Object[]>() {
+			public int compare(Object[] o1, Object[] o2) {
+				return new Integer(((ExcelField) o1[0]).sort())
+						.compareTo(new Integer(((ExcelField) o2[0]).sort()));
+			};
+		});
+		// Initialize
+		List<String> headerList = Lists.newArrayList();
+		for (Object[] os : annotationList) {
+			String t = ((ExcelField) os[0]).title();
+			// 如果是导出，则去掉注释
+			if (type == 1) {
+				String[] ss = StringUtils.split(t, "**", 2);
+				if (ss.length == 2) {
+					t = ss[0];
+				}
+			}
+			headerList.add(t);
+		}
+		if(StringUtils.isNotEmpty(title)){
+			initialize(title, headerList);
+		}else{
+			createTitleByCenter(headerList);
+		}
+		return this;
 	}
 
 	/**
@@ -183,6 +277,18 @@ public class ExportExcel {
 	 */
 	public ExportExcel(String title, List<String> headerList) {
 		initialize(title, headerList);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param title
+	 *            表格标题，传“空值”，表示无标题
+	 * @param map
+	 *            表头列表
+	 */
+	public ExportExcel(String title, Map map) {
+		initialize(title, map);
 	}
 
 	/**
@@ -236,6 +342,75 @@ public class ExportExcel {
 			sheet.setColumnWidth(i, colWidth < 3000 ? 3000 : colWidth);
 		}
 		log.debug("Initialize success.");
+	}
+
+	/**
+	 * 初始化函数
+	 *
+	 * @param headerList
+	 *            表头列表
+	 */
+	private void createTitleByCenter(List<String> headerList) {
+
+		if (headerList == null) {
+			throw new RuntimeException("headerList not null!");
+		}
+		Row headerRow = sheet.createRow(rownum++);
+		headerRow.setHeightInPoints(16);
+		for (int i = 0,j=1; i < headerList.size(); i++,j++) {
+			Cell cell = headerRow.createCell(j);
+			cell.setCellStyle(styles.get("header"));
+			String[] ss = StringUtils.split(headerList.get(i), "**", 2);
+			if (ss.length == 2) {
+				cell.setCellValue(ss[0]);
+				Comment comment = this.sheet.createDrawingPatriarch()
+						.createCellComment(
+								new XSSFClientAnchor(0, 0, 0, 0, (short) 3, 3,
+										(short) 5, 6));
+				comment.setString(new XSSFRichTextString(ss[1]));
+				cell.setCellComment(comment);
+			} else {
+				cell.setCellValue(headerList.get(i));
+			}
+			sheet.autoSizeColumn(i);
+		}
+		/*for (int i = 1; i <= headerList.size(); i++) {
+			int colWidth = sheet.getColumnWidth(i) * 2;
+			sheet.setColumnWidth(i, colWidth < 3000 ? 3000 : colWidth);
+		}*/
+		log.debug("Initialize success.");
+	}
+
+	/**
+	 * 初始化函数
+	 *
+	 * @param title
+	 *            表格标题，传“空值”，表示无标题
+	 * @param map
+	 *            自定义表格
+	 */
+	private void initialize(String title,Map<String,Object> map) {
+		this.wb = new SXSSFWorkbook(500);
+		this.sheet = wb.createSheet("Export");
+		this.styles = createStyles(wb);
+
+		// Create header
+		if (map == null) {
+			throw new RuntimeException("map not null!");
+		}
+		Row headerRow = sheet.createRow(rownum++);
+		headerRow.setHeightInPoints(16);
+
+		int j=1;
+		for(Map.Entry<String, Object> entry : map.entrySet()){
+			if(j % 6 == 1 ){
+				headerRow = sheet.createRow(rownum++);
+				j=1;
+			}
+			headerRow.createCell(j++).setCellValue(entry.getKey());
+			headerRow.createCell(j++).setCellValue((String)entry.getValue());
+		}
+
 	}
 
 	/**
@@ -443,6 +618,58 @@ public class ExportExcel {
 	}
 
 	/**
+	 * 添加数据（通过annotation.ExportField添加数据）
+	 *
+	 * @return list 数据列表
+	 */
+	public <E> ExportExcel setDataListAndTitle(List<E> list,Class<?> cls) {
+		if(CollectionUtils.isNotEmpty(list)){
+			this.addRow();
+			annotationList.clear();
+			initExcelByClass("", cls,1);
+		}
+		for (E e : list) {
+			int colunm = 1;
+			Row row = this.addRow();
+			StringBuilder sb = new StringBuilder();
+			for (Object[] os : annotationList) {
+				ExcelField ef = (ExcelField) os[0];
+				Object val = null;
+				// Get entity value
+				try {
+					if (StringUtils.isNotBlank(ef.value())) {
+						val = Reflections.invokeGetter(e, ef.value());
+					} else {
+						if (os[1] instanceof Field) {
+							val = Reflections.invokeGetter(e,
+									((Field) os[1]).getName());
+						} else if (os[1] instanceof Method) {
+							val = Reflections.invokeMethod(e,
+									((Method) os[1]).getName(), new Class[] {},
+									new Object[] {});
+						}
+					}
+					// If is dict, get dict label
+					if (StringUtils.isNotBlank(ef.dictType())) {
+						val = DictUtils.getDictLabel(
+								val == null ? "" : val.toString(),
+								ef.dictType(), "");
+					}
+				} catch (Exception ex) {
+					// Failure to ignore
+					log.info(ex.toString());
+					val = "";
+				}
+				this.addCell(row, colunm++, val, ef.align(), ef.fieldType());
+				sb.append(val + ", ");
+			}
+			log.debug("Write success: [" + row.getRowNum() + "] "
+					+ sb.toString());
+		}
+		return this;
+	}
+
+	/**
 	 * 添加数据(添加map数据)
 	 *
 	 * @return list 数据列表
@@ -461,6 +688,46 @@ public class ExportExcel {
 				Object val = null;
 				if (srcMap.get(titleSet.get(j)) != null) {
 					val = srcMap.get(titleSet.get(j)).toString();
+				} else {
+					val = "";
+				}
+				this.addCell(row, colunm++, val, 2, String.class);
+				sb.append(val + ", ");
+			}
+
+			log.debug("Write success: [" + row.getRowNum() + "] "
+					+ sb.toString());
+		}
+		return this;
+	}
+
+	/**
+	 * 添加数据(添加map数据,多出渲染表头)
+	 *
+	 * @return list 数据列表
+	 */
+	public <E> ExportExcel setDataListMap(List<Map> src_list, Map titleSet) {
+
+		List<String> keyList = new ArrayList<>(titleSet.keySet());
+		List<String> valueList = new ArrayList<>(titleSet.values());
+
+		if(CollectionUtils.isNotEmpty(src_list)){
+			this.addRow();
+			createTitleByCenter(valueList);
+		}
+		for (int k=0;k<src_list.size();k++) {
+
+			Map<String,Object> srcMap = JSONObject.parseObject(JSONObject.toJSONString(src_list.get(k)), Map.class);
+
+			int colunm = 1;
+			Row row = this.addRow();
+			StringBuilder sb = new StringBuilder();
+
+			// 行，获取cell值
+			for(int j=0;j<keyList.size();j++){
+				Object val = null;
+				if (srcMap.get(keyList.get(j)) != null) {
+					val = srcMap.get(keyList.get(j)).toString();
 				} else {
 					val = "";
 				}
@@ -522,6 +789,11 @@ public class ExportExcel {
 		return this;
 	}
 
+	/*public static void main(String[] args) throws Throwable {
+		ExportExcel ee = new ExportExcel("表格标题", new HashMap<>());
+		ee.writeFile("D:/export.xlsx");
+		ee.dispose();
+	}*/
 	// /**
 	// * 导出测试
 	// */

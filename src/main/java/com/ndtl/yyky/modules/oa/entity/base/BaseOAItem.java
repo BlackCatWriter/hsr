@@ -43,7 +43,7 @@ public abstract class BaseOAItem extends BaseOAEntity {
 		this.office = office;
 	}
 
-	@NotNull(message = "权属不能为空")
+	/*@NotNull(message = "权属不能为空")*/
 	@ExcelField(title = "权属", align = 2, sort = 17)
 	public Long getWeightBelong() {
 		return weightBelong;

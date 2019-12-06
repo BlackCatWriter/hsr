@@ -14,19 +14,6 @@
 <script type="text/javascript">
 	$(document).ready(
 			function() {
-                $("#btnExport").click(function() {
-                    top.$.jBox.confirm("确认要导出经费支出明细数据吗？", "系统提示",
-                        function(v, h, f) {
-                            if (v == "ok") {
-                                $("#inputForm").attr("action", "${ctx}/sys/user/exportUserDetail");
-                                $("#inputForm").submit();
-                            }
-                        },
-                        {
-                            buttonsFocus: 1
-                        });
-                    top.$('.jbox-body .jbox-icon').css('top', '55px');
-                });
 				changChild("${user.prefression}");
 				$("#inputForm")
 						.validate(
@@ -73,7 +60,15 @@
 			}
 		}, 'json');
 	}
-
+	function exportUserDetail(){
+        top.$.jBox.confirm("确认要导出个人档案明细数据吗？", "系统提示",
+            function(v, h, f) {
+                if (v == "ok") {
+                    $("#searchForm").submit();
+                }
+            });
+        top.$('.jbox-body .jbox-icon').css('top', '55px');
+	}
     function saveUserEducation(){
         top.$.jBox("<div style='padding:20px;'>"
 			+"<div class='control-group'>" + "<div class='controls'>" + "<label class='control-label'>学校名称:&nbsp;</label>"  + "<input id='schoolName' name='schoolName' type='text' />" + "</div>" + "</div>"
@@ -165,6 +160,8 @@
 </head>
 <body>
 	<br />
+	<form:form id="searchForm" modelAttribute="user" action="${ctx}/sys/user/exportUserDetail" method="post" >
+	</form:form>
 	<form:form id="inputForm" modelAttribute="user" action="${ctx}/sys/user/infoSave" method="post" enctype="multipart/form-data" class="form-horizontal">
 		<tags:message content="${message}" />
 		<div class="box">
@@ -214,7 +211,7 @@
 		<div class="control-group">
 			<label class="control-label">身份证:</label>
 			<div class="controls">
-				<form:input path="idCard" htmlEscape="false" maxlength="50" class="required" />
+				<form:input path="idCard" htmlEscape="false" maxlength="50" />
 			</div>
 		</div>
 		<div class="control-group">
@@ -422,7 +419,7 @@
 		</div>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" />
-			<input id="btnExport" class="btn btn-primary" type="submit" value="导 出" />
+			<a onclick="exportUserDetail()" class="btn btn-primary" type="submit" >导出</a>
 		</div>
 	</form:form>
 </body>

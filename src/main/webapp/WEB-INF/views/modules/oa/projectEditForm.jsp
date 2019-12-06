@@ -12,10 +12,33 @@
 <link href="${ctxStatic}/bootstrap/2.3.1/css_default/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="${ctxStatic}/common/dropzone.css" type="text/css" rel="stylesheet" />
 <script src="${ctxStatic}/common/myuploadfunction.js"></script>
+<style type="text/css">
+	#level-controls label{display: inline-block;}
+</style>
 <script type="text/javascript">
 $(document).ready(function() {
     $("#name").focus();
     $("#uploaded-files").hide();
+    $("#level-controls input[type=checkbox]").change(function() {
+        var sportSelect = document.getElementsByName('levelList' ),
+            maxNums   = 3;
+        for(var i in sportSelect){
+            sportSelect[i]. onclick = function (){
+                var _sportSelect = document.getElementsByName('levelList' ),
+                    cNums = 0;
+                for(var i in _sportSelect){
+                    if(i == 'length') break ;
+                    if(_sportSelect[i].checked){
+                        cNums ++;
+                    }
+                }
+                if(cNums > maxNums){
+                    this.checked = false;
+                    alert('最多只能选择三项');
+                }
+            }
+        }
+    });
     $("#inputForm").validate({
         submitHandler: function(form) {
             loading('正在提交，请稍等...');
@@ -253,6 +276,11 @@ function saveAndSubmit() {
     $("#checkForm").attr("action", "${ctx}/oa/project/submitProjectToUser");
     $("#checkForm").submit();
 }
+function saveAndSubmitProject() {
+    $("#inputForm").attr("action", "${ctx}/oa/project/saveAndSubmitProject");
+    $("#inputForm").submit();
+}
+
 function complete(taskId, variables) {
     var keys = "",
     values = "",
@@ -329,7 +357,7 @@ function complete(taskId, variables) {
 </head>
 <body>
 	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/oa/project/form">科研项目登记</a></li>
+		<%--<li><a href="${ctx}/oa/project/form">科研项目登记</a></li>--%>
 		<li class="active"><a href="${ctx}/oa/project/editform">项目编辑</a></li>
 		<li><a href="${ctx}/oa/project/list">所有任务</a></li>
 		<li><a href="${ctx}/oa/project/task">待办任务</a></li>
@@ -392,10 +420,11 @@ function complete(taskId, variables) {
 			</div>
 			<div class="control-group">
 				<label class="control-label">申请等级:</label>
-				<div class="controls">
-					<form:select path="level">
+				<div class="controls" id="level-controls">
+					<%--<form:select path="level">
 						<form:options items="${fns:getDictList('project_level')}" itemLabel="label" itemValue="value" htmlEscape="false" />
-					</form:select>
+					</form:select>--%>
+					<form:checkboxes path="levelList" items="${fns:getDictList('project_level')}" itemLabel="label" itemValue="value" class="required" htmlEscape="false"/>
 				</div>
 			</div>
 			<div class="control-group">
@@ -432,6 +461,7 @@ function complete(taskId, variables) {
 			</div>
 		<div class="form-actions">
 			<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" />&nbsp;
+			<input id="btnSaveSubmit" class="btn btn-primary" onclick="saveAndSubmitProject()" type="submit" value="保存并提交" />&nbsp;
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)" />
 		</div>
 		</form:form>

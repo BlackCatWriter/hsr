@@ -1,9 +1,6 @@
 package com.ndtl.yyky.modules.oa.web;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -103,6 +100,7 @@ public class ProjectController extends BaseOAController {
 		setUserListInTask(project);
 		model.addAttribute("project", project);
 		model.addAttribute("form", true);
+        model.addAttribute("levelList",project.getLevelList());
 		return "modules/oa/projectEditForm";
 	}
 
@@ -115,8 +113,9 @@ public class ProjectController extends BaseOAController {
 	 */
 	@RequestMapping(value = "edit", method = RequestMethod.POST)
 	public String edit(Project project) {
+        project.setLevelList(project.getLevelList());
 		projectService.editProject(project);
-		return "redirect:" + Global.getAdminPath() + "/oa/project/form";
+		return "redirect:" + Global.getAdminPath() + "/oa/project/list";
 	}
 
 	@ModelAttribute("project")
@@ -176,10 +175,28 @@ public class ProjectController extends BaseOAController {
 
 	@RequiresPermissions("oa:project:edit")
 	@RequestMapping(value = "save", method = RequestMethod.POST)
-	public String save(Project project, RedirectAttributes redirectAttributes) {
+	public String save(Project project, RedirectAttributes redirectAttributes,Model model) {
+		try {
+			project.setStatus(ProjectStatus.CREATE);
+            project.setLevelList(project.getLevelList());
+			projectService.saveProject(project);
+
+			model.addAttribute("project", project);
+			model.addAttribute("form", true);
+			addMessage(redirectAttributes, "提交成功！");
+		} catch (Exception e) {
+			logger.error("提交失败：", e);
+		}
+        return "redirect:" + Global.getAdminPath() + "/oa/project/list";
+	}
+
+	@RequiresPermissions("oa:project:edit")
+	@RequestMapping(value = "saveAndSubmitProject", method = RequestMethod.POST)
+	public String saveAndSubmitProject(Project project, RedirectAttributes redirectAttributes) {
 		try {
 			Map<String, Object> variables = new HashMap<String, Object>();
 			project.setStatus(ProjectStatus.CREATE);
+            project.setLevelList(project.getLevelList());
 			ProcessInstance processInstance = projectService.save(project,
 					variables, ProcessDefinitionKey.Project);
 			addMessage(redirectAttributes,
@@ -188,7 +205,7 @@ public class ProjectController extends BaseOAController {
 			logger.error("启动项目申请流程失败：", e);
 			addMessage(redirectAttributes, "系统内部错误！");
 		}
-		return "redirect:" + Global.getAdminPath() + "/oa/project/form";
+		return "redirect:" + Global.getAdminPath() + "/oa/project/list";
 	}
 
 	@RequiresPermissions("oa:project:view")

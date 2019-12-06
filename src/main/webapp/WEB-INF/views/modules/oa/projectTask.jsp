@@ -557,12 +557,7 @@ function complete(taskId, variables) {
 							<td>${project.user.name}</td>
 							<td><fmt:formatDate value="${project.createDate}"
 									type="both" /></td>
-							<c:if test="${empty project.file}">
-								<td>${project.projectName}</td>
-							</c:if>
-							<c:if test="${not empty project.file}">
-								<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>
-							</c:if>
+							<td><a href="${ctx}/cms/project/form?id=${project.id}" >${project.projectName}</a></td>
 							<td>${task.name}</td>
 							<td><fmt:formatDate value="${task.createTime}" type="both" /></td>
 							<%--<td>${pi.suspended ? "已挂起" : "正常" }；<b title='流程版本号'>V:
@@ -611,12 +606,13 @@ function complete(taskId, variables) {
 							<td>${project.user.name}</td>
 							<td><fmt:formatDate value="${project.createDate}"
 									type="both" /></td>
-							<c:if test="${empty project.file}">
+							<td><a href="${ctx}/cms/project/form?id=${project.id}" >${project.projectName}</a></td>
+							<%--<c:if test="${empty project.file}">
 								<td>${project.projectName}</td>
 							</c:if>
 							<c:if test="${not empty project.file}">
 								<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>
-							</c:if>
+							</c:if>--%>
 							<td>${task.name}</td>
 							<td><fmt:formatDate value="${task.createTime}" type="both" /></td>
 							<td>${project.checkedCount}/${project.assignCount}</td>
@@ -664,12 +660,13 @@ function complete(taskId, variables) {
 							<td>${project.user.name}</td>
 							<td><fmt:formatDate value="${project.createDate}"
 									type="both" /></td>
-							<c:if test="${empty project.file}">
+							<td><a href="${ctx}/cms/project/form?id=${project.id}" >${project.projectName}</a></td>
+							<%--<c:if test="${empty project.file}">
 								<td>${project.projectName}</td>
 							</c:if>
 							<c:if test="${not empty project.file}">
 								<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>
-							</c:if>
+							</c:if>--%>
 							<td>${task.name}</td>
 							<td><fmt:formatDate value="${task.createTime}" type="both" /></td>
 							<td>${project.processStatus}</td>
@@ -706,12 +703,13 @@ function complete(taskId, variables) {
 							<%--<td>${project.user.name}</td>--%>
 							<td><fmt:formatDate value="${project.createDate}"
 									type="both" /></td>
-							<c:if test="${empty project.file}">
+							<td><a href="${ctx}/cms/project/form?id=${project.id}" >${project.projectName}</a></td>
+							<%--<c:if test="${empty project.file}">
 								<td>${project.projectName}</td>
 							</c:if>
 							<c:if test="${not empty project.file}">
 								<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>
-							</c:if>
+							</c:if>--%>
 							<td>${task.name}</td>
 							<td><fmt:formatDate value="${task.createTime}" type="both" /></td>
 							<td>${project.checkedCount}/${project.assignCount}</td>

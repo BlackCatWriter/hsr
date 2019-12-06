@@ -1,9 +1,6 @@
 package com.ndtl.yyky.modules.oa.entity;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -81,7 +78,7 @@ public class Project extends BaseOAItem {
 
 	// -- 临时属性 --//
 	private boolean selected;
-
+	private List<String> levelList;
 	private List<Thesis> thesis;
 	private List<Reward> reward;
 	private List<Reward> newTec;
@@ -509,4 +506,19 @@ public class Project extends BaseOAItem {
 	public void setIntroduce(String introduce) {
 		this.introduce = introduce;
 	}
+
+	@Transient
+	@JsonIgnore
+	public List<String> getLevelList() {
+		if(level != null){
+			return Arrays.asList(StringUtils.split(this.level,","));
+		}
+		return new ArrayList<>();
+	}
+
+	@Transient
+	public void setLevelList(List<String> levelList) {
+		this.level = StringUtils.join(levelList.toArray(new String[levelList.size()]),",");
+	}
+
 }

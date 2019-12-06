@@ -12,10 +12,36 @@
 <link href="${ctxStatic}/bootstrap/2.3.1/css_default/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <link href="${ctxStatic}/common/dropzone.css" type="text/css" rel="stylesheet" />
 <script src="${ctxStatic}/common/myuploadfunction.js"></script>
+
+<style type="text/css">
+	#level-controls label{display: inline-block;}
+</style>
 <script type="text/javascript">
 $(document).ready(function() {
     $("#name").focus();
     $("#uploaded-files").hide();
+
+    $("#level-controls input[type=checkbox]").change(function() {
+        var sportSelect = document.getElementsByName('levelList' ),
+            maxNums   = 3;
+        for(var i in sportSelect){
+            sportSelect[i]. onclick = function (){
+                var _sportSelect = document.getElementsByName('levelList' ),
+                    cNums = 0;
+                for(var i in _sportSelect){
+                    if(i == 'length') break ;
+                    if(_sportSelect[i].checked){
+                        cNums ++;
+                    }
+                }
+                if(cNums > maxNums){
+                    this.checked = false;
+                    alert('最多只能选择三项');
+                }
+            }
+        }
+    });
+
     $("#inputForm").validate({
         submitHandler: function(form) {
             loading('正在提交，请稍等...');
@@ -262,6 +288,10 @@ function saveAndSubmit() {
     $("#checkForm").attr("action", "${ctx}/oa/project/submitProjectToUser");
     $("#checkForm").submit();
 }
+function saveAndSubmitProject() {
+    $("#inputForm").attr("action", "${ctx}/oa/project/saveAndSubmitProject");
+    $("#inputForm").submit();
+}
 function complete(taskId, variables) {
     var keys = "",
     values = "",
@@ -409,11 +439,11 @@ function complete(taskId, variables) {
 			</div>
 			<div class="control-group">
 				<label class="control-label">申请等级:</label>
-				<div class="controls">
-					<form:select path="level" >
-						<form:options items="${fns:getDictList('project_level')}" itemLabel="label" itemValue="value" htmlEscape="false" />
-					</form:select>
-
+				<div class="controls" id="level-controls">
+					<%--<form:select path="level" >
+						<form:checkboxes items="${fns:getDictList('project_level')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+					</form:select>--%>
+					<form:checkboxes path="levelList" items="${fns:getDictList('project_level')}" itemLabel="label" itemValue="value" class="required" htmlEscape="false"/>
 				</div>
 			</div>
 			<div class="control-group">
@@ -554,7 +584,8 @@ function complete(taskId, variables) {
 			<div class="form-actions">
 				<c:if test="${form eq true}">
 					<shiro:hasPermission name="oa:project:edit">
-						<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" />&nbsp;</shiro:hasPermission>
+						<input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存" />&nbsp;
+						<input id="btnSubmit" class="btn btn-primary" onclick="saveAndSubmitProject()" type="submit" value="保存并提交" />&nbsp;</shiro:hasPermission>
 				</c:if>
 				<c:if test="${modify eq true}">
 					<input id="btnReSubmit" class="btn btn-primary" type="button" onClick="reSubmit(true)" value="重新申请" />&nbsp;</c:if>

@@ -59,28 +59,41 @@
 			<tr>
 				<%--<td>${project.id}</td>--%>
 				<td>${project.projectNo}</td>
-				<c:if test="${empty project.file}">
-					<td>${project.projectName}</td>
-				</c:if>
-				<c:if test="${not empty project.file}">
-					<%--<td><a href="${ctx}/oa/project/get/${project.id}" target='_blank'>${project.projectName}</a></td>--%>
-					<td><a href="${ctx}/cms/project/form?id=${project.id}">${project.projectName}</a></td>
-				</c:if>
+				<td><a href="${ctx}/cms/project/form?id=${project.id}">${project.projectName}</a></td>
 				<td>${project.processStatus}</td>
 				<td>${project.createBy.name}</td>
 				<td>${project.createDate}</td>
-				<c:if test="${not empty task}">
+				<c:choose>
+					<c:when test="${not empty task}">
+						<td>${task.name}</td>
+					</c:when>
+					<c:when test="${empty task && project.delFlag eq '2'}">
+						<td>已结束</td>
+					</c:when>
+					<c:otherwise>
+						<td>未开始</td>
+					</c:otherwise>
+				</c:choose>
+				<%--<c:if test="${not empty task}">
 					<td>${task.name}</td>
 				</c:if>
 				<c:if test="${empty task}">
 					<td>已结束</td>
-				</c:if>
-				<c:if test="${project.taskKey eq 'kjDeptAudit'}">
+				</c:if>--%>
+				<%--<c:if test="${project.taskKey eq 'kjDeptAudit'}">
 					<td><a href="${ctx}/oa/project/editform?id=${project.id}">编辑</a></td>
 				</c:if>
 				<c:if test="${project.taskKey ne 'kjDeptAudit'}">
 					<td></td>
-				</c:if>
+				</c:if>--%>
+				<c:choose>
+					<c:when test="${(empty task && project.delFlag ne '2') || projectData.taskKey eq 'modifyApply'}">
+						<td><a href="${ctx}/oa/project/editform?id=${project.id}">编辑</a></td>
+					</c:when>
+					<c:otherwise>
+						<td><a href="${ctx}/cms/project/form?id=${project.id}">查看</a></td>
+					</c:otherwise>
+				</c:choose>
 			</tr>
 		</c:forEach>
 		</tbody>

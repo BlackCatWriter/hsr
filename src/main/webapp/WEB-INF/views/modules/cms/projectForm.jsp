@@ -65,7 +65,10 @@
 		<div class="control-group">
 			<label class="control-label">附件链接:</label>
 			<div class="controls">
-				<a href="${ctx}/cms/project/get/${project.id}">${project.file}</a>
+				<c:set value="${ fn:split(project.file, ',') }" var="arr" />
+				<c:forEach items="${ arr }" var="s">
+					<a href="${ctx}/cms/project/get/${project.id}">${s}</a><br>
+				</c:forEach>
 			</div>
 		</div>
 		<div class="control-group">

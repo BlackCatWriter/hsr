@@ -386,17 +386,7 @@ public class UserController extends BaseOAController {
 	@RequestMapping(value = "infoSave")
 	public String infoSave(User user, Model model,
 						   HttpServletRequest request, MultipartFile file) {
-		Map<String,String> filePath = getFilePathByWeb("head",
-				String.valueOf(UserUtils.getUser().getId()),request);
-		try {
-			saveFileFromInputStream(
-					file.getInputStream(),
-					filePath.get("servletPath"),
-					file.getOriginalFilename());
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		User currentUser = UserUtils.getUser();
 		if (StringUtils.isNotBlank(user.getName())) {
 
@@ -405,6 +395,22 @@ public class UserController extends BaseOAController {
 				return "modules/sys/userInfo";
 			}
 			currentUser = UserUtils.getUser(true);
+
+			if(file != null && StringUtils.isNotEmpty(file.getOriginalFilename())){
+				Map<String,String> filePath = getFilePathByWeb("head",
+						String.valueOf(UserUtils.getUser().getId()),request);
+				try {
+					saveFileFromInputStream(
+							file.getInputStream(),
+							filePath.get("servletPath"),
+							file.getOriginalFilename());
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				currentUser.setHeadImg(filePath.get("relativePath")+"/"+file.getOriginalFilename());
+			}
+
 			currentUser.setEmail(user.getEmail());
 			currentUser.setPhone(user.getPhone());
 			currentUser.setMobile(user.getMobile());
@@ -418,7 +424,6 @@ public class UserController extends BaseOAController {
 			currentUser.setIdCard(user.getIdCard());
 			currentUser.setContactAddress(user.getContactAddress());
 			currentUser.setPost(user.getPost());
-			currentUser.setHeadImg(filePath.get("relativePath")+"/"+file.getOriginalFilename());
 			currentUser.setPrefression(user.getPrefression());
 			currentUser.setTitle(user.getTitle());
 			currentUser.setSex(user.getSex());
@@ -454,7 +459,7 @@ public class UserController extends BaseOAController {
 			titleMap.put("党派",DictUtils.getDictLabel(currentUser.getParty(),"party", ""));
 			titleMap.put("籍贯",currentUser.getNativePlace());
 			titleMap.put("职称",DictUtils.getDictLabel(currentUser.getTitle(),"title", ""));
-			titleMap.put("职务",DictUtils.getDictLabel(currentUser.getPost(),"post", ""));
+			titleMap.put("职务",DictUtils.getDictLabel(currentUser.getPost(),"acad_exercise_role", ""));
 			titleMap.put("科室",UserUtils.getOfficeByOffid(currentUser.getOffice().getId()).getName());
 			titleMap.put("身份证号码",currentUser.getIdCard());
 			titleMap.put("手机号码",currentUser.getMobile());

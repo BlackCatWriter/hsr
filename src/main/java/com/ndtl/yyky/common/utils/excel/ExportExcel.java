@@ -394,6 +394,16 @@ public class ExportExcel {
 		this.sheet = wb.createSheet("Export");
 		this.styles = createStyles(wb);
 
+		// Create title
+		if (StringUtils.isNotBlank(title)) {
+			Row titleRow = sheet.createRow(rownum++);
+			titleRow.setHeightInPoints(30);
+			Cell titleCell = titleRow.createCell(1);
+			titleCell.setCellStyle(styles.get("title"));
+			titleCell.setCellValue(title);
+			sheet.addMergedRegion(new CellRangeAddress(titleRow.getRowNum(),
+					titleRow.getRowNum(), titleRow.getRowNum()+1, 14));
+		}
 		// Create header
 		if (map == null) {
 			throw new RuntimeException("map not null!");

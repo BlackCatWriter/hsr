@@ -319,10 +319,10 @@
 				<td>${project.createDate}</td>
 				<td>${project.status.displayName}</td>
 				<td>
-				<c:if test="${fns:isKJDept()}">
+				<c:if test="${fns:isKJDept() and project.status ne 'FINISH'}">
 					<a class="handle" href="#" data-id="${project.id}">经费编辑</a>
 				</c:if>
-				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id}">
+				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id and project.status ne 'FINISH'}">
 					<c:if test="${not empty project.plan}">
 						<a href="${ctx}/oa/expense/form?id=${project.id}">申请经费</a>
 					</c:if>
@@ -332,33 +332,33 @@
 				</c:if>
 				</td>
 				<td>
-				<c:if test="${fns:isKJDept() and not empty project.midTermFileTemplete}">
+				<c:if test="${project.status ne 'FINISH' and fns:isKJDept() and not empty project.midTermFileTemplete}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/midTemplete">中期考核模板：${project.midTermFileTemplete}</a>
 				</c:if>
-				<c:if test="${fns:isKJDept() and empty project.midTermFileTemplete}">
+				<c:if test="${project.status ne 'FINISH' and fns:isKJDept() and empty project.midTermFileTemplete}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/midTemplete">中期考核模板</a>
 				</c:if>
-				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id and not empty project.midTermFileTemplete and not empty project.midTermFile}">
+				<c:if test="${project.status ne 'FINISH' and project.status.approval and project.weightBelong==fns:getUser().id and not empty project.midTermFileTemplete and not empty project.midTermFile}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/mid">中期考核：${project.midTermFile}</a>
 				</c:if>
-				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id and not empty project.midTermFileTemplete  and empty project.midTermFile}">
+				<c:if test="${project.status ne 'FINISH' and project.status.approval and project.weightBelong==fns:getUser().id and not empty project.midTermFileTemplete  and empty project.midTermFile}">
 					<a  href="${ctx}/oa/project/projectMgmt/${project.id}/mid">中期考核</a>
 				</c:if>
 				</td>
 				<td>
-				<c:if test="${fns:isKJDept() and empty project.endFileTemplete}">
+				<c:if test="${project.status ne 'FINISH' and fns:isKJDept() and empty project.endFileTemplete}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/endTemplete">结题模板</a>
 				</c:if>
-				<c:if test="${fns:isKJDept() and not empty project.endFileTemplete}">
+				<c:if test="${project.status ne 'FINISH' and fns:isKJDept() and not empty project.endFileTemplete}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/endTemplete">结题模板：${project.endFileTemplete}</a>
 				</c:if>
-				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id and not empty project.endFileTemplete and empty project.endFile}">
+				<c:if test="${project.status ne 'FINISH' and project.status.approval and project.weightBelong==fns:getUser().id and not empty project.endFileTemplete and empty project.endFile}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/end">结题</a>
 				</c:if>
-				<c:if test="${project.status.approval and project.weightBelong==fns:getUser().id and not empty project.endFileTemplete and not empty project.endFile}">
+				<c:if test="${project.status ne 'FINISH' and project.status.approval and project.weightBelong==fns:getUser().id and not empty project.endFileTemplete and not empty project.endFile}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/end">结题：${project.endFile}</a>
 				</c:if>
-				<c:if test="${project.status ne 'FINISH'}">
+				<c:if test="${project.status ne 'FINISH' and fns:isKJDept()}">
 					<a href="${ctx}/oa/expense/close?id=${project.id}">关闭项目</a>
 				</c:if>
 				</td>

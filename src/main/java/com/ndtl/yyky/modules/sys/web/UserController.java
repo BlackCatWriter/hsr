@@ -443,7 +443,7 @@ public class UserController extends BaseOAController {
 
 
 	@RequestMapping(value = "exportUserDetail", method = RequestMethod.POST)
-	public String exportUserDetail(Map<String, Object> paramMap,HttpServletRequest request, HttpServletResponse response,
+	public void exportUserDetail(Map<String, Object> paramMap,HttpServletRequest request, HttpServletResponse response,
 											RedirectAttributes redirectAttributes) {
 		Map<String,String> titleMap = new LinkedHashMap<>();
 		List<List> sourceList = new ArrayList();
@@ -481,7 +481,7 @@ public class UserController extends BaseOAController {
 
 			String fileName = "个人档案" + DateUtils.getDate("yyyyMMddHHmmss")+ ".xlsx";
 
-			ExportExcel excel = new ExportExcel("", titleMap);
+			ExportExcel excel = new ExportExcel("个人档案", titleMap);
 
 			for(int i = 0 ;i<sourceList.size();i++){
 				excel.setDataListMap(sourceList.get(i),titleList.get(i));
@@ -494,11 +494,10 @@ public class UserController extends BaseOAController {
 			excel.setDataListAndTitle(achieve.getBookList(), Book.class);
 			excel.setDataListAndTitle(achieve.getRewardList(),Reward.class);
 			excel.write(response, fileName).dispose();
-			return null;
+
 		} catch (Exception e) {
 			addMessage(redirectAttributes, "导出数据失败！失败信息：" + e.getMessage());
 		}
-		return "redirect:" + Global.getAdminPath() + "/sys/user/?repage";
 	}
 
 	/**

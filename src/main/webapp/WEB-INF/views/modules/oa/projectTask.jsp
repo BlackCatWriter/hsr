@@ -436,7 +436,7 @@ function complete(taskId, variables) {
 			</tr>
 			<tr>
 				<td>科研项目题目：</td>
-				<td><a href="${ctx}/oa/project/get/{{id}}" target='_blank'>{{projectName}}</a></td>
+				<td><a href="${ctx}/cms/project/form?id={{id}}">{{projectName}}</a></td>
 			</tr>
 			<tr>
 				<td>第一责任人：</td>

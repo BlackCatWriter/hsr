@@ -51,6 +51,16 @@
 			$("#searchForm").submit();
 	    	return false;
 	    }
+        function exportUserDetail(){
+            top.$.jBox.confirm("确认要导出个人档案明细数据吗？", "系统提示",
+                function(v, h, f) {
+                    if (v == "ok") {
+                        $("#searchForm").attr("action","${ctx}/sys/user/exportUserDetail");
+                        $("#searchForm").submit();
+                    }
+                });
+            top.$('.jbox-body .jbox-icon').css('top', '55px');
+        }
 	</script>
 </head>
 <body>
@@ -109,6 +119,7 @@
 				<shiro:hasPermission name="sys:user:edit"><td>
     				<a href="${ctx}/sys/user/form?id=${user.id}">修改</a>
 					<a href="${ctx}/sys/user/delete?id=${user.id}" onclick="return confirmx('确认要删除该用户吗？', this.href)">删除</a>
+					<a href="javascript:void(0);" onclick="exportUserDetail()">档案</a>
 				</td></shiro:hasPermission>
 			</tr>
 		</c:forEach>

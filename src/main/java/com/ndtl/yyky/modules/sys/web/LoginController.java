@@ -52,6 +52,15 @@ public class LoginController extends BaseController {
 	}
 
 	/**
+	 * 管理注册
+	 */
+	@RequestMapping(value = "${adminPath}/register", method = RequestMethod.GET)
+	public String register(HttpServletRequest request,User user, Model model) {
+		model.addAttribute("user", user);
+		return "modules/sys/registerForm";
+	}
+
+	/**
 	 * 登录失败，真正登录的POST请求由Filter完成
 	 */
 	@RequestMapping(value = "${adminPath}/login", method = RequestMethod.POST)
@@ -89,6 +98,10 @@ public class LoginController extends BaseController {
 			model.addAttribute("basecode", PPLicClientUtils.generateLicRequest());
 			model.addAttribute("message", String.valueOf(map.get("message")));
 			return "modules/sys/sysLicense";
+		}
+		if (user.getIsCheck() == 0) {
+			addMessage(model, "登录失败，用户还未审核通过！");
+			return "modules/sys/sysLogin";
 		}
 		// 设置文件管理权限
 		String ckfinderUserRole = "test";

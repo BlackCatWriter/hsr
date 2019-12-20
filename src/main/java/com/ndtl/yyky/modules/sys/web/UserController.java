@@ -172,6 +172,40 @@ public class UserController extends BaseOAController {
 		return "modules/sys/userList";
 	}
 
+	@RequestMapping(value = "registerSave")
+	public String registerSave(User user, String oldLoginName, String newPassword,
+					   HttpServletRequest request, Model model,
+					   RedirectAttributes redirectAttributes) {
+		if (Global.isDemoMode()) {
+			addMessage(redirectAttributes, "演示模式，不允许操作！");
+			return "redirect:" + Global.getAdminPath() + "/sys/user/?repage";
+		}
+		// 修正引用赋值问题，不知道为何，Company和Office引用的一个实例地址，修改了一个，另外一个跟着修改。
+		user.setCompany(new Office(StringUtils.toLong(request
+				.getParameter("company.id"))));
+		user.setOffice(new Office(StringUtils.toLong(request
+				.getParameter("office.id"))));
+		// 如果新密码为空，则不更换密码
+		if (StringUtils.isNotBlank(newPassword)) {
+			user.setPassword(SystemService.entryptPassword(newPassword));
+		}
+		if (!beanValidator(model, user)) {
+			return form(user, model);
+		}
+		if (!"true".equals(checkLoginName(oldLoginName, user.getLoginName()))) {
+			addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
+			return form(user, model);
+		}
+		// 保存用户信息
+		systemService.saveUser(user);
+		// 清除当前用户缓存
+		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())) {
+			UserUtils.getCacheMap().clear();
+		}
+		addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");
+		return "modules/sys/sysLogin";
+	}
+
 	@RequiresPermissions("sys:user:view")
 	@RequestMapping(value = "form")
 	public String form(User user, Model model) {
@@ -220,6 +254,7 @@ public class UserController extends BaseOAController {
 			}
 		}
 		user.setRoleList(roleList);
+		user.setIsCheck(1);//审核状态
 		// 保存用户信息
 		systemService.saveUser(user);
 		// 清除当前用户缓存
@@ -227,6 +262,25 @@ public class UserController extends BaseOAController {
 			UserUtils.getCacheMap().clear();
 		}
 		addMessage(redirectAttributes, "保存用户'" + user.getLoginName() + "'成功");
+		return "redirect:" + Global.getAdminPath() + "/sys/user/?repage";
+	}
+
+
+	@RequestMapping(value = "check")
+	public String check(Long id, RedirectAttributes redirectAttributes) {
+
+		try {
+			User user = systemService.findUserById(id);
+			if(user != null){
+				user.setIsCheck(1);
+				systemService.saveUser(user);
+				addMessage(redirectAttributes, "审核成功");
+			}else{
+				addMessage(redirectAttributes, "审核失败，未找到该用户");
+			}
+		}catch (Exception e){
+			logger.error("用户审核出错" + e);
+		}
 		return "redirect:" + Global.getAdminPath() + "/sys/user/?repage";
 	}
 
@@ -336,7 +390,6 @@ public class UserController extends BaseOAController {
 	}
 
 	@ResponseBody
-	@RequiresPermissions("sys:user:edit")
 	@RequestMapping(value = "checkLoginName")
 	public String checkLoginName(String oldLoginName, String loginName) {
 		if (loginName != null && loginName.equals(oldLoginName)) {
@@ -496,7 +549,7 @@ public class UserController extends BaseOAController {
 			excel.write(response, fileName).dispose();
 
 		} catch (Exception e) {
-			addMessage(redirectAttributes, "导出数据失败！失败信息：" + e.getMessage());
+			logger.error("导出数据失败！失败信息：", e);
 		}
 	}
 

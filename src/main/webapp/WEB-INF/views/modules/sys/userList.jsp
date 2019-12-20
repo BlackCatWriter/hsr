@@ -102,6 +102,7 @@
 				<th>职称</th>
 				<th>学历</th>
 				<th>出生日期</th>
+				<th>审核状态</th>
 				<th>角色</th><shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission></tr></thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="user">
@@ -113,10 +114,14 @@
 				<td>${user.phone}</td>
 				<td>${user.mobile}</td>
 				<td>${user.jobTitle}</td>
-				<td>${user.education}</td>
+				<td>${fns:getDictLabel(user.education, 'degree', '')}</td>
 				<td>${user.birthday}</td>
 				<td>${user.roleNames}</td>
+				<td>${fns:getDictLabel(user.isCheck, 'user_check', '')}</td>
 				<shiro:hasPermission name="sys:user:edit"><td>
+					<c:if test="${user.isCheck eq '0'}">
+						<a href="${ctx}/sys/user/check?id=${user.id}">审核</a>
+					</c:if>
     				<a href="${ctx}/sys/user/form?id=${user.id}">修改</a>
 					<a href="${ctx}/sys/user/delete?id=${user.id}" onclick="return confirmx('确认要删除该用户吗？', this.href)">删除</a>
 					<a href="javascript:void(0);" onclick="exportUserDetail()">档案</a>

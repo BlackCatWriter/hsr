@@ -87,6 +87,7 @@ public class User extends DataEntity {
 	private String party;//党派
 	private String nation;//民族
 	private String headImg;//头像
+	private Integer isCheck;//是否审核
 
 
 	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
@@ -500,5 +501,13 @@ public class User extends DataEntity {
 
 	public void setHeadImg(String headImg) {
 		this.headImg = headImg;
+	}
+
+	public Integer getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(Integer isCheck) {
+		this.isCheck = isCheck;
 	}
 }

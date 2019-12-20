@@ -24,6 +24,11 @@
 			<value>
 				/static/** = anon
 				/userfiles/** = anon
+				${adminPath}/tag/** = anon
+				${adminPath}/register = anon
+				${adminPath}/sys/user/registerSave = anon
+				${adminPath}/sys/user/checkLoginName = anon
+				${adminPath}/sys/office/** = anon
 				${adminPath}/login = authc
 				${adminPath}/logout = logout
 				${adminPath}/** = user

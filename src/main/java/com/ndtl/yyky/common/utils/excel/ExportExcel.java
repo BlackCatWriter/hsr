@@ -372,7 +372,7 @@ public class ExportExcel {
 			} else {
 				cell.setCellValue(headerList.get(i));
 			}
-			sheet.autoSizeColumn(i);
+			//sheet.autoSizeColumn(j);
 		}
 		/*for (int i = 1; i <= headerList.size(); i++) {
 			int colWidth = sheet.getColumnWidth(i) * 2;

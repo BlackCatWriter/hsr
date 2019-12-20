@@ -45,8 +45,19 @@
 		<div id="messageBox" class="alert alert-error <%=error==null?"hide":""%>"><button data-dismiss="alert" class="close">×</button>
 			<label id="loginError" class="error"><%=error==null?"":"com.ndtl.yyky.modules.sys.security.CaptchaException".equals(error)?"验证码错误, 请重试.":"用户或密码错误, 请重试." %></label>
 		</div>
+		<c:if test="${not empty message}">
+			<script type="text/javascript">
+				//alert("${message}");
+                $("#messageBox").html("${message}");
+                $("#messageBox").show();
+			</script>
+			<%--<c:set var="ctype" value="${fn:indexOf(message,'失败') eq -1?'success':'error'}"/>
+			<c:if test="${ctype eq 'error'}">
+				<div id="messageStatusBox" class="alert alert-error"><button data-dismiss="alert" class="close">×</button>${message}</div>
+			</c:if>--%>
+		</c:if>
 	</div>
-	<h1 class="form-signin-heading"><%--${fns:getConfig('productName')}--%></h1>
+	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>
 	<form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
 		<label class="input-label" for="username" >登录名</label>
 		<input type="text" id="username" name="username" class="input-block-level required" value="${username}" placeholder="请输入工号">
@@ -57,6 +68,7 @@
 			<tags:validateCode name="validateCode" inputCssStyle="margin-bottom:0;"/>
 		</div></c:if>
 		<input class="btn btn-large btn-primary" type="submit" value="登 录"/>&nbsp;&nbsp;
+		<a class="btn btn-large btn-primary" href="${ctx}/register" >注 册</a>&nbsp;&nbsp;
 		<label for="rememberMe" title="下次不需要再登录"><input type="checkbox" id="rememberMe" name="rememberMe"/> 记住我</label>
 		<div id="themeSwitch" class="dropdown">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">${fns:getDictLabel(cookie.theme.value,'theme','默认主题')}<b class="caret"></b></a>

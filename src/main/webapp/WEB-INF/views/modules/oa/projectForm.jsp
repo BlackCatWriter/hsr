@@ -73,36 +73,36 @@ $(document).ready(function() {
         },
         rules: {
             creativity: {
-                range: [0, 30]
+                range: [0, 20]
             },
             advancement: {
-                range: [0, 25]
+                range: [0, 20]
             },
             scientificity: {
                 range: [0, 20]
             },
             feasibility: {
-                range: [0, 15]
+                range: [0, 20]
             },
             practicability: {
-                range: [0, 10]
+                range: [0, 20]
             }
         },
         messages: {
             creativity: {
-                range: "请输入0-30内的整数。"
+                range: "请输入0-20内的整数。"
             },
             advancement: {
-                range: "请输入0-25内的整数。"
+                range: "请输入0-20内的整数。"
             },
             scientificity: {
                 range: "请输入0-20内的整数。"
             },
             feasibility: {
-                range: "请输入0-15内的整数。"
+                range: "请输入0-20内的整数。"
             },
             practicability: {
-                range: "请输入0-10内的整数。"
+                range: "请输入0-20内的整数。"
             }
         }
     });
@@ -415,11 +415,11 @@ function complete(taskId, variables) {
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label"><font color='red'>*</font>权属：</label>
+				<label class="control-label">权属：</label>
 				<div class="controls">
-					<input id="weightBelong" name="weightBelong" value="${project.weightBelong}" maxlength="200" class="input-large required"
+					<input id="weightBelong" name="weightBelong" value="${project.weightBelong}" maxlength="200" class="input-large"
 						type="hidden" />
-					<form:input path="weightBelongDisplayName" maxlength="200" class="input-large required" readonly="true"/>
+					<form:input path="weightBelongDisplayName" maxlength="200" class="input-large" readonly="true"/>
 
 				</div>
 			</div>
@@ -516,6 +516,7 @@ function complete(taskId, variables) {
 							<th>科学性</th>
 							<th>可行性</th>
 							<th>实用性</th>
+							<th>评审结果</th>
 							<th>评审意见</th>
 						</tr>
 						<tbody>
@@ -530,6 +531,7 @@ function complete(taskId, variables) {
 									<td><c:if test="${projectToUser.finished}">${projectToUser.scientificity}</c:if></td>
 									<td><c:if test="${projectToUser.finished}">${projectToUser.feasibility}</c:if></td>
 									<td><c:if test="${projectToUser.finished}">${projectToUser.practicability}</c:if></td>
+									<td>${fns:getDictLabel(projectToUser.isRecommend, 'project_user_recommend', '无')}</td>
 									<td style="overflow: hidden; word-wrap: normal; -ms-text-overflow: ellipsis;-o-text-overflow: ellipsis; text-overflow: ellipsis;" >
 										<c:if test="${projectToUser.finished}">${projectToUser.remarks}</c:if>
 									</td>
@@ -670,31 +672,40 @@ function complete(taskId, variables) {
 			<div class="control-group">
 				<label class="control-label">创新性：</label>
 				<div class="controls">
-					<form:input path="creativity" class="required digits" />
+					<form:input path="creativity" class="required digits" /><font color="red">&nbsp;评分范围(0~20)</font>
 				</div>
+
 			</div>
 			<div class="control-group">
 				<label class="control-label">先进性：</label>
 				<div class="controls">
-					<form:input path="advancement" class="required digits" />
+					<form:input path="advancement" class="required digits" /><font color="red">&nbsp;评分范围(0~20)</font>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">科学性：</label>
 				<div class="controls">
-					<form:input path="scientificity" class="required digits" />
+					<form:input path="scientificity" class="required digits" /><font color="red">&nbsp;评分范围(0~20)</font>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">可行性：</label>
 				<div class="controls">
-					<form:input path="feasibility" class="required digits" />
+					<form:input path="feasibility" class="required digits" /><font color="red">&nbsp;评分范围(0~20)</font>
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">实用性：</label>
 				<div class="controls">
-					<form:input path="practicability" class="required digits" />
+					<form:input path="practicability" class="required digits" /><font color="red">&nbsp;评分范围(0~20)</font>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">评审结果:</label>
+				<div class="controls">
+					<form:select path="isRecommend">
+						<form:options items="${fns:getDictList('project_user_recommend')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+					</form:select>
 				</div>
 			</div>
 			<div class="control-group">

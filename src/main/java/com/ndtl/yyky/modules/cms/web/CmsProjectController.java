@@ -430,34 +430,34 @@ public class CmsProjectController extends BaseOAController {
 
 	@RequestMapping(value = "getMid/{id}", method = RequestMethod.GET)
 	public void getMidFile(HttpServletResponse response, @PathVariable Long id,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes) throws Exception {
 		Project entity = projectService.findOne(id);
 		String fileName = entity.getMidTermFile();
-		this.getFile(response, id, redirectAttributes, fileName, "project");
+		this.multFileDownload(response, id, redirectAttributes, fileName, "project");
 	}
 
 	@RequestMapping(value = "getMidTemplete/{id}", method = RequestMethod.GET)
 	public void getMidTemplete(HttpServletResponse response,
-			@PathVariable Long id, RedirectAttributes redirectAttributes) {
+			@PathVariable Long id, RedirectAttributes redirectAttributes) throws Exception {
 		Project entity = projectService.findOne(id);
 		String fileName = entity.getMidTermFileTemplete();
-		this.getFile(response, id, redirectAttributes, fileName, "project");
+		this.multTempFileDownload(response, "midTemplete", redirectAttributes, fileName, "project");
 	}
 
 	@RequestMapping(value = "getEndTemplete/{id}", method = RequestMethod.GET)
 	public void getEndTemplete(HttpServletResponse response,
-			@PathVariable Long id, RedirectAttributes redirectAttributes) {
+			@PathVariable Long id, RedirectAttributes redirectAttributes) throws Exception {
 		Project entity = projectService.findOne(id);
 		String fileName = entity.getEndFileTemplete();
-		this.getFile(response, id, redirectAttributes, fileName, "project");
+		this.multTempFileDownload(response, "endTemplete", redirectAttributes, fileName, "project");
 	}
 
 	@RequestMapping(value = "getEnd/{id}", method = RequestMethod.GET)
 	public void getEndFile(HttpServletResponse response, @PathVariable Long id,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes) throws Exception {
 		Project entity = projectService.findOne(id);
 		String fileName = entity.getEndFile();
-		this.getFile(response, id, redirectAttributes, fileName, "project");
+		this.multFileDownload(response, id, redirectAttributes, fileName, "project");
 	}
 
 	@RequestMapping(value = "import/template")

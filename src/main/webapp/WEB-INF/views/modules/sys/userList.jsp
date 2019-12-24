@@ -120,7 +120,7 @@
 				<td>${fns:getDictLabel(user.isCheck, 'user_check', '')}</td>
 				<shiro:hasPermission name="sys:user:edit"><td>
 					<c:if test="${user.isCheck eq '0'}">
-						<a href="${ctx}/sys/user/check?id=${user.id}">审核</a>
+						<a href="${ctx}/sys/user/check?id=${user.id}" onclick="return confirmx('确认通过审核吗？', this.href)">审核</a>
 					</c:if>
     				<a href="${ctx}/sys/user/form?id=${user.id}">修改</a>
 					<a href="${ctx}/sys/user/delete?id=${user.id}" onclick="return confirmx('确认要删除该用户吗？', this.href)">删除</a>

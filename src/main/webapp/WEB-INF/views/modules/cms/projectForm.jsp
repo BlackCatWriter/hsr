@@ -74,13 +74,19 @@
 		<div class="control-group">
 			<label class="control-label">中期考核附件链接:</label>
 			<div class="controls">
-				<a href="${ctx}/cms/project/getMid/${project.id}">${project.midTermFile}</a>
+				<c:set value="${ fn:split(project.midTermFile, ',') }" var="arr" />
+				<c:forEach items="${ arr }" var="s">
+					<a href="${ctx}/cms/project/getMid/${project.id}">${s}</a><br>
+				</c:forEach>
 			</div>
 		</div>
 		<div class="control-group">
 			<label class="control-label">结题附件链接:</label>
 			<div class="controls">
-				<a href="${ctx}/cms/project/getEnd/${project.id}">${project.endFile}</a>
+				<c:set value="${ fn:split(project.endFile, ',') }" var="arr" />
+				<c:forEach items="${ arr }" var="s">
+					<a href="${ctx}/cms/project/getEnd/${project.id}">${s}</a><br>
+				</c:forEach>
 			</div>
 		</div>
 		<div class="control-group">

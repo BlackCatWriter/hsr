@@ -35,6 +35,7 @@ public class ProjectToUser extends DataEntity {
 	private Integer scientificity;// 科学性
 	private Integer feasibility;// 可行性
 	private Integer practicability;// 实用性
+	private Integer isRecommend;//是否推荐
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -116,5 +117,12 @@ public class ProjectToUser extends DataEntity {
 
 	public void setPracticability(Integer practicability) {
 		this.practicability = practicability;
+	}
+
+	public Integer getIsRecommend() {
+		return isRecommend;
+	}
+	public void setIsRecommend(Integer isRecommend) {
+		this.isRecommend = isRecommend;
 	}
 }

@@ -56,6 +56,12 @@ $("#${id}keyword").keyup(function(event){
            $("#firstAge").val(jsonuser.age);
            $("#${id}words").append($optu).show();  
         }
+        if(data.length == 0){
+            $("#${id}words").empty().hide();
+            $("#${id}Id").val(keyVal);
+            $("#${id}keyword").val(keyVal);
+            $("#firstAge").val("");
+        }
      }, "json");
 });
 $("#${id}words").bind("dblclick", function() {  

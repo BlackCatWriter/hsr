@@ -1,11 +1,11 @@
 package com.ndtl.yyky.modules.oa.web.base;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -35,6 +35,7 @@ public abstract class BaseOAController extends BaseController {
 
 	protected LinkedList<FileMeta> files = new LinkedList<FileMeta>();
 	protected FileMeta fileMeta = null;
+	protected String nodeType = null;
 	@Autowired
 	protected TaskService taskService;
 
@@ -50,10 +51,18 @@ public abstract class BaseOAController extends BaseController {
 
 	@RequestMapping(value = "/upload/{type}", method = RequestMethod.POST)
 	@ResponseBody
-	public String uploadFile(MultipartHttpServletRequest request,
+	public String uploadFile(MultipartHttpServletRequest request,String node,
 			@PathVariable("type") String type) {
 		Iterator<String> itr = request.getFileNames();
+		String filePath = String.valueOf(UserUtils.getUser().getId());
 		MultipartFile mpf = null;
+		if(StringUtils.isNotEmpty(node) && !StringUtils.equals(nodeType,node)){
+			nodeType = node;
+			files.clear();
+		}
+		if(StringUtils.equals(node,"midTemplete") || StringUtils.equals(node,"endTemplete")){
+			filePath = node;
+		}
 		while (itr.hasNext()) {
 			mpf = request.getFile(itr.next());
 			if (files.size() >= 4) {
@@ -67,8 +76,7 @@ public abstract class BaseOAController extends BaseController {
 				fileMeta.setBytes(mpf.getBytes());
 				saveFileFromInputStream(
 						mpf.getInputStream(),
-						getFilePath(type,
-								String.valueOf(UserUtils.getUser().getId())),
+						getFilePath(type,filePath),
 						mpf.getOriginalFilename());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -130,19 +138,20 @@ public abstract class BaseOAController extends BaseController {
 
 	@RequestMapping(value = "get/{id}", method = RequestMethod.GET)
 	public void getFile(HttpServletResponse response, @PathVariable Long id,
-			RedirectAttributes redirectAttributes) {
+			RedirectAttributes redirectAttributes) throws Exception {
 		BaseOAEntity entity = getService().findOne(id);
 		String fileName = entity.getFile();
-		this.getFile(response, id, redirectAttributes, fileName, entity
+		this.multFileDownload(response, id, redirectAttributes, fileName, entity
 				.getClass().getSimpleName());
+
 	}
 
 	@RequestMapping(value = "get/{id}/{type}", method = RequestMethod.GET)
 	public void getFile(HttpServletResponse response, @PathVariable Long id,
-			@PathVariable String type, RedirectAttributes redirectAttributes) {
+			@PathVariable String type, RedirectAttributes redirectAttributes) throws Exception {
 		BaseOAEntity entity = getService().findOne(id);
 		String fileName = entity.getFile();
-		this.getFile(response, id, redirectAttributes, fileName, type);
+		this.multFileDownload(response, id, redirectAttributes, fileName, type);
 	}
 
 	public void getFile(HttpServletResponse response, @PathVariable Long id,
@@ -150,15 +159,13 @@ public abstract class BaseOAController extends BaseController {
 		BaseOAEntity entity = getService().findOne(id);
 		String filePath = getFilePath(type,
 				String.valueOf(entity.getCreateBy().getId()));
-		for(String path : fileName.split(",")){
-			File file = new File(filePath, path);
+			File file = new File(filePath, fileName);
 			try {
 				String fName = new String(file.getName().getBytes(), "iso-8859-1");
 				// 读到流中
 				InputStream inStream = new FileInputStream(file.getAbsolutePath());// 文件的存放路径
 				OutputStream out = response.getOutputStream();
 				// 设置输出的格式
-				response.reset();
 				response.setContentType("multipart/form-data");
 				response.addHeader("Content-Disposition", "attachment; filename=\""
 						+ fName + "\"");
@@ -177,12 +184,120 @@ public abstract class BaseOAController extends BaseController {
 			} catch (IOException e) {
 				addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
 			}
-		}
-
 	}
 
 	protected void convertOffice(BaseOAItem entity) {
 		entity.setOffice(OfficeType.getValue(entity.getOfficeName()));
+	}
+
+	/**
+	 * 1 多文件下载
+	 * @param response HttpServletResponse
+	 * @param fileName 待下载文件
+	 * @throws Exception
+	 * @date 2019年3月29日11:31:35
+	 */
+	public void multFileDownload(HttpServletResponse response, @PathVariable Long id,
+								 RedirectAttributes redirectAttributes, String fileName, String type) throws Exception {
+		List<String> files = new ArrayList<>();
+		BaseOAEntity entity = getService().findOne(id);
+		String filePath = getFilePath(type,
+				String.valueOf(entity.getCreateBy().getId()));
+
+		for(String name : fileName.split(",")){
+			files.add(name);
+		}
+
+		response.setContentType("multipart/form-data");
+		response.addHeader("Content-Disposition", "attachment; filename=\""
+				+ StringUtils.join(System.currentTimeMillis(),".zip") + "\"");
+		ServletOutputStream out;
+		FileInputStream instream = null;
+		try {
+			ZipOutputStream zipstream=new ZipOutputStream(response.getOutputStream());
+			for (String file:files) {
+				if (!new File(filePath+file).exists()) {
+					continue;
+				}
+				instream=new FileInputStream(filePath+file);
+				ZipEntry entry = new ZipEntry(file);
+				zipstream.putNextEntry(entry);
+				byte[] buffer = new byte[1024];
+				int len = 0;
+				while (len != -1){
+					len = instream.read(buffer);
+					zipstream.write(buffer,0,buffer.length);
+				}
+				instream.close();
+				zipstream.closeEntry();
+				zipstream.flush();
+			}
+			zipstream.finish();
+			zipstream.close();
+		} catch (UnsupportedEncodingException e1) {
+			logger.error("下载文件出错！",e1);
+			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+		} catch (FileNotFoundException e1) {
+			logger.error("下载文件出错！",e1);
+			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+		} catch (IOException e) {
+			logger.error("下载文件出错！",e);
+			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+		}
+	}
+
+	/**
+	 * 1 多文件下载
+	 * @param response HttpServletResponse
+	 * @param fileName 待下载文件
+	 * @throws Exception
+	 * @date 2019年3月29日11:31:35
+	 */
+	public void multTempFileDownload(HttpServletResponse response, String tempFile,
+								 RedirectAttributes redirectAttributes, String fileName, String type) throws Exception {
+		List<String> files = new ArrayList<>();
+		String filePath = getFilePath(type,tempFile);
+
+		for(String name : fileName.split(",")){
+			files.add(name);
+		}
+
+		response.setContentType("multipart/form-data");
+		response.addHeader("Content-Disposition", "attachment; filename=\""
+				+ StringUtils.join(System.currentTimeMillis(),".zip") + "\"");
+		ServletOutputStream out;
+		FileInputStream instream = null;
+		try {
+			ZipOutputStream zipstream=new ZipOutputStream(response.getOutputStream());
+			for (String file:files) {
+				if (!new File(filePath+file).exists()) {
+					continue;
+				}
+				instream=new FileInputStream(filePath+file);
+				ZipEntry entry = new ZipEntry(file);
+				zipstream.putNextEntry(entry);
+				byte[] buffer = new byte[1024];
+				int len = 0;
+				while (len != -1){
+					len = instream.read(buffer);
+					zipstream.write(buffer,0,buffer.length);
+				}
+				instream.close();
+				zipstream.closeEntry();
+				zipstream.flush();
+			}
+			zipstream.finish();
+			zipstream.close();
+		} catch (UnsupportedEncodingException e1) {
+			logger.error("下载文件出错！",e1);
+			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+		} catch (FileNotFoundException e1) {
+			logger.error("下载文件出错！",e1);
+			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+		} catch (IOException e) {
+			logger.error("下载文件出错！",e);
+			addMessage(redirectAttributes, "下载文件" + fileName + "出错！");
+		}
 	}
 	
 //	/**

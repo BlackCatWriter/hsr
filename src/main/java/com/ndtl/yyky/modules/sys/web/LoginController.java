@@ -9,6 +9,7 @@ import com.ndtl.yyky.common.persistence.Page;
 import com.ndtl.yyky.common.utils.DateUtils;
 import com.ndtl.yyky.common.utils.excel.ExportExcel;
 import com.ndtl.yyky.modules.sys.utils.PPLicClientUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
@@ -29,6 +30,8 @@ import com.ndtl.yyky.common.web.BaseController;
 import com.ndtl.yyky.modules.sys.entity.User;
 import com.ndtl.yyky.modules.sys.utils.UserUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static com.ndtl.yyky.modules.sys.utils.UserUtils.CACHE_USER;
 
 /**
  * 登录Controller
@@ -100,6 +103,8 @@ public class LoginController extends BaseController {
 			return "modules/sys/sysLicense";
 		}
 		if (user.getIsCheck() == 0) {
+			SecurityUtils.getSubject().logout();
+			UserUtils.removeCache(CACHE_USER);
 			addMessage(model, "登录失败，用户还未审核通过！");
 			return "modules/sys/sysLogin";
 		}

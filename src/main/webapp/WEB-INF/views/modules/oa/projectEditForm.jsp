@@ -266,7 +266,16 @@ function pass(kjDeptPass) {
         type: 'B'
     }]);
 }
-
+function deleteTr(nowTr){
+    var fileNames ="";
+    $(nowTr).parent().parent().remove();
+    $.each($("#uploaded-files [name=fileName]"),function () {
+        fileNames += $(this).text() + ",";
+    })
+    if(fileNames != ""){
+        $("#file").val(fileNames.substring(0,fileNames.length-1));
+    }
+}
 function save() {
     $("#checkForm").attr("action", "${ctx}/oa/project/saveProjectToUser");
     $("#checkForm").submit();
@@ -396,11 +405,11 @@ function complete(taskId, variables) {
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label"><font color='red'>*</font>权属：</label>
+				<label class="control-label">权属：</label>
 				<div class="controls">
-					<input id="weightBelong" name="weightBelong" value="${project.weightBelong}" maxlength="200" class="input-large required"
+					<input id="weightBelong" name="weightBelong" value="${project.weightBelong}" maxlength="200" class="input-large"
 						type="hidden" />
-					<form:input path="weightBelongDisplayName" maxlength="200" class="input-large required" readonly="true"/>
+					<form:input path="weightBelongDisplayName" maxlength="200" class="input-large" readonly="true"/>
 
 				</div>
 			</div>
@@ -454,9 +463,15 @@ function complete(taskId, variables) {
 				</div>
 			</div>
 			<div class="control-group">
+				<label class="control-label">项目简介：</label>
+				<div class="controls">
+					<form:textarea path="introduce" rows="5" style="width:500px;" maxlength="800" />
+				</div>
+			</div>
+			<div class="control-group">
 				<label class="control-label">备注：</label>
 				<div class="controls">
-					<form:textarea path="remarks" rows="5" maxlength="20" />
+					<form:textarea path="remarks" rows="5" style="width:500px;" maxlength="20" />
 				</div>
 			</div>
 		<div class="form-actions">

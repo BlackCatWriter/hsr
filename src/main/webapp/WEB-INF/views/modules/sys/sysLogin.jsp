@@ -47,14 +47,9 @@
 		</div>
 		<c:if test="${not empty message}">
 			<script type="text/javascript">
-				//alert("${message}");
                 $("#messageBox").html("${message}");
                 $("#messageBox").show();
 			</script>
-			<%--<c:set var="ctype" value="${fn:indexOf(message,'失败') eq -1?'success':'error'}"/>
-			<c:if test="${ctype eq 'error'}">
-				<div id="messageStatusBox" class="alert alert-error"><button data-dismiss="alert" class="close">×</button>${message}</div>
-			</c:if>--%>
 		</c:if>
 	</div>
 	<h1 class="form-signin-heading">${fns:getConfig('productName')}</h1>

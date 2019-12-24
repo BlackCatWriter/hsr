@@ -212,7 +212,10 @@ public class UserUtils extends BaseService {
 		if (StringUtils.isBlank(userId)) {
 			return "";
 		}
-		return getUserDisplayName(Long.valueOf(userId));
+		if((Object)userId instanceof Long){
+			return getUserDisplayName(Long.valueOf(userId));
+		}
+		return userId;
 	}
 
 	public static String getUserDisplayName(Long userId) {

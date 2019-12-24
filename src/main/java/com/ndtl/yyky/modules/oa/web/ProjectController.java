@@ -514,7 +514,7 @@ public class ProjectController extends BaseOAController {
 
 	private String uploadFileForProject(MultipartHttpServletRequest request,
 			Long id, Boolean isMid) {
-		files = super.uploadFile(request, "project");
+		files = super.uploadFile(request, "project","");
 		Project project = (Project) projectService.findById(id);
 		Iterator<String> itr = request.getFileNames();
 		String fileName = itr.next();

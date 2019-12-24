@@ -32,7 +32,16 @@
 				}
 			});
 		});
-		
+        function deleteTr(nowTr){
+            var fileNames ="";
+            $(nowTr).parent().parent().remove();
+            $.each($("#uploaded-files [name=fileName]"),function () {
+                fileNames += $(this).text() + ",";
+            })
+            if(fileNames != ""){
+                $("#file").val(fileNames.substring(0,fileNames.length-1));
+            }
+        }
 		function projectChange(projectId){
 			location.href='${ctx}/oa/expense/form?id=' + projectId;
 		}
@@ -60,7 +69,7 @@
 			<label class="control-label">中期考核附件上传:</label>
 			<div class="controls">
 				<input id="file" name="midTermFile" type="hidden" value="${project.midTermFile}"/>
-				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project">
+				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project?node=mid">
 			</div>
 		</div>
 		<div class="control-group">
@@ -92,7 +101,7 @@
 			<label class="control-label">中期考核模板附件上传:</label>
 			<div class="controls">
 				<input id="file" name="midTermFileTemplete" type="hidden" value="${project.midTermFileTemplete}"/>
-				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project">
+				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project?node=midTemplete">
 			</div>
 		</div>
 		<div class="control-group">
@@ -124,7 +133,7 @@
 			<label class="control-label">结题模板附件上传:</label>
 			<div class="controls">
 				<input id="file" name="endFileTemplete" type="hidden" value="${project.endFileTemplete}"/>
-				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project">
+				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project?node=endTemplete">
 			</div>
 		</div>
 		<div class="control-group">
@@ -155,7 +164,7 @@
 			<label class="control-label">结题附件上传:</label>
 			<div class="controls">
 				<input id="file" name="endFile" type="hidden" value="${project.endFile}"/>
-				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project">
+				<input id="fileupload" type="file" name="files[]" data-url="${ctx}/oa/project/upload/project?node=end">
 			</div>
 		</div>
 		<div class="control-group">

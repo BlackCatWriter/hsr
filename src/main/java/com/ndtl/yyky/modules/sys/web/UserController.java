@@ -196,6 +196,12 @@ public class UserController extends BaseOAController {
 			addMessage(model, "保存用户'" + user.getLoginName() + "'失败，登录名已存在");
 			return form(user, model);
 		}
+		List<Role> roleList = Lists.newArrayList();
+		Role role = systemService.findRoleByName("普通人员");
+		if(role != null){
+			roleList.add(role);
+			user.setRoleList(roleList);
+		}
 		// 保存用户信息
 		systemService.saveUser(user);
 		// 清除当前用户缓存

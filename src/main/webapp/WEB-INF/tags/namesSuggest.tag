@@ -78,7 +78,8 @@ a.del_link:active {
 <script type="text/javascript">
 $("#${id}words").empty().hide();
 $("#${id}keyword").keyup(function(event){
-    var keyVal = $(this).val();  
+    var keyVal = $(this).val();
+    var keyVal1 =  $(this).val()
     if ("" == keyVal) {  
         $("#${id}words").empty().hide();
         $("#${id}keyword").val(""); 
@@ -105,6 +106,12 @@ $("#${id}keyword").keyup(function(event){
            $optu.text(value);  
            $optu.val(jsonuser.id);
            $("#${id}words").append($optu).show();  
+        }
+        if(data.length == 0){
+            var $optu = $("<option></option>");
+            $optu.text(keyVal1);
+            $optu.val(keyVal1);
+            $("#${id}words").append($optu).show();
         }
      }, "json");
 });

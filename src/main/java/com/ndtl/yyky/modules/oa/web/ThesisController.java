@@ -76,7 +76,7 @@ public class ThesisController extends BaseOAController {
 		thesis.setOffice(UserUtils.getUser().getOffice());
 		thesis.setOfficeName(UserUtils.getUser().getOffice().getName());
 		model.addAttribute("thesis", thesis);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/thesisForm";
 	}
@@ -92,7 +92,7 @@ public class ThesisController extends BaseOAController {
 	public String editform(Thesis thesis, Model model) {
 		setUserListInTask(thesis);
 		model.addAttribute("thesis", thesis);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/thesisEditForm";
 	}

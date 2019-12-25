@@ -74,7 +74,7 @@ public class BookController extends BaseOAController {
 		book.setOffice(UserUtils.getUser().getOffice());
 		book.setOfficeName(UserUtils.getUser().getOffice().getName());
 		model.addAttribute("book", book);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/bookForm";
 	}
@@ -90,7 +90,7 @@ public class BookController extends BaseOAController {
 	public String editform(Book book, Model model) {
 		setUserListInTask(book);
 		model.addAttribute("book", book);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/bookEditForm";
 	}

@@ -212,7 +212,7 @@ public class UserUtils extends BaseService {
 		if (StringUtils.isBlank(userId)) {
 			return "";
 		}
-		if((Object)userId instanceof Long){
+		if(DateUtils.isNumeric(userId)){
 			return getUserDisplayName(Long.valueOf(userId));
 		}
 		return userId;

@@ -74,7 +74,7 @@ public class PatentController extends BaseOAController {
 		patent.setOffice(UserUtils.getUser().getOffice());
 		patent.setOfficeName(UserUtils.getUser().getOffice().getName());
 		model.addAttribute("patent", patent);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/patentForm";
 	}
@@ -90,7 +90,7 @@ public class PatentController extends BaseOAController {
 	public String editform(Patent patent, Model model) {
 		setUserListInTask(patent);
 		model.addAttribute("patent", patent);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/patentEditForm";
 	}

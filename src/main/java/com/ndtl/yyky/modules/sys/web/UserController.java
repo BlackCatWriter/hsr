@@ -431,6 +431,9 @@ public class UserController extends BaseOAController {
 			currentUser.setDegree(user.getDegree());
 			currentUser.setEducationalBackground(user
 					.getEducationalBackground());
+			currentUser.setGraduateAdvisor(user.getGraduateAdvisor());
+			currentUser.setJobTitle(user.getJobTitle());
+			currentUser.setEducation(user.getEducation());
 			Office office = officeService.get(user.getOffice().getId());
 			currentUser.setOffice(office);
 			systemService.saveUser(currentUser);
@@ -487,8 +490,11 @@ public class UserController extends BaseOAController {
 			currentUser.setTitle(user.getTitle());
 			currentUser.setSex(user.getSex());
 			currentUser.setDegree(user.getDegree());
+			currentUser.setJobTitle(user.getJobTitle());
+			currentUser.setEducation(user.getEducation());
 			currentUser.setEducationalBackground(user
 					.getEducationalBackground());
+			currentUser.setGraduateAdvisor(user.getGraduateAdvisor());
 			Office office = officeService.get(user.getOffice().getId());
 			currentUser.setOffice(office);
 			systemService.saveUser(currentUser);
@@ -677,6 +683,9 @@ public class UserController extends BaseOAController {
 			currentUser.setDegree(user.getDegree());
 			currentUser.setEducationalBackground(user
 					.getEducationalBackground());
+			currentUser.setGraduateAdvisor(user.getGraduateAdvisor());
+			currentUser.setJobTitle(user.getJobTitle());
+			currentUser.setEducation(user.getEducation());
 			Office office = officeService.get(user.getOffice().getId());
 			currentUser.setOffice(office);
 			if (!currentUser.isInitInfo()) {
@@ -749,12 +758,12 @@ public class UserController extends BaseOAController {
 		List<UserSelectModel> possibleUsers = new ArrayList<UserSelectModel>();
 		List<User> users = UserUtils.getUserList();
 		String value = var.getValues();
-		List<Long> idList = Lists.newArrayList();
+		List<String> idList = Lists.newArrayList();
 		if (value.indexOf("@") != -1) {
 			String[] ids = value.substring(value.indexOf("@") + 1).split(",");
 			for (String id : ids) {
 				if (StringUtils.isNotEmpty(id)) {
-					idList.add(Long.valueOf(id));
+					idList.add(String.valueOf(id));
 				}
 			}
 			value = value.substring(0, value.indexOf("@"));

@@ -299,10 +299,9 @@ public class User extends DataEntity {
 		return Collections3.extractToString(roleList, "name", ", ");
 	}
 
-	@Transient
 	@ExcelField(title = "职称", align = 2, sort = 55)
 	public String getJobTitle() {
-		return DictUtils.getDictLabel(getTitle(), "title_"+getPrefression(), "");
+		return jobTitle;
 	}
 	
 	public void setJobTitle(String jobTitle) {

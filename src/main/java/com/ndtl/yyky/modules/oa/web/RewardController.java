@@ -86,7 +86,7 @@ public class RewardController extends BaseOAController {
 		reward.setOfficeName(UserUtils.getUser().getOffice().getName());
 		model.addAttribute("reward", reward);
 		model.addAttribute("form", true);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/rewardForm";
 	}
@@ -102,7 +102,7 @@ public class RewardController extends BaseOAController {
 	public String editform(Reward reward, Model model) {
 		setUserListInTask(reward);
 		model.addAttribute("reward", reward);
-		List<Project> projectList = projectService.findApprovalProjects();
+		List<Project> projectList = projectService.findOwnedApprovalProjects();
 		model.addAttribute("projectList", projectList);
 		return "modules/oa/rewardEditForm";
 	}
@@ -188,6 +188,7 @@ public class RewardController extends BaseOAController {
 		try {
 			if(Global.getProcessEable()){
 				reward.setDelFlag("2");
+				reward.setType(RewardType.tecProgress.name());
 				rewardService.save(reward);
 			}else {
 				Map<String, Object> variables = new HashMap<String, Object>();

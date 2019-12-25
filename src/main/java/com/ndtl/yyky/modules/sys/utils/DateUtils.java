@@ -42,6 +42,15 @@ public class DateUtils {
         return sdf.parse(strDate);
     }
 
+    public static boolean isNumeric(String str) {
+        for (int i = 0; i < str.length(); i++) {
+            System.out.println(str.charAt(i));
+            if (!Character.isDigit(str.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
     public static void main(String[] args) {
         try {
             int  age = getAge(parse("1993-03-19"));           //由出生日期获得年龄***

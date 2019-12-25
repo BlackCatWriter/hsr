@@ -463,9 +463,9 @@ function complete(taskId, variables) {
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label">项目简介：</label>
+				<label class="control-label"><font color='red'>*</font>项目简介：</label>
 				<div class="controls">
-					<form:textarea path="introduce" rows="5" style="width:500px;" maxlength="800" />
+					<form:textarea path="introduce" rows="5" style="width:500px;" maxlength="800" class="required"/>
 				</div>
 			</div>
 			<div class="control-group">

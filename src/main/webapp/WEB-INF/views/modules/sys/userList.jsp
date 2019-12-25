@@ -113,11 +113,11 @@
 				<td>${user.name}</td>
 				<td>${user.phone}</td>
 				<td>${user.mobile}</td>
-				<td>${user.jobTitle}</td>
-				<td>${fns:getDictLabel(user.education, 'degree', '')}</td>
+				<td>${fns:getDictLabel(user.jobTitle, 'job_title', '')}</td>
+				<td>${fns:getDictLabel(user.education, 'education_type', '')}</td>
 				<td>${user.birthday}</td>
-				<td>${user.roleNames}</td>
 				<td>${fns:getDictLabel(user.isCheck, 'user_check', '')}</td>
+				<td>${user.roleNames}</td>
 				<shiro:hasPermission name="sys:user:edit"><td>
 					<c:if test="${user.isCheck eq '0'}">
 						<a href="${ctx}/sys/user/check?id=${user.id}" onclick="return confirmx('确认通过审核吗？', this.href)">审核</a>

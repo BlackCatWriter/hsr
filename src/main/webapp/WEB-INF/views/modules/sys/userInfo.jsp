@@ -250,8 +250,8 @@
 		<div class="control-group">
 			<label class="control-label">学历:</label>
 			<div class="controls">
-				<form:select path="degree">
-					<form:options items="${fns:getDictList('degree')}" itemLabel="label" itemValue="value" htmlEscape="false" />
+				<form:select path="education">
+					<form:options items="${fns:getDictList('education_type')}" itemLabel="label" itemValue="value" htmlEscape="false" />
 				</form:select>
 			</div>
 		</div>
@@ -268,11 +268,7 @@
 		<div class="control-group">
 			<label class="control-label">研究生导师:</label>
 			<div class="controls">
-				<form:select path="graduateAdvisor">
-					<option value=""></option>
-					<form:options items="${fns:getDictList('graduate_advisor')}" itemLabel="label" itemValue="value"
-						htmlEscape="false" />
-				</form:select>
+				<form:input path="graduateAdvisor" htmlEscape="false" maxlength="50" />
 			</div>
 		</div>
 		<div class="control-group">
@@ -294,8 +290,8 @@
 			</div>
 			<br> <label class="control-label">职称:</label>
 			<div class="controls">
-				<form:select id="title" path="title">
-					<form:options items="${fns:getDictList(userTitle)}" itemLabel="label" itemValue="value" htmlEscape="false" />
+				<form:select path="jobTitle">
+					<form:options items="${fns:getDictList('job_title')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
 			</div>
 		</div>

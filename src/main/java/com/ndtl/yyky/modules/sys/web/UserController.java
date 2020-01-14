@@ -40,10 +40,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ndtl.yyky.modules.sys.utils.ToolEncrypt.md5Encrypt;
 
 /**
  * 用户Controller
@@ -447,7 +450,7 @@ public class UserController extends BaseOAController {
 
 	@RequestMapping(value = "infoSave")
 	public String infoSave(User user, Model model,
-						   HttpServletRequest request, MultipartFile file) {
+						   HttpServletRequest request, MultipartFile file) throws NoSuchAlgorithmException {
 
 		User currentUser = UserUtils.getUser();
 		if (StringUtils.isNotBlank(user.getName())) {
@@ -465,12 +468,14 @@ public class UserController extends BaseOAController {
 					saveFileFromInputStream(
 							file.getInputStream(),
 							filePath.get("servletPath"),
-							file.getOriginalFilename());
+							md5Encrypt(file.getOriginalFilename()));
 
 				} catch (IOException e) {
 					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
 				}
-				currentUser.setHeadImg(filePath.get("relativePath")+"/"+file.getOriginalFilename());
+				currentUser.setHeadImg(filePath.get("relativePath")+"/"+md5Encrypt(file.getOriginalFilename()));
 			}
 
 			currentUser.setEmail(user.getEmail());

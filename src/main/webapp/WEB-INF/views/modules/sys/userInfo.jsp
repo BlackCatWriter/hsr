@@ -167,7 +167,7 @@
 		<div class="box">
 			<p>
 			<c:if test="${not empty user.headImg}">
-				<div class="upload imgLog2" style="background: url('${user.headImg}')0% 0% / cover;">
+				<div class="upload imgLog2" style="background: url('/hsr/${user.headImg}')0% 0% / cover;">
 					<span style="opacity: 0"><i class="glyphicon glyphicon-open"></i>上传头像</span>
 				</div>
 			</c:if>

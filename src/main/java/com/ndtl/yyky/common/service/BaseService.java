@@ -1,9 +1,11 @@
 
 package com.ndtl.yyky.common.service;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.ndtl.yyky.modules.sys.entity.Office;
+import com.ndtl.yyky.modules.sys.entity.Role;
+import com.ndtl.yyky.modules.sys.entity.User;
+import com.ndtl.yyky.modules.sys.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
@@ -11,9 +13,9 @@ import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.ndtl.yyky.modules.sys.entity.Role;
-import com.ndtl.yyky.modules.sys.entity.User;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Service基类
@@ -112,5 +114,45 @@ public abstract class BaseService {
 		ql.append(")");
 		return ql.toString();
 	}
-	
+
+	protected List<Map> filterListResultByRole(List<Map> list) {
+		User user = UserUtils.getUser();
+		if (UserUtils.isAdmin(user) || UserUtils.isFinance(user)
+				|| UserUtils.isHosLeader(user)) {
+			return list;
+		} else if (UserUtils.isDeptLeader(user)) {
+			Office office = user.getOffice();
+			List<Map> result = Lists.newArrayList();
+			for (Map e : list) {
+				if ((e.get("office_id") != null && e.get("office_id").equals(office.getId()))
+						|| (e.get("create_by") != null && e.get("create_by").equals(user.getId()))) {
+					result.add(e);
+				}
+			}
+			return result;
+		} else if (UserUtils.isKJDept()) {
+            Office office = user.getOffice();
+            List<Map> result = Lists.newArrayList();
+            for (Map e : list) {
+                Office resultOffice = UserUtils.getOfficeByOffid(Long.valueOf(e.get("office_id").toString()));
+
+                if ((resultOffice != null && resultOffice.getId() != null
+                        && resultOffice.getParentIds().contains(String.valueOf(office.getId())))
+                        || resultOffice.getId().equals(office.getId())
+                        || (e.get("create_by") != null && e.get("create_by").equals(user.getId()))) {
+                    result.add(e);
+                }
+            }
+            return result;
+        } else {
+			List<Map> result = Lists.newArrayList();
+			for (Map e : list) {
+				if (e != null && e.get("create_by") != null
+						&& e.get("create_by").equals(user.getId())) {
+					result.add(e);
+				}
+			}
+			return result;
+		}
+	}
 }

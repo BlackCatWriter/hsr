@@ -33,9 +33,8 @@ import com.ndtl.yyky.modules.sys.utils.UserUtils;
 
 public abstract class BaseOAController extends BaseController {
 
-	protected LinkedList<FileMeta> files = new LinkedList<FileMeta>();
+	//protected LinkedList<FileMeta> files = new LinkedList<FileMeta>();
 	protected FileMeta fileMeta = null;
-	protected String nodeType = null;
 	@Autowired
 	protected TaskService taskService;
 
@@ -53,21 +52,18 @@ public abstract class BaseOAController extends BaseController {
 	@ResponseBody
 	public String uploadFile(MultipartHttpServletRequest request,String node,
 			@PathVariable("type") String type) {
+
+		LinkedList<FileMeta> files = new LinkedList<FileMeta>();
 		Iterator<String> itr = request.getFileNames();
 		String filePath = String.valueOf(UserUtils.getUser().getId());
 		MultipartFile mpf = null;
-		if(StringUtils.isNotEmpty(node) && !StringUtils.equals(nodeType,node)){
-			nodeType = node;
-			files.clear();
-		}
+
 		if(StringUtils.equals(node,"midTemplete") || StringUtils.equals(node,"endTemplete")){
 			filePath = node;
 		}
 		while (itr.hasNext()) {
 			mpf = request.getFile(itr.next());
-			if (files.size() >= 4) {
-				files.pop();
-			}
+
 			fileMeta = new FileMeta();
 			fileMeta.setFileName(mpf.getOriginalFilename());
 			fileMeta.setFileSize(mpf.getSize() / 1024 + " Kb");

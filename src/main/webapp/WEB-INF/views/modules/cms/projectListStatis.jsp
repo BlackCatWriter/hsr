@@ -93,6 +93,7 @@
 				<th>关联著作</th>
 				<th>关联专利</th>
 				<th>关联科技进步奖</th>
+				<th>合同</th>
 				<th>项目总经费</th>
 				<th>项目已用经费</th>
 				<th>项目剩余经费</th>
@@ -138,6 +139,13 @@
 					<div style="width:80px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis">
 						<c:forEach items="${project.reward}" var="reward">
 							<a href="${ctx}/cms/reward/form?id=${reward.id}" title="${reward.rewardName}">${reward.rewardName}</a><br>
+						</c:forEach>
+					</div>
+				</td>
+				<td>
+					<div style="width:80px;overflow:hidden; white-space:nowrap; text-overflow:ellipsis">
+						<c:forEach items="${project.projectData}" var="projectData">
+							<a href="${ctx}/oa/projectData/check?id=${projectData.id}">查看</a><br>
 						</c:forEach>
 					</div>
 				</td>

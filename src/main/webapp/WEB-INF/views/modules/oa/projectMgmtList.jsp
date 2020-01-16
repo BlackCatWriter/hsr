@@ -344,6 +344,9 @@
 				<c:if test="${project.status ne 'FINISH' and project.status.approval and project.weightBelong==fns:getUser().id and not empty project.midTermFileTemplete  and empty project.midTermFile}">
 					<a  href="${ctx}/oa/project/projectMgmt/${project.id}/mid">中期考核</a>
 				</c:if>
+				<c:if test="${project.status ne 'FINISH' and project.status.approval and fns:isKJDept() and not empty project.midTermFileTemplete and not empty project.midTermFile}">
+					<a href="${ctx}/cms/project/getMid/${project.id}">中期考核:${project.midTermFile}</a><br>
+				</c:if>
 				</td>
 				<td>
 				<c:if test="${project.status ne 'FINISH' and fns:isKJDept() and empty project.endFileTemplete}">
@@ -357,6 +360,9 @@
 				</c:if>
 				<c:if test="${project.status ne 'FINISH' and project.status.approval and project.weightBelong==fns:getUser().id and not empty project.endFileTemplete and not empty project.endFile}">
 					<a href="${ctx}/oa/project/projectMgmt/${project.id}/end">结题：${project.endFile}</a>
+				</c:if>
+				<c:if test="${project.status ne 'FINISH' and project.status.approval and fns:isKJDept() and not empty project.endFileTemplete and not empty project.endFile}">
+					<a href="${ctx}/cms/project/getEnd/${project.id}">结题:${project.endFile}</a><br>
 				</c:if>
 				<c:if test="${project.status ne 'FINISH' and fns:isKJDept()}">
 					<a href="${ctx}/oa/expense/close?id=${project.id}">关闭项目</a>

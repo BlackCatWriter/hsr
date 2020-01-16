@@ -149,7 +149,7 @@ public class UserUtils extends BaseService {
 			putCache(CACHE_OFFICE_LIST, officeList);
 		}
 		for(Office office : officeList){
-			if(office.getId() == officeId){
+			if(office.getId().equals(officeId)){
 				return office;
 			}
 		}
@@ -287,6 +287,13 @@ public class UserUtils extends BaseService {
 
 	public static boolean isDeptLeader(User user) {
 		if (user.getRoleIdList().contains(12L)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isKjLeader(User user) {
+		if (user.getRoleIdList().contains(9L)) {
 			return true;
 		}
 		return false;

@@ -329,6 +329,14 @@ public abstract class BaseOAService extends BaseService {
 				continue;
 				}
 			}
+			if(task.getTaskDefinitionKey().equals("kjDeptAudit")){
+				if (UserUtils.isKjLeader(user)
+						&& !(entity.getCreateBy().getOffice().getParentIds()
+						.contains(String.valueOf(user.getOffice().getId()))
+						|| entity.getCreateBy().getOffice().getId().equals(user.getOffice().getId()))) {
+					continue;
+				}
+			}
 			entity.setTask(task);
 			entity.setProcessInstance(processInstance);
 			entity.setProcessDefinition(repositoryService

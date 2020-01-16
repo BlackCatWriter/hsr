@@ -3,12 +3,11 @@ package com.ndtl.yyky.modules.cms.service;
 import com.google.common.collect.Lists;
 import com.ndtl.yyky.common.persistence.Page;
 import com.ndtl.yyky.common.service.BaseService;
-import com.ndtl.yyky.common.utils.DateUtils;
 import com.ndtl.yyky.modules.cms.dao.AccountDao;
 import com.ndtl.yyky.modules.cms.entity.Account;
-import com.ndtl.yyky.modules.cms.entity.Article;
-import com.ndtl.yyky.modules.cms.entity.Site;
 import com.ndtl.yyky.modules.oa.entity.Expense;
+import com.ndtl.yyky.modules.sys.entity.Office;
+import com.ndtl.yyky.modules.sys.entity.User;
 import com.ndtl.yyky.modules.sys.utils.UserUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
@@ -44,7 +43,10 @@ public class AccountService extends BaseService {
 			dc.add(Restrictions.like("project.projectNo",  "%"+account.getProjectNo()+"%"));
 		}
 		dc.addOrder(Order.desc("id"));
-		return accountDao.find(page, dc);
+		Page<Account> searchResult = accountDao.find(page, dc);
+		List<Account> accountList = filterAcountResultByRole(searchResult.getList());
+		searchResult.setList(accountList);
+		return searchResult;
 	}
 
 	 public Page<Map> projectAccountByYear(Page<Map> page,Map<String, Object> paramMap) {
@@ -52,7 +54,7 @@ public class AccountService extends BaseService {
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
 
-		ql.append(" SELECT t.project_no,t.project_name,account.budget,expense.expend,(account.budget-IFNULL(expense.expend,0)) as balance,expense.year as year FROM oa_project t LEFT JOIN ");
+		ql.append(" SELECT t.project_no,t.project_name,t.office_id,t.create_by,account.budget,expense.expend,(account.budget-IFNULL(expense.expend,0)) as balance,expense.year as year FROM oa_project t LEFT JOIN ");
 		ql.append(" (SELECT (a.sd_fee+a.pt_fee) as budget,a.project_id,DATE_FORMAT(a.approp_date, '%Y') AS YEAR FROM oa_expense_account a GROUP BY a.project_id,DATE_FORMAT(a.approp_date, '%Y') )");
 		ql.append(" account ON account.project_id = t.id LEFT JOIN (SELECT SUM(b.amount) AS expend,b.project_id,DATE_FORMAT(b.update_date,'%Y') as year FROM oa_expense b");
 		ql.append(" WHERE b.del_flag LIKE 2 GROUP BY b.project_id,DATE_FORMAT(b.update_date,'%Y') ) expense ON expense.project_id = t.id and account.YEAR = expense. YEAR where t.del_flag LIKE 2");
@@ -73,6 +75,7 @@ public class AccountService extends BaseService {
 			ps.add(year);
 		}
 		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		list.setList(filterListResultByRole(list.getList()));
 		return list;
 	}
 
@@ -81,14 +84,14 @@ public class AccountService extends BaseService {
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
 
-		ql.append(" select * from (select u.`name`,o.name as dept_name,p.project_name,t.jl,t.title,t.update_date from oa_thesis t ");
+		ql.append(" select * from (select u.`name`,o.name as dept_name,p.project_name,t.jl,t.title,t.office_id,t.create_by,t.update_date from oa_thesis t ");
 		ql.append(" INNER JOIN sys_user u ON t.co_author = u.id LEFT JOIN oa_project p ON t.project_id = p.id INNER JOIN sys_office o ON t.office_id = o.id");
-		ql.append(" where t.del_flag = 2 UNION ALL select u.`name`,o.name as dept_name,p.project_name,t.jl,t.title,t.update_date from oa_patent t");
+		ql.append(" where t.del_flag = 2 UNION ALL select u.`name`,o.name as dept_name,p.project_name,t.jl,t.title,t.office_id,t.create_by,t.update_date from oa_patent t");
 		ql.append(" INNER JOIN sys_user u ON t.author1 = u.id LEFT JOIN oa_project p ON t.project_id = p.id INNER JOIN sys_office o ON t.office_id = o.id");
-		ql.append(" where t.del_flag = 2 UNION ALL select u.`name`,o.name as dept_name,p.project_name,t.jl,t.title,t.update_date from oa_book t ");
+		ql.append(" where t.del_flag = 2 UNION ALL select u.`name`,o.name as dept_name,p.project_name,t.jl,t.title,t.office_id,t.create_by,t.update_date from oa_book t ");
 
 		ql.append(" INNER JOIN sys_user u ON t.author1 = u.id LEFT JOIN oa_project p ON t.project_id = p.id INNER JOIN sys_office o ON t.office_id = o.id");
-		ql.append(" where t.del_flag = 2 UNION ALL select u.`name`,o.name as dept_name,p.project_name,t.xb_fee as jl,t.reward_name as title,t.update_date from oa_reward t ");
+		ql.append(" where t.del_flag = 2 UNION ALL select u.`name`,o.name as dept_name,p.project_name,t.xb_fee as jl,t.reward_name as title,t.office_id,t.create_by,t.update_date from oa_reward t ");
 		ql.append(" INNER JOIN sys_user u ON t.author1 = u.id LEFT JOIN oa_project p ON t.project_id = p.id INNER JOIN sys_office o ON t.office_id = o.id ");
 		ql.append(" where t.del_flag = 2 )this where 1=1");
 
@@ -111,6 +114,7 @@ public class AccountService extends BaseService {
 		}
 
 		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		list.setList(filterListResultByRole(list.getList()));
 		return list;
 	}
 
@@ -119,7 +123,7 @@ public class AccountService extends BaseService {
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
 
-		ql.append(" select o.name as dept_name,u.`name`,a.project_name,t.creativity,t.advancement,t.scientificity,t.feasibility,t.practicability,t.update_date,t.remarks from oa_project_user t ");
+		ql.append(" select o.name as dept_name,u.`name`,a.project_name,a.office_id,a.create_by,t.creativity,t.advancement,t.scientificity,t.feasibility,t.practicability,t.update_date,t.remarks from oa_project_user t ");
 		ql.append(" left join oa_project a on t.project_id=a.id INNER JOIN sys_user u ON t.user_id = u.id INNER JOIN sys_office o ON u.office_id = o.id where 1=1 ");
 
 		String project_name = (String)paramMap.get("project_name");
@@ -134,6 +138,7 @@ public class AccountService extends BaseService {
 		}
 
 		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		list.setList(filterListResultByRole(list.getList()));
 		return list;
 	}
 
@@ -142,9 +147,9 @@ public class AccountService extends BaseService {
 		StringBuilder ql = new StringBuilder();
 		List<Object> ps = Lists.newArrayList();
 
-		ql.append(" select * from ( select u.`name`,o.`name` as dept_name,a.academic_name as topic,t.bx_fee,t.update_date,t.remarks from oa_academiccost t");
+		ql.append(" select * from ( select u.`name`,o.`name` as dept_name,a.academic_name as topic,a.office_id,a.create_by,t.bx_fee,t.update_date,t.remarks from oa_academiccost t");
 		ql.append(" inner join oa_academic a on t.academic_id = a.id INNER JOIN sys_user u ON t.create_by = u.id INNER JOIN sys_office o ON a.office_id = o.id where t.del_flag = 2");
-		ql.append(" union ALL select u.`name`,o.`name` as dept_name,b.advstudy_direction as topic,t.bx_fee,t.update_date,t.remarks from oa_academiccost t");
+		ql.append(" union ALL select u.`name`,o.`name` as dept_name,b.advstudy_direction as topic,b.office_id,b.create_by,t.bx_fee,t.update_date,t.remarks from oa_academiccost t");
 		ql.append(" inner join oa_advstudy b on t.advstudy_id = b.id INNER JOIN sys_user u ON t.create_by = u.id INNER JOIN sys_office o ON b.office_id = o.id where t.del_flag = 2 ) this where 1=1 ");
 
 		String name = (String)paramMap.get("name");
@@ -159,6 +164,7 @@ public class AccountService extends BaseService {
 		}
 
 		Page<Map> list = accountDao.findBySql(page,ql.toString(), Map.class, ps.toArray());
+		list.setList(filterListResultByRole(list.getList()));
 		return list;
 	}
 
@@ -168,6 +174,36 @@ public class AccountService extends BaseService {
 		account.setUpdateDate(new Date());
 		accountDao.clear();
 		accountDao.save(account);
+	}
+
+	private List<Account> filterAcountResultByRole(List<Account> list) {
+		User user = UserUtils.getUser();
+		if (UserUtils.isAdmin(user) || UserUtils.isFinance(user)
+				|| UserUtils.isHosLeader(user) || UserUtils.isKJDept()) {
+			return list;
+		} else if (UserUtils.isDeptLeader(user)) {
+			Office office = user.getOffice();
+			List<Account> result = Lists.newArrayList();
+			for (Account e : list) {
+				if ((e != null && e.getProject() != null
+						&& e.getProject().getOffice() != null && e.getProject()
+						.getOffice().getId().equals(office.getId()))
+						|| (e.getCreateBy() != null && e.getCreateBy().getId()
+						.equals(user.getId()))) {
+					result.add(e);
+				}
+			}
+			return result;
+		} else {
+			List<Account> result = Lists.newArrayList();
+			for (Account e : list) {
+				if (e != null && e.getCreateBy() != null
+						&& e.getCreateBy().getId().equals(user.getId())) {
+					result.add(e);
+				}
+			}
+			return result;
+		}
 	}
 
 }

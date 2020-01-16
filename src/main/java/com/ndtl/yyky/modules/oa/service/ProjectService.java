@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.ndtl.yyky.modules.cms.dao.ExpensePlanDao;
 import com.ndtl.yyky.modules.cms.dao.ExpenseRatioDao;
+import com.ndtl.yyky.modules.oa.dao.*;
+import com.ndtl.yyky.modules.oa.entity.*;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -19,16 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 import com.ndtl.yyky.common.persistence.Page;
 import com.ndtl.yyky.common.utils.DateUtils;
-import com.ndtl.yyky.modules.oa.dao.BaseOADao;
-import com.ndtl.yyky.modules.oa.dao.ExpenseDao;
-import com.ndtl.yyky.modules.oa.dao.ProjectDao;
-import com.ndtl.yyky.modules.oa.dao.ProjectToUserDao;
-import com.ndtl.yyky.modules.oa.entity.Achievement;
-import com.ndtl.yyky.modules.oa.entity.Expense;
-import com.ndtl.yyky.modules.oa.entity.Project;
-import com.ndtl.yyky.modules.oa.entity.ProjectToUser;
-import com.ndtl.yyky.modules.oa.entity.Reward;
-import com.ndtl.yyky.modules.oa.entity.Thesis;
 import com.ndtl.yyky.modules.oa.entity.Reward.RewardType;
 import com.ndtl.yyky.modules.oa.entity.enums.ProjectStatus;
 import com.ndtl.yyky.modules.oa.service.base.BaseOAService;
@@ -58,6 +50,9 @@ public class ProjectService extends BaseOAService {
 
 	@Autowired
 	private ProjectToUserDao projectToUserDao;
+
+	@Autowired
+	private ProjectDataDao projectDataDao;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -204,6 +199,7 @@ public class ProjectService extends BaseOAService {
 		project.setBook(projectDao.findBookForProject(project.getId()));
 		project.setPlan(expensePlanDao.findPlanListByProjectId(project.getId()));
 		project.setRatio(expenseRatioDao.findRatioListByProjectId(project.getId()));
+		project.setProjectData(projectDataDao.findProjectDataListByProjectId(project.getId()));
 	}
 
 	public Page<Project> findForCMS(Page<Project> page, Project project,
@@ -282,6 +278,9 @@ public class ProjectService extends BaseOAService {
 			project.setStatus(ProjectStatus.CREATE);
 		} else if (((Boolean) variables.get("editexpense") != null)) {
 		} else {
+			if(ProjectStatus.CLOSE.equals(project.getStatus().next())){
+				projectDataDao.insertProjectData(project.getOffice().getId(),project.getId(),project.getCreateBy().getId(),new Date());
+			}
 			project.setStatus(project.getStatus().next());
 		}
 		if (((Boolean) variables.get("lxSuccess") != null)

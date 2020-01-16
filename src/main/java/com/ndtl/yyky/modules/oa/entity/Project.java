@@ -85,6 +85,7 @@ public class Project extends BaseOAItem {
 	private List<Reward> tecAdv;
 	private List<Book> book;
 	private List<Patent> patent;
+	private List<ProjectData> projectData;
 
 	private List<ExpenseRatio> ratio;
 	private List<ExpensePlan> plan;
@@ -446,6 +447,15 @@ public class Project extends BaseOAItem {
 
 	public void setBook(List<Book> book) {
 		this.book = book;
+	}
+
+	@Transient
+	public List<ProjectData> getProjectData() {
+		return projectData;
+	}
+
+	public void setProjectData(List<ProjectData> projectData) {
+		this.projectData = projectData;
 	}
 
 	@Transient

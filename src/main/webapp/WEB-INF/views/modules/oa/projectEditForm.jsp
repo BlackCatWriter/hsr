@@ -440,6 +440,7 @@ function complete(taskId, variables) {
 				<label class="control-label">附件上传:</label>
 					<div class="controls">
 						已上传文件：<a href="${ctx}/oa/project/get/${project.id}">${project.file}</a>
+						<>
 					</div>
 				<div class="controls">
 					<input id="file" name="file" type="hidden" value="${project.file}" /> <input id="fileupload" type="file"

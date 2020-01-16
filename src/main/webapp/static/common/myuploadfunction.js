@@ -3,7 +3,7 @@ $(function () {
         dataType: 'json',
         
         done: function (e, data) {
-        	$("tr:has(td)").remove();
+        	//$("tr:has(td)").remove();
         	var fileNames ="";
             $.each(data.result, function (index, file) {
                 $("#uploaded-files").append(
@@ -16,7 +16,11 @@ $(function () {
                 fileNames += file.fileName + ",";
             });
             if(fileNames != ""){
-                $("#file").val(fileNames.substring(0,fileNames.length-1));
+            	if($("#file").val()){
+                    $("#file").val($("#file").val()+","+fileNames.substring(0,fileNames.length-1));
+				}else{
+                    $("#file").val(fileNames.substring(0,fileNames.length-1));
+                }
 			}
             $("#progress").show();
             $("#uploaded-files").show();

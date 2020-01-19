@@ -53,14 +53,17 @@ $("#${id}keyword").keyup(function(event){
            var value=jsonuser.name+"("+jsonuser.no+")--"+jsonuser.officeName;
            $optu.text(value);  
            $optu.val(jsonuser.id);
-           $("#firstAge").val(jsonuser.age);
+           if("${id}" == "author1"){
+              $("#firstAge").val(jsonuser.age);
+           }
+
            $("#${id}words").append($optu).show();  
         }
         if(data.length == 0){
             $("#${id}words").empty().hide();
             $("#${id}Id").val(keyVal);
             $("#${id}keyword").val(keyVal);
-            $("#firstAge").val("");
+            //$("#firstAge").val("");
         }
      }, "json");
 });

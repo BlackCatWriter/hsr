@@ -115,7 +115,8 @@ $("#${id}keyword").keyup(function(event){
         }
      }, "json");
 });
-$("#${id}words").bind("dblclick", function() {  
+$("#${id}words").bind("dblclick", function() {
+    debugger;
 	var oldIds=$("#${id}Id").val();
 	var newId=$(this).val();
 	if(oldIds){
@@ -125,7 +126,7 @@ $("#${id}words").bind("dblclick", function() {
 	}
 	var oldValue=$("#${id}select").html();
 	var item = $(this).find("option:selected").text();
-	var itemHtml = "<label class='itemLabel'>" + item + "<a href='#' class='del_link' onclick='removeItem${id}(this, " + newId + ");'>&nbsp;X</a></label>"
+	var itemHtml = "<label class='itemLabel'>" + item + "<a href='#' class='del_link' onclick='removeItem${id}(this, "+'"' + newId +'"'+ ");'>&nbsp;X</a></label>"
 	var newValue=oldValue+itemHtml;
     $("#${id}select").html(newValue); 
     $("#${id}keyword").val(''); 

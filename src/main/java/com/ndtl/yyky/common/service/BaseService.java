@@ -29,7 +29,7 @@ public abstract class BaseService {
 	
 	/**
 	 * 数据范围过滤
-	 * @param dc Hibernate标准查询对象
+	 * @param
 	 * @param user 当前用户对象，通过“UserUtils.getUser()”获取
 	 * @param officeAlias 机构表别名，例如：dc.createAlias("office", "office");
 	 * @param userAlias 用户表别名，传递空，忽略此参数
@@ -118,7 +118,7 @@ public abstract class BaseService {
 	protected List<Map> filterListResultByRole(List<Map> list) {
 		User user = UserUtils.getUser();
 		if (UserUtils.isAdmin(user) || UserUtils.isFinance(user)
-				|| UserUtils.isHosLeader(user)) {
+				|| UserUtils.isHosLeader(user) || UserUtils.isKJDept()) {
 			return list;
 		} else if (UserUtils.isDeptLeader(user)) {
 			Office office = user.getOffice();
@@ -130,7 +130,7 @@ public abstract class BaseService {
 				}
 			}
 			return result;
-		} else if (UserUtils.isKJDept()) {
+		} /*else if (UserUtils.isKJDept()) {
             Office office = user.getOffice();
             List<Map> result = Lists.newArrayList();
             for (Map e : list) {
@@ -144,7 +144,7 @@ public abstract class BaseService {
                 }
             }
             return result;
-        } else {
+        }*/ else {
 			List<Map> result = Lists.newArrayList();
 			for (Map e : list) {
 				if (e != null && e.get("create_by") != null

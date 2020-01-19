@@ -168,7 +168,7 @@ public class ProjectService extends BaseOAService {
 			return result;
 		}
 	}
-	
+
 	public Page<Project> findForRelatedCMS(Page<Project> page, Project project,
 			Map<String, Object> paramMap) {
 		Page<Project> result = findForCMS(page, project,paramMap);
